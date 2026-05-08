@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNCHARTED — Creative Studio Intro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0A0A0A;
+    overflow: hidden;
+    font-family: 'Bebas Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Letterbox for 2.35:1 */
+  .letterbox-top, .letterbox-bottom {
+    position: absolute; left: 0; right: 0; z-index: 100;
+    background: #000000;
+  }
+  .letterbox-top { top: 0; height: 90px; }
+  .letterbox-bottom { bottom: 0; height: 90px; }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+
+  /* Scene 1: The Spark */
+  #scene-spark {
+    background: radial-gradient(ellipse at center, #1A1410 0%, #0A0A0A 70%);
+    opacity: 1;
+  }
+  .spark {
+    width: 4px; height: 4px;
+    background: #C9A96E;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(201,169,110,0.6), 0 0 60px rgba(201,169,110,0.3), 0 0 120px rgba(201,169,110,0.15);
+    opacity: 0;
+    filter: blur(20px);
+  }
+
+  /* Scene 2: First Word */
+  #scene-word {
+    background: radial-gradient(ellipse at 50% 50%, #1E1A14 0%, #0A0A0A 65%);
+  }
+  .hero-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 140px; font-weight: 400;
+    letter-spacing: 40px;
+    color: #F0EDE8;
+    opacity: 0;
+    filter: blur(30px);
+    text-shadow: 0 0 80px rgba(201,169,110,0.4);
+  }
+
+  /* Scene 3: Tagline */
+  #scene-tagline {
+    background: radial-gradient(ellipse at 65% 50%, #1E1A14 0%, #0A0A0A 60%);
+  }
+  .tagline-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; font-style: italic;
+    letter-spacing: 6px;
+    color: rgba(240,237,232,0.8);
+    opacity: 0;
+  }
+  .glow-streak {
+    position: absolute;
+    width: 200px; height: 2px;
+    background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+    opacity: 0;
+    filter: blur(4px);
+  }
+
+  /* Scene 4: Full Name */
+  #scene-full {
+    background: radial-gradient(ellipse at 50% 50%, #252018 0%, #0A0A0A 60%);
+    background-image:
+      radial-gradient(ellipse at 30% 40%, rgba(201,169,110,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(201,169,110,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, #252018 0%, #0A0A0A 60%);
+  }
+  .full-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 96px; font-weight: 400;
+    letter-spacing: 24px;
+    color: #F0EDE8;
+    opacity: 0;
+    transform: scale(1.1);
+    text-shadow: 0 0 60px rgba(201,169,110,0.3), 0 0 120px rgba(201,169,110,0.1);
+  }
+
+  /* Scene 5: Fade to Black */
+  #scene-final {
+    background: #0A0A0A;
+  }
+  .final-spark {
+    position: absolute;
+    top: 50px; left: 50px;
+    width: 3px; height: 3px;
+    background: #C9A96E;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(201,169,110,0.5);
+    opacity: 0;
+  }
+
+  /* Grain Overlay */
+  .grain {
+    position: absolute; inset: 0; z-index: 99;
+    opacity: 0.25; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Letterbox -->
+<div class="letterbox-top"></div>
+<div class="letterbox-bottom"></div>
+
+<!-- Grain -->
+<div class="grain"></div>
+
+<!-- ==================== SCENE 1: Spark (0-5s) ==================== -->
+<div class="composition" id="scene-spark" data-composition-id="scene-1" data-start="0" data-duration="5" data-track-index="0">
+  <div class="spark" id="the-spark"></div>
+</div>
+
+<!-- ==================== SCENE 2: First Word (5-10s) ==================== -->
+<div class="composition" id="scene-word" data-composition-id="scene-2" data-start="5" data-duration="5" data-track-index="0">
+  <h1 class="hero-word" id="hero-word">UNCHARTED</h1>
+</div>
+
+<!-- ==================== SCENE 3: Tagline (10-16s) ==================== -->
+<div class="composition" id="scene-tagline" data-composition-id="scene-3" data-start="10" data-duration="6" data-track-index="0">
+  <div class="glow-streak" id="glow-streak"></div>
+  <p class="tagline-text" id="tagline-text">CREATIVE STUDIO &mdash; EST. 2026</p>
+</div>
+
+<!-- ==================== SCENE 4: Full Name (16-21s) ==================== -->
+<div class="composition" id="scene-full" data-composition-id="scene-4" data-start="16" data-duration="5" data-track-index="0">
+  <h2 class="full-name" id="full-name">UNCHARTED STUDIOS</h2>
+</div>
+
+<!-- ==================== SCENE 5: Final Fade (21-25s) ==================== -->
+<div class="composition" id="scene-final" data-composition-id="scene-5" data-start="21" data-duration="4" data-track-index="0">
+  <div class="final-spark" id="final-spark"></div>
+</div>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // ── Scene 1: Spark emerges (0-5s) ──
+  const sparkTl = gsap.timeline();
+  sparkTl
+    .to("#the-spark", {
+      opacity: 0.8,
+      filter: "blur(0px)",
+      duration: 3,
+      ease: "power3.out"
+    })
+    .to("#the-spark", {
+      scale: 1.05,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    }, "-=1.5")
+    .to("#scene-spark", {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.in"
+    }, "+=4");
+
+  // ── Scene 2: Word reveals (5-10s) ──
+  const wordTl = gsap.timeline();
+  wordTl
+    .set("#scene-word", { opacity: 1 })
+    .to("#hero-word", {
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 2,
+      ease: "power3.out"
+    })
+    .to("#hero-word", {
+      opacity: 0,
+      filter: "blur(15px)",
+      duration: 1,
+      ease: "power2.in",
+      delay: 1.5
+    })
+    .to("#scene-word", {
+      opacity: 0,
+      duration: 0.5
+    }, "-=0.5");
+
+  // ── Scene 3: Tagline + glow streak (10-16s) ──
+  const tagTl = gsap.timeline();
+  tagTl
+    .set("#scene-tagline", { opacity: 1 })
+    .set("#glow-streak", { left: "10%", top: "45%" })
+    .to("#glow-streak", {
+      opacity: 0.8,
+      left: "75%",
+      duration: 3,
+      ease: "power2.inOut"
+    })
+    .to("#tagline-text", {
+      opacity: 1,
+      duration: 1.5,
+      ease: "power2.out"
+    }, "-=2.5")
+    .to("#glow-streak", {
+      opacity: 0,
+      duration: 1
+    }, "+=0.5")
+    .to(["#tagline-text", "#scene-tagline"], {
+      opacity: 0,
+      duration: 1
+    }, "+=2");
+
+  // ── Scene 4: Full name (16-21s) ──
+  const fullTl = gsap.timeline();
+  fullTl
+    .set("#scene-full", { opacity: 1 })
+    .to("#full-name", {
+      opacity: 1,
+      scale: 1,
+      duration: 2.5,
+      ease: "power2.out"
+    })
+    .to("#scene-full", {
+      opacity: 0,
+      duration: 1.5
+    }, "+=1.5");
+
+  // ── Scene 5: Final spark (21-25s) ──
+  const finalTl = gsap.timeline();
+  finalTl
+    .set("#scene-final", { opacity: 1 })
+    .to("#final-spark", {
+      opacity: 0.8,
+      duration: 2,
+      ease: "power2.out"
+    })
+    .to("#final-spark", {
+      opacity: 0,
+      duration: 0.3,
+      repeat: 1,
+      yoyo: true
+    })
+    .to("#scene-final", {
+      opacity: 0,
+      duration: 1
+    }, "+=0.5");
+
+  // ── HyperFrames seek adapter ──
+  window.__hf_gsap = function(composition, currentTime) {
+    gsap.globalTimeline.time(currentTime);
+  };
+</script>
+</body>
+</html>

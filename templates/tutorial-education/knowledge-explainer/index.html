@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How AI Actually Works — Knowledge Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-white: #FFFFFF;
+      --bg-cream: #FAFAF9;
+      --bg-light-blue: #EFF6FF;
+      --bg-dark: #1E3A5F;
+      --bg-card: #F8FAFC;
+      --accent: #3B82F6;
+      --accent-light: #60A5FA;
+      --accent-lighter: #93C5FD;
+      --accent-dark: #1E40AF;
+      --highlight: #F59E0B;
+      --text-headline: #1A1A1A;
+      --text-body: #374151;
+      --text-label: #64748B;
+      --text-muted: #9CA3AF;
+      --text-white: #F8FAFC;
+      --border-light: #E5E7EB;
+      --border-med: #D1D5DB;
+      --success: #22C55E;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-white);
+      color: var(--text-headline);
+      overflow: hidden;
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+    }
+
+    /* ========== CANVAS / SCENE CONTAINER ========== */
+    .hf-canvas {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-white);
+    }
+
+    .hf-scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .hf-scene.active { opacity: 1; pointer-events: auto; }
+
+    /* Scene-specific background overrides */
+    .hf-scene[data-hf-scene="5"] { background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 100%); }
+
+    /* ========== SCENE 1: OPENING HOOK ========== */
+    .scene1-wrapper {
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .hook-title {
+      font-family: var(--font-sans);
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--accent-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .hook-title .char {
+      display: inline-block;
+      opacity: 0;
+    }
+
+    .blinking-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 56px;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 2px;
+      opacity: 1;
+      animation: cursor-blink 0.8s step-end infinite;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hook-subtitle {
+      font-size: 24px;
+      color: var(--text-label);
+      font-weight: 400;
+      margin-top: 16px;
+      opacity: 0;
+    }
+
+    /* Floating geometric shapes */
+    .floating-shapes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-shape {
+      position: absolute;
+      opacity: 0.3;
+    }
+
+    .float-shape.circle {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+    }
+
+    .float-shape.square {
+      width: 50px; height: 50px;
+      border: 3px solid var(--accent-light);
+      transform: rotate(15deg);
+    }
+
+    .float-shape.triangle {
+      width: 0; height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 52px solid var(--accent-lighter);
+      background: transparent !important;
+    }
+
+    /* ========== SCENE 2: WHAT IS AI? ========== */
+    .scene2-wrapper {
+      display: flex;
+      width: 1400px;
+      gap: 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .scene2-sidebar {
+      width: 320px;
+      background: var(--bg-light-blue);
+      border-radius: 0 16px 16px 0;
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .keyword-badge {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #DBEAFE;
+      color: var(--accent-dark);
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 24px;
+      text-align: center;
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    .scene2-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .definition-card {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      padding: 32px 36px;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      opacity: 0;
+    }
+
+    .definition-text {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .definition-source {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 16px;
+    }
+
+    /* ========== SCENE 3: MACHINE LEARNING FLOWCHART ========== */
+    .scene3-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 1200px;
+    }
+
+    .flowchart-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent-dark);
+      text-align: center;
+      margin-bottom: 48px;
+      opacity: 0;
+    }
+
+    .flowchart-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+    }
+
+    .flow-box {
+      width: 160px;
+      height: 80px;
+      background: var(--accent);
+      color: var(--text-white);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+    }
+
+    .flow-desc {
+      font-size: 14px;
+      color: var(--text-label);
+      margin-top: 10px;
+      text-align: center;
+      max-width: 140px;
+    }
+
+    .flow-arrow {
+      width: 80px;
+      height: 3px;
+      background: var(--border-med);
+      position: relative;
+      margin: 0 12px;
+      flex-shrink: 0;
+    }
+
+    .flow-arrow::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: -5px;
+      width: 0; height: 0;
+      border-left: 10px solid var(--border-med);
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+
+    .flow-arrow.feedback {
+      position: relative;
+      width: 100%;
+      height: 40px;
+      background: transparent;
+      margin: 0;
+    }
+
+    .flow-arrow.feedback svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ========== SCENE 4: ANALOGY - SIDE BY SIDE ========== */
+    .scene4-wrapper {
+      display: flex;
+      width: 1400px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .analogy-panel {
+      flex: 1;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .analogy-panel.left {
+      background: #FFFBEB;
+      border-radius: 16px 0 0 16px;
+    }
+
+    .analogy-panel.right {
+      background: var(--bg-light-blue);
+      border-radius: 0 16px 16px 0;
+    }
+
+    .analogy-divider {
+      width: 2px;
+      background: linear-gradient(to bottom, var(--border-light), var(--border-med));
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .divider-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 14px;
+      color: var(--text-label);
+      padding: 20px 8px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .analogy-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-label);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 32px;
+    }
+
+    .analogy-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      opacity: 0;
+    }
+
+    .analogy-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .analogy-panel.left .analogy-check {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+
+    .analogy-panel.right .analogy-check {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .analogy-text {
+      font-size: 17px;
+      color: var(--text-body);
+      font-weight: 500;
+    }
+
+    /* ========== SCENE 5: CLOSING TAKEAWAY ========== */
+    .scene5-wrapper {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .closing-equation {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .closing-equation .eq-part {
+      opacity: 0;
+      display: inline-block;
+    }
+
+    .eq-ai { font-size: 72px; font-weight: 900; color: #FFFFFF; }
+    .eq-equals { font-size: 72px; font-weight: 300; color: var(--accent-light); }
+    .eq-data { font-size: 72px; font-weight: 800; color: var(--highlight); }
+    .eq-patterns { font-size: 72px; font-weight: 800; color: var(--accent); }
+    .eq-iteration { font-size: 72px; font-weight: 800; color: var(--accent-lighter); }
+
+    .closing-support {
+      font-size: 20px;
+      color: rgba(248, 250, 252, 0.8);
+      margin-top: 24px;
+      opacity: 0;
+    }
+
+    .end-card-brand {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .brand-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(248, 250, 252, 0.7);
+    }
+
+    .end-card-episode {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      text-align: right;
+      opacity: 0;
+    }
+
+    .episode-series {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .episode-number {
+      font-size: 12px;
+      color: rgba(148, 163, 184, 0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hf-canvas" data-hf-project="knowledge-explainer" data-hf-duration="30" data-hf-resolution="1920x1080">
+
+    <!-- ==================== SCENE 1: OPENING HOOK (0s – 5s) ==================== -->
+    <div class="hf-scene active"
+         data-hf-scene="1"
+         data-hf-scene-start="0"
+         data-hf-scene-duration="5"
+         data-hf-scene-name="opening-hook">
+
+      <!-- Floating geometric shapes -->
+      <div class="floating-shapes">
+        <div class="float-shape circle" style="top:12%;left:10%;" data-hf-shape="1"></div>
+        <div class="float-shape square" style="top:18%;right:15%;" data-hf-shape="2"></div>
+        <div class="float-shape triangle" style="bottom:22%;left:20%;" data-hf-shape="3"></div>
+        <div class="float-shape circle" style="top:60%;right:8%;width:40px;height:40px;" data-hf-shape="4"></div>
+        <div class="float-shape square" style="bottom:30%;right:30%;width:35px;height:35px;" data-hf-shape="5"></div>
+        <div class="float-shape triangle" style="top:8%;left:40%;" data-hf-shape="6"></div>
+      </div>
+
+      <div class="scene1-wrapper">
+        <div class="hook-title" data-hf-animate="typewriter" data-hf-type-speed="50">
+          Artificial Intelligence<span class="blinking-cursor" data-hf-cursor></span>
+        </div>
+        <p class="hook-subtitle" data-hf-animate="fade-in" data-hf-animate-delay="1.8">
+          It's not magic. It's math.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 2: WHAT IS AI? (5s – 11s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="2"
+         data-hf-scene-start="5"
+         data-hf-scene-duration="6"
+         data-hf-scene-name="what-is-ai">
+
+      <div class="scene2-wrapper">
+        <div class="scene2-sidebar">
+          <span class="keyword-badge" data-hf-keyword="1" data-hf-animate="slide-right">Learning</span>
+          <span class="keyword-badge" data-hf-keyword="2" data-hf-animate="slide-right">Reasoning</span>
+          <span class="keyword-badge" data-hf-keyword="3" data-hf-animate="slide-right">Perception</span>
+        </div>
+        <div class="scene2-content">
+          <div class="definition-card" data-hf-animate="fade-in">
+            <p class="definition-text">
+              Artificial Intelligence is the field of computer science focused on building systems that can perform tasks that typically require human intelligence.
+            </p>
+            <p class="definition-source">&mdash; Definition adapted from Stanford HAI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 3: ML FLOWCHART (11s – 18s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="3"
+         data-hf-scene-start="11"
+         data-hf-scene-duration="7"
+         data-hf-scene-name="ml-flowchart">
+
+      <div class="scene3-wrapper">
+        <h2 class="flowchart-title" data-hf-animate="fade-in">How Machine Learning Works</h2>
+        <div class="flowchart-diagram">
+          <!-- Step A: Data -->
+          <div class="flow-step" data-hf-flow-step="A" data-hf-animate="pop-in">
+            <div class="flow-box">Data</div>
+            <p class="flow-desc">Millions of examples</p>
+          </div>
+          <div class="flow-arrow" data-hf-flow-arrow="A-B"></div>
+          <!-- Step B: Learn -->
+          <div class="flow-step" data-hf-flow-step="B" data-hf-animate="pop-in">
+            <div class="flow-box">Learn</div>
+            <p class="flow-desc">Pattern recognition</p>
+          </div>
+          <div class="flow-arrow" data-hf-flow-arrow="B-C"></div>
+          <!-- Step C: Predict -->
+          <div class="flow-step" data-hf-flow-step="C" data-hf-animate="pop-in">
+            <div class="flow-box">Predict</div>
+            <p class="flow-desc">Output generation</p>
+          </div>
+        </div>
+        <!-- Feedback loop (below the main flow) -->
+        <div class="flow-arrow feedback" style="margin-top:12px;text-align:center;" data-hf-flow-arrow="feedback">
+          <svg viewBox="0 0 1200 50" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrowhead-feedback" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#F59E0B" />
+              </marker>
+            </defs>
+            <path d="M 800 25 Q 950 25 950 5 Q 950 -15 300 -15 Q 100 -15 100 5 Q 100 25 230 25"
+                  fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="8,4"
+                  marker-end="url(#arrowhead-feedback)" />
+          </svg>
+          <div class="flow-step" data-hf-flow-step="D" data-hf-animate="pop-in" style="margin:0 auto;">
+            <div class="flow-box" style="background:#F59E0B;">Improve</div>
+            <p class="flow-desc">Error correction</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 4: ANALOGY (18s – 24s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="4"
+         data-hf-scene-start="18"
+         data-hf-scene-duration="6"
+         data-hf-scene-name="teaching-analogy">
+
+      <div class="scene4-wrapper">
+        <div class="analogy-panel left">
+          <span class="analogy-label">Human Learning</span>
+          <div class="analogy-step" data-hf-analogy="human-1">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Show examples</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="human-2">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Explain patterns</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="human-3">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Practice with feedback</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="human-4">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Achieve mastery</span>
+          </div>
+        </div>
+        <div class="analogy-divider">
+          <span class="divider-label">Same steps, different methods</span>
+        </div>
+        <div class="analogy-panel right">
+          <span class="analogy-label">Machine Learning</span>
+          <div class="analogy-step" data-hf-analogy="ml-1">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Feed training data</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="ml-2">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Train the model</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="ml-3">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Evaluate &amp; tune</span>
+          </div>
+          <div class="analogy-step" data-hf-analogy="ml-4">
+            <span class="analogy-check">&#10003;</span>
+            <span class="analogy-text">Deploy to production</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 5: CLOSING (24s – 30s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="5"
+         data-hf-scene-start="24"
+         data-hf-scene-duration="6"
+         data-hf-scene-name="closing-takeaway">
+
+      <div class="scene5-wrapper">
+        <div class="closing-equation" data-hf-animate="stagger-equation" data-hf-stagger-delay="0.3">
+          <span class="eq-part eq-ai" data-hf-eq="ai">AI</span>
+          <span class="eq-part eq-equals" data-hf-eq="eq">=</span>
+          <span class="eq-part eq-data" data-hf-eq="data">Data</span>
+          <span class="eq-part eq-equals" data-hf-eq="plus1">+</span>
+          <span class="eq-part eq-patterns" data-hf-eq="patterns">Patterns</span>
+          <span class="eq-part eq-equals" data-hf-eq="plus2">+</span>
+          <span class="eq-part eq-iteration" data-hf-eq="iteration">Iteration</span>
+        </div>
+        <p class="closing-support" data-hf-animate="fade-in" data-hf-animate-delay="2.5">
+          The more data it sees, the better it gets. That's the whole secret.
+        </p>
+      </div>
+
+      <div class="end-card-brand" data-hf-animate="fade-in" data-hf-animate-delay="4.5">
+        <div class="brand-logo">Edu</div>
+        <span class="brand-text">How Tech Works</span>
+      </div>
+      <div class="end-card-episode" data-hf-animate="fade-in" data-hf-animate-delay="4.8">
+        <p class="episode-series">How Tech Works</p>
+        <p class="episode-number">Episode 1</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script>
+    /**
+     * HyperFrames Knowledge Explainer — Animation Controller
+     *
+     * 5-scene educational explainer: "How AI Actually Works"
+     * Editorial style with diagrams, keyword highlights, and flowchart animations.
+     *
+     * Total duration: 30 seconds
+     * Resolution: 1920x1080
+     */
+
+    (function () {
+      'use strict';
+
+      const scenes = document.querySelectorAll('.hf-scene');
+      const totalDuration = 30;
+
+      const sceneTimeline = [
+        { id: 1, start: 0,  duration: 5,  name: 'opening-hook' },
+        { id: 2, start: 5,  duration: 6,  name: 'what-is-ai' },
+        { id: 3, start: 11, duration: 7,  name: 'ml-flowchart' },
+        { id: 4, start: 18, duration: 6,  name: 'teaching-analogy' },
+        { id: 5, start: 24, duration: 6,  name: 'closing-takeaway' }
+      ];
+
+      function activateScene(sceneId) {
+        scenes.forEach(s => s.classList.remove('active'));
+        const el = document.querySelector(`[data-hf-scene="${sceneId}"]`);
+        if (el) { el.classList.add('active'); animateScene(sceneId); }
+      }
+
+      function animateScene(sceneId) {
+        const tl = gsap.timeline();
+
+        switch (sceneId) {
+
+          // SCENE 1: Opening Hook — typewriter title + floating shapes
+          case 1: {
+            const chars = document.querySelectorAll('.hook-title .char');
+            if (chars.length === 0) {
+              // If characters weren't pre-split, animate the whole word
+              const titleEl = document.querySelector('.hook-title');
+              const text = titleEl.textContent.replace(/\s+/g, '').trim();
+              titleEl.innerHTML = '';
+              text.split('').forEach(ch => {
+                const span = document.createElement('span');
+                span.className = 'char';
+                span.textContent = ch;
+                titleEl.appendChild(span);
+              });
+              // Re-query
+              const allChars = document.querySelectorAll('.hook-title .char');
+              tl.to(allChars, { opacity: 1, duration: 0.05, stagger: 0.05, ease: 'steps(1)' });
+            } else {
+              tl.to(chars, { opacity: 1, duration: 0.05, stagger: 0.05, ease: 'steps(1)' });
+            }
+            tl.to('.hook-subtitle', { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.2');
+            // Floating shapes gentle drift
+            tl.to('.float-shape', {
+              y: () => gsap.utils.random(-30, 30),
+              x: () => gsap.utils.random(-20, 20),
+              rotation: () => gsap.utils.random(-15, 15),
+              duration: 4,
+              ease: 'sine.inOut',
+              stagger: 0.1
+            }, 0);
+            break;
+          }
+
+          // SCENE 2: Definition Card + Keyword Badges
+          case 2:
+            tl.to('.definition-card', { opacity: 1, duration: 0.5, ease: 'power3.out' })
+              .to('[data-hf-keyword]', {
+                opacity: 1,
+                x: 0,
+                duration: 0.4,
+                stagger: 0.25,
+                ease: 'back.out(1.5)'
+              }, '-=0.1');
+            break;
+
+          // SCENE 3: ML Flowchart — sequential build
+          case 3:
+            tl.to('.flowchart-title', { opacity: 1, duration: 0.4, ease: 'power2.out' })
+              .to('[data-hf-flow-step="A"]', {
+                opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.4)'
+              })
+              .to('[data-hf-flow-arrow="A-B"]', {
+                opacity: 1, duration: 0.3, ease: 'power2.out'
+              })
+              .to('[data-hf-flow-step="B"]', {
+                opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.4)'
+              })
+              .to('[data-hf-flow-arrow="B-C"]', {
+                opacity: 1, duration: 0.3, ease: 'power2.out'
+              })
+              .to('[data-hf-flow-step="C"]', {
+                opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.4)'
+              })
+              // Feedback loop
+              .to('[data-hf-flow-arrow="feedback"]', {
+                opacity: 1, duration: 0.5, ease: 'power2.out'
+              })
+              .to('[data-hf-flow-step="D"]', {
+                opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.4)'
+              }, '-=0.2');
+            break;
+
+          // SCENE 4: Side-by-Side Analogy
+          case 4: {
+            const leftSteps = document.querySelectorAll('[data-hf-analogy^="human"]');
+            const rightSteps = document.querySelectorAll('[data-hf-analogy^="ml"]');
+            tl.to(leftSteps, { opacity: 1, duration: 0.35, stagger: 0.2, ease: 'power2.out' });
+            tl.to(rightSteps, { opacity: 1, duration: 0.35, stagger: 0.2, ease: 'power2.out' }, '-=0.85');
+            break;
+          }
+
+          // SCENE 5: Closing Equation + End Card
+          case 5:
+            tl.to('[data-hf-eq]', {
+              opacity: 1,
+              duration: 0.5,
+              stagger: 0.3,
+              ease: 'back.out(1.5)'
+            })
+            .to('.closing-support', { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.1')
+            .to('.end-card-brand', { opacity: 1, duration: 0.5, ease: 'power2.out' })
+            .to('.end-card-episode', { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.3');
+
+            // Gentle float on the equation
+            gsap.to('.closing-equation', {
+              y: -4,
+              duration: 3,
+              repeat: -1,
+              yoyo: true,
+              ease: 'sine.inOut'
+            });
+            break;
+        }
+      }
+
+      function buildMasterTimeline() {
+        const mtl = gsap.timeline({ repeat: 0 });
+        sceneTimeline.forEach(scene => {
+          mtl.call(() => activateScene(scene.id), null, scene.start);
+        });
+        return mtl;
+      }
+
+      function resetAllScenes() {
+        scenes.forEach(s => s.classList.remove('active'));
+        gsap.set('.hook-subtitle', { opacity: 0 });
+        gsap.set('.definition-card', { opacity: 0 });
+        gsap.set('[data-hf-keyword]', { opacity: 0, x: -40 });
+        gsap.set('.flowchart-title', { opacity: 0 });
+        gsap.set('[data-hf-flow-step]', { opacity: 0, scale: 0.8 });
+        gsap.set('[data-hf-flow-arrow]', { opacity: 0 });
+        gsap.set('[data-hf-analogy]', { opacity: 0 });
+        gsap.set('[data-hf-eq]', { opacity: 0 });
+        gsap.set('.closing-support', { opacity: 0 });
+        gsap.set('.end-card-brand, .end-card-episode', { opacity: 0 });
+      }
+
+      function init() {
+        activateScene(1);
+        const masterTL = buildMasterTimeline();
+        masterTL.play();
+
+        sceneTimeline.forEach(scene => {
+          gsap.delayedCall(scene.start, () => {
+            console.log(`[HyperFrames] Scene ${scene.id}: "${scene.name}" — ${scene.start}s–${scene.start + scene.duration}s`);
+          });
+        });
+      }
+
+      window.HyperFrames = window.HyperFrames || {};
+      window.HyperFrames.knowledgeExplainer = {
+        init, resetAllScenes, activateScene, sceneTimeline, animateScene, totalDuration
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+
+</body>
+</html>

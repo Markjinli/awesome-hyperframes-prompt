@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q4 2026 KPI Dashboard — HyperFrames</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0F172A;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: #F8FAFC;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+
+  /* ========== SCENE 1: Revenue ========== */
+  #scene-revenue { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); opacity: 1; }
+  .revenue-layout { display: flex; gap: 80px; align-items: center; }
+  .rev-label { font-size: 22px; font-weight: 400; color: #94A3B8; letter-spacing: 4px; text-transform: uppercase; }
+  .rev-number { font-size: 120px; font-weight: 900; color: #38BDF8; line-height: 1; letter-spacing: -3px; }
+  .rev-growth { font-size: 28px; font-weight: 600; color: #4ADE80; margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+  .rev-growth .arrow { font-size: 32px; }
+  .rev-bar-chart { display: flex; gap: 16px; align-items: flex-end; height: 200px; }
+  .rev-bar { width: 40px; background: linear-gradient(0deg, #38BDF8, #818CF8); border-radius: 4px 4px 0 0; opacity: 0; }
+
+  /* ========== SCENE 2: Growth ========== */
+  #scene-growth { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+  .growth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; width: 80%; }
+  .growth-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    opacity: 0;
+  }
+  .growth-card .card-value { font-size: 56px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+  .growth-card .card-label { font-size: 16px; color: #94A3B8; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+  .growth-card:nth-child(1) .card-value { color: #38BDF8; }
+  .growth-card:nth-child(2) .card-value { color: #4ADE80; }
+  .growth-card:nth-child(3) .card-value { color: #F59E0B; }
+
+  /* ========== SCENE 3: Customers ========== */
+  #scene-customers { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+  .customer-layout { display: flex; gap: 60px; align-items: center; }
+  .donut-container { position: relative; width: 240px; height: 240px; }
+  .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .donut-pct { font-size: 48px; font-weight: 900; color: #F8FAFC; }
+  .donut-label { font-size: 14px; color: #94A3B8; }
+  .customer-stats { display: flex; flex-direction: column; gap: 24px; }
+  .stat-row { display: flex; align-items: center; gap: 16px; }
+  .stat-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .stat-info .stat-value { font-size: 36px; font-weight: 700; }
+  .stat-info .stat-name { font-size: 14px; color: #94A3B8; }
+
+  /* ========== SCENE 4: Outlook ========== */
+  #scene-outlook { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+  .outlook-content { text-align: center; }
+  .outlook-badge {
+    display: inline-block;
+    background: rgba(56,189,248,0.1);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 100px;
+    padding: 12px 32px;
+    font-size: 18px; font-weight: 600; color: #38BDF8;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+    opacity: 0;
+  }
+  .outlook-target { font-size: 80px; font-weight: 900; color: #F8FAFC; opacity: 0; letter-spacing: -2px; }
+  .outlook-sub { font-size: 20px; color: #94A3B8; margin-top: 16px; opacity: 0; }
+
+  /* Grid background texture */
+  .grid-bg {
+    position: absolute; inset: 0; opacity: 0.03; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ==================== SCENE 1: Revenue (0-6s) ==================== -->
+<div class="composition" id="scene-revenue" data-composition-id="scene-1" data-start="0" data-duration="6" data-track-index="0">
+  <div class="revenue-layout">
+    <div>
+      <div class="rev-label" id="rev-label">Quarterly Revenue</div>
+      <div class="rev-number" id="rev-number">$48.2M</div>
+      <div class="rev-growth" id="rev-growth">
+        <span class="arrow">↑</span> 23.4% YoY
+      </div>
+    </div>
+    <div class="rev-bar-chart" id="rev-chart">
+      <div class="rev-bar" style="height: 120px;" data-value="120"></div>
+      <div class="rev-bar" style="height: 155px;" data-value="155"></div>
+      <div class="rev-bar" style="height: 138px;" data-value="138"></div>
+      <div class="rev-bar" style="height: 180px;" data-value="180"></div>
+      <div class="rev-bar" style="height: 200px;" data-value="200"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCENE 2: Growth Metrics (6-13s) ==================== -->
+<div class="composition" id="scene-growth" data-composition-id="scene-2" data-start="6" data-duration="7" data-track-index="0">
+  <div class="growth-grid" id="growth-grid">
+    <div class="growth-card" id="card-1">
+      <div class="card-value">142%</div>
+      <div class="card-label">Revenue Growth</div>
+    </div>
+    <div class="growth-card" id="card-2">
+      <div class="card-value">$12.8M</div>
+      <div class="card-label">Net Profit</div>
+    </div>
+    <div class="growth-card" id="card-3">
+      <div class="card-value">3.2x</div>
+      <div class="card-label">ROI Multiple</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCENE 3: Customer Mix (13-20s) ==================== -->
+<div class="composition" id="scene-customers" data-composition-id="scene-3" data-start="13" data-duration="7" data-track-index="0">
+  <div class="customer-layout">
+    <div class="donut-container">
+      <svg viewBox="0 0 240 240" id="donut-svg" width="240" height="240">
+        <circle cx="120" cy="120" r="100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="#38BDF8" stroke-width="20"
+          stroke-dasharray="282.7 345.6" stroke-dashoffset="0" stroke-linecap="round"
+          transform="rotate(-90 120 120)" id="donut-enterprise"/>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="#4ADE80" stroke-width="20"
+          stroke-dasharray="188.5 439.8" stroke-dashoffset="-282.7" stroke-linecap="round"
+          transform="rotate(-90 120 120)" id="donut-mid"/>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="#F59E0B" stroke-width="20"
+          stroke-dasharray="157.1 471.2" stroke-dashoffset="-471.2" stroke-linecap="round"
+          transform="rotate(-90 120 120)" id="donut-smb"/>
+      </svg>
+      <div class="donut-center">
+        <div class="donut-pct" id="donut-pct">8.5K</div>
+        <div class="donut-label">Total Customers</div>
+      </div>
+    </div>
+    <div class="customer-stats" id="customer-stats">
+      <div class="stat-row">
+        <div class="stat-dot" style="background:#38BDF8;"></div>
+        <div class="stat-info">
+          <div class="stat-value">45%</div>
+          <div class="stat-name">Enterprise</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-dot" style="background:#4ADE80;"></div>
+        <div class="stat-info">
+          <div class="stat-value">30%</div>
+          <div class="stat-name">Mid-Market</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-dot" style="background:#F59E0B;"></div>
+        <div class="stat-info">
+          <div class="stat-value">25%</div>
+          <div class="stat-name">SMB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCENE 4: Outlook (20-25s) ==================== -->
+<div class="composition" id="scene-outlook" data-composition-id="scene-4" data-start="20" data-duration="5" data-track-index="0">
+  <div class="outlook-content">
+    <div class="outlook-badge" id="outlook-badge">FORECAST 2027</div>
+    <div class="outlook-target" id="outlook-target">$100M ARR</div>
+    <div class="outlook-sub" id="outlook-sub">Projected by Q3 2027 • 2.1x Current Run Rate</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // ── Scene 1: Revenue (0-6s) ──
+  const rTl = gsap.timeline();
+  rTl
+    .set("#scene-revenue", { opacity: 1 })
+    .fromTo("#rev-label", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 })
+    .fromTo("#rev-number", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, "-=0.2")
+    .fromTo("#rev-growth", { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.4 }, "-=0.3")
+    .fromTo("#rev-chart .rev-bar", { scaleY: 0, opacity: 0, transformOrigin: "bottom center" },
+      { scaleY: 1, opacity: 1, duration: 0.6, stagger: 0.12, ease: "power2.out" })
+    .to("#scene-revenue", { opacity: 0, duration: 0.4, ease: "power2.in" });
+
+  // ── Scene 2: Growth Cards (6-13s) ──
+  const gTl = gsap.timeline();
+  gTl
+    .set("#scene-growth", { opacity: 1 })
+    .fromTo("#growth-grid .growth-card", { opacity: 0, y: 40, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.2, ease: "power2.out" })
+    .to("#scene-growth", { opacity: 0, duration: 0.4, delay: 1.5 });
+
+  // ── Scene 3: Customers (13-20s) ──
+  const cTl = gsap.timeline();
+  cTl
+    .set("#scene-customers", { opacity: 1 })
+    .fromTo("#donut-svg circle[id]", { opacity: 0 },
+      { opacity: 1, duration: 0.5, stagger: 0.3 })
+    .fromTo("#donut-pct", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out" }, "-=0.8")
+    .fromTo("#customer-stats .stat-row", { opacity: 0, x: 20 },
+      { opacity: 1, x: 0, duration: 0.4, stagger: 0.15 }, "-=0.3")
+    .to("#scene-customers", { opacity: 0, duration: 0.4, delay: 1.5 });
+
+  // ── Scene 4: Outlook (20-25s) ──
+  const oTl = gsap.timeline();
+  oTl
+    .set("#scene-outlook", { opacity: 1 })
+    .fromTo("#outlook-badge", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 })
+    .fromTo("#outlook-target", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, "-=0.1")
+    .fromTo("#outlook-sub", { opacity: 0 }, { opacity: 1, duration: 0.6 }, "-=0.3")
+    .to("#scene-outlook", { opacity: 0, duration: 0.6, delay: 2 });
+
+  window.__hf_gsap = function(composition, currentTime) {
+    gsap.globalTimeline.time(currentTime);
+  };
+</script>
+</body>
+</html>

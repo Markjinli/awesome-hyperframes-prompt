@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Coffee -- Company Origin</title>
+<style>
+  /* ===== CSS Reset & Global Styles ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --color-deep: #3C2415;
+    --color-amber: #C68B59;
+    --color-cream: #F5E6D3;
+    --color-saddle: #8B4513;
+    --color-dark: #1A0E06;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Playfair+Display:ital,wght@0,400..900;1,400..700&display=swap');
+
+  body {
+    background: #000;
+    overflow: hidden;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HyperFrames Canvas ===== */
+  #hyperframes-canvas {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--color-cream);
+  }
+
+  /* ===== Composition Containers ===== */
+  .composition {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .composition.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ===== Film Grain Overlay ===== */
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+  }
+
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    animation: grainShift 0.5s steps(5) infinite;
+  }
+
+  @keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-1%, 1%); }
+    40% { transform: translate(-2%, -1%); }
+    60% { transform: translate(1%, -2%); }
+    80% { transform: translate(2%, 2%); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* ===== Vignette ===== */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 998;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(60,36,21,0.45) 100%);
+  }
+
+  /* ===== Letterbox Bars ===== */
+  .letterbox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: #000;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .letterbox.top { top: 0; }
+  .letterbox.bottom { bottom: 0; }
+  .letterbox.visible { opacity: 1; }
+
+  /* ===== Scene 1: The Beginning ===== */
+  .scene-beginning {
+    background: radial-gradient(ellipse at 60% 40%, #F5E6D3 0%, #E0C9B0 60%, #3C2415 100%);
+  }
+
+  .garage-photo {
+    position: relative;
+    width: 700px;
+    height: 500px;
+    background: linear-gradient(135deg, #2A1808 0%, #4A3020 50%, #3C2415 100%);
+    border: 8px solid #F5E6D3;
+    box-shadow: 0 20px 60px rgba(60,36,21,0.5), inset 0 0 100px rgba(0,0,0,0.3);
+    overflow: hidden;
+    transform-origin: center center;
+  }
+
+  .garage-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(255,220,160,0.15) 0%, transparent 60%),
+      linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+  }
+
+  .light-bulb {
+    position: absolute;
+    top: 60px;
+    right: 120px;
+    width: 40px;
+    height: 50px;
+    background: radial-gradient(circle at 50% 30%, #FFE8C0, #C68B59);
+    border-radius: 50% 50% 40% 40%;
+    box-shadow: 0 0 80px rgba(255,200,100,0.6), 0 0 160px rgba(255,180,80,0.3);
+    z-index: 2;
+  }
+
+  .coffee-beans {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 1;
+  }
+
+  .bean {
+    width: 24px;
+    height: 32px;
+    background: radial-gradient(ellipse at 40% 35%, #8B6914, #3C2415);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .founding-year {
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--color-amber);
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    letter-spacing: 6px;
+    opacity: 0;
+  }
+
+  /* ===== Scene 2: The Struggle ===== */
+  .scene-struggle {
+    background: linear-gradient(170deg, #3C2415 0%, #2A1808 100%);
+  }
+
+  .struggle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1300px;
+    align-items: center;
+  }
+
+  .hand-painted-sign {
+    background: #F5E6D3;
+    padding: 40px 60px;
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    text-align: center;
+    border: 3px solid #C68B59;
+    position: relative;
+  }
+
+  .hand-painted-sign h2 {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: #3C2415;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .hand-painted-sign .sub {
+    font-family: var(--font-body);
+    font-size: 20px;
+    color: #C68B59;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    background: #F5E6D3;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+
+  .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: #3C2415;
+    border-radius: 50%;
+    position: relative;
+    opacity: 0;
+  }
+
+  .calendar-day.x-mark::after {
+    content: '\2715';
+    position: absolute;
+    font-size: 28px;
+    color: #C68B59;
+    font-weight: 700;
+  }
+
+  .quote-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 38px;
+    color: #F5E6D3;
+    text-align: center;
+    max-width: 900px;
+    line-height: 1.5;
+    opacity: 0;
+    z-index: 5;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+
+  /* ===== Scene 3: The Breakthrough ===== */
+  .scene-breakthrough {
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C0 50%, #F5E6D3 100%);
+  }
+
+  .newspaper {
+    background: #FDF8F3;
+    padding: 60px 70px;
+    border: 1px solid #D4B896;
+    box-shadow: 0 12px 48px rgba(60,36,21,0.25);
+    text-align: center;
+    max-width: 800px;
+    position: relative;
+    transform-origin: center;
+  }
+
+  .newspaper h3 {
+    font-family: var(--font-display);
+    font-size: 56px;
+    color: #3C2415;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .newspaper .dateline {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #C68B59;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    border-top: 2px solid #C68B59;
+    border-bottom: 2px solid #C68B59;
+    display: inline-block;
+    padding: 8px 20px;
+    margin-top: 12px;
+  }
+
+  .storefront-reveal {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(60,36,21,0.3) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  /* ===== Scene 4: The Community ===== */
+  .scene-community {
+    background: linear-gradient(160deg, #F5E6D3 0%, #D4B896 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+  }
+
+  .community-photos {
+    display: flex;
+    gap: 24px;
+  }
+
+  .community-photo {
+    width: 300px;
+    height: 360px;
+    background: var(--color-cream);
+    border: 6px solid white;
+    box-shadow: 0 8px 30px rgba(60,36,21,0.3);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .community-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(198,139,89,0.2) 0%, transparent 50%);
+  }
+
+  .map-pins {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 80px;
+  }
+
+  .map-pin {
+    width: 18px;
+    height: 18px;
+    background: var(--color-saddle);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    position: relative;
+    opacity: 0;
+  }
+
+  .map-pin::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--color-cream);
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+  }
+
+  /* ===== Scene 5: The Impact ===== */
+  .scene-impact {
+    background: radial-gradient(ellipse at center, #F5E6D3 0%, #3C2415 100%);
+  }
+
+  .impact-numbers {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .impact-card {
+    text-align: center;
+    opacity: 0;
+  }
+
+  .impact-card .number {
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--color-amber);
+    display: block;
+    line-height: 1;
+  }
+
+  .impact-card .label {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-cream);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* ===== Scene 6: The Future ===== */
+  .scene-future {
+    background: var(--color-cream);
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .logo-wordmark {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 900;
+    color: var(--color-deep);
+    letter-spacing: -2px;
+    opacity: 0;
+  }
+
+  .logo-wordmark .accent {
+    color: var(--color-amber);
+  }
+
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 22px;
+    color: var(--color-amber);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  .final-line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--color-deep);
+    opacity: 0;
+    margin-top: 16px;
+  }
+
+  .light-leak {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 500;
+    background: radial-gradient(ellipse at 30% 20%, rgba(255,200,120,0.15) 0%, transparent 60%);
+  }
+
+</style>
+</head>
+<body>
+
+<div id="hyperframes-canvas">
+
+  <!-- ===== Global overlays ===== -->
+  <div class="grain-overlay"></div>
+  <div class="vignette"></div>
+  <div class="letterbox top" id="letterboxTop"></div>
+  <div class="letterbox bottom" id="letterboxBottom"></div>
+  <div class="light-leak" id="lightLeak"></div>
+
+  <!-- ===== SCENE 1: The Beginning (0s-8s) ===== -->
+  <div class="composition scene-beginning active"
+       data-composition-id="scene-1-beginning"
+       data-start="0"
+       data-duration="8"
+       data-track-index="1">
+    <div class="garage-photo" id="garagePhoto">
+      <div class="light-bulb"></div>
+      <div class="coffee-beans" id="coffeeBeans">
+        <div class="bean"></div><div class="bean"></div><div class="bean"></div><div class="bean"></div><div class="bean"></div>
+      </div>
+      <div class="founding-year" id="foundingYear">2013</div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 2: The Struggle (8s-15s) ===== -->
+  <div class="composition scene-struggle"
+       data-composition-id="scene-2-struggle"
+       data-start="8"
+       data-duration="7"
+       data-track-index="2">
+    <div class="struggle-grid">
+      <div class="hand-painted-sign" id="handSign">
+        <h2>Atlas Coffee</h2>
+        <div class="sub">-- Open --</div>
+      </div>
+      <div class="calendar" id="calendarGrid">
+        <div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div>
+        <div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div>
+        <div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div>
+        <div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div><div class="calendar-day"></div>
+        <div class="calendar-day"></div><div class="calendar-day"></div><div class="calendar-day"></div>
+        <div class="calendar-day"></div><div class="calendar-day"></div><div class="calendar-day"></div>
+        <div class="calendar-day"></div><div class="calendar-day x-mark"></div><div class="calendar-day x-mark"></div>
+        <div class="calendar-day x-mark"></div>
+      </div>
+    </div>
+    <div class="quote-overlay" id="quoteStruggle">
+      "We sold 12 cups our first week.<br>We gave away twice that."
+    </div>
+  </div>
+
+  <!-- ===== SCENE 3: The Breakthrough (15s-22s) ===== -->
+  <div class="composition scene-breakthrough"
+       data-composition-id="scene-3-breakthrough"
+       data-start="15"
+       data-duration="7"
+       data-track-index="3">
+    <div class="newspaper" id="newspaper">
+      <h3>Best Coffee<br>in the Valley</h3>
+      <div class="dateline">July 2015</div>
+    </div>
+    <div class="storefront-reveal" id="storefrontReveal"></div>
+  </div>
+
+  <!-- ===== SCENE 4: The Community (22s-30s) ===== -->
+  <div class="composition scene-community"
+       data-composition-id="scene-4-community"
+       data-start="22"
+       data-duration="8"
+       data-track-index="4">
+    <div class="community-photos">
+      <div class="community-photo" id="photo1" style="transform: rotate(-3deg);"></div>
+      <div class="community-photo" id="photo2" style="transform: rotate(2deg);"></div>
+      <div class="community-photo" id="photo3" style="transform: rotate(-1deg);"></div>
+      <div class="community-photo" id="photo4" style="transform: rotate(1.5deg);"></div>
+    </div>
+    <div class="map-pins">
+      <div class="map-pin" id="pin1"></div>
+      <div class="map-pin" id="pin2"></div>
+      <div class="map-pin" id="pin3"></div>
+      <div class="map-pin" id="pin4"></div>
+      <div class="map-pin" id="pin5"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 5: The Impact (30s-38s) ===== -->
+  <div class="composition scene-impact"
+       data-composition-id="scene-5-impact"
+       data-start="30"
+       data-duration="8"
+       data-track-index="5">
+    <div class="impact-numbers">
+      <div class="impact-card" id="impactCard1">
+        <span class="number" id="counter1">0</span>
+        <span class="label">Stores Nationwide</span>
+      </div>
+      <div class="impact-card" id="impactCard2">
+        <span class="number" id="counter2">0</span>
+        <span class="label">Farmers Partnered</span>
+      </div>
+      <div class="impact-card" id="impactCard3">
+        <span class="number" id="counter3">0</span>
+        <span class="label">Cups Daily</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 6: The Future (38s-45s) ===== -->
+  <div class="composition scene-future"
+       data-composition-id="scene-6-future"
+       data-start="38"
+       data-duration="7"
+       data-track-index="6">
+    <div class="logo-wordmark" id="logoWordmark">
+      AT<span class="accent">L</span>AS COFFEE
+    </div>
+    <div class="tagline" id="tagline">From Garage to Nationwide</div>
+    <div class="final-line" id="finalLine">The next chapter starts with you.</div>
+  </div>
+
+</div>
+
+<!-- ===== GSAP from CDN ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<script>
+  (function() {
+    // ===== Master Timeline =====
+    const tl = gsap.timeline({ paused: false });
+
+    // ===== Scene references =====
+    const scene1 = document.querySelector('[data-composition-id="scene-1-beginning"]');
+    const scene2 = document.querySelector('[data-composition-id="scene-2-struggle"]');
+    const scene3 = document.querySelector('[data-composition-id="scene-3-breakthrough"]');
+    const scene4 = document.querySelector('[data-composition-id="scene-4-community"]');
+    const scene5 = document.querySelector('[data-composition-id="scene-5-impact"]');
+    const scene6 = document.querySelector('[data-composition-id="scene-6-future"]');
+
+    const letterboxTop = document.getElementById('letterboxTop');
+    const letterboxBottom = document.getElementById('letterboxBottom');
+    const lightLeak = document.getElementById('lightLeak');
+
+    // ===== Helper: Crossfade between two compositions =====
+    function crossfade(fromEl, toEl, duration) {
+      if (fromEl) {
+        gsap.to(fromEl, { opacity: 0, duration: duration, ease: 'power2.inOut' });
+      }
+      if (toEl) {
+        gsap.set(toEl, { opacity: 1 });
+      }
+    }
+
+    // ===== SCENE 1: The Beginning (0s -- 8s) =====
+    tl.set(scene1, { opacity: 1 }, 0);
+
+    // Ken Burns push-in on garage photo
+    tl.fromTo('#garagePhoto',
+      { scale: 0.85, transformOrigin: '50% 50%' },
+      { scale: 1.0, duration: 8, ease: 'power1.out' },
+      0
+    );
+
+    // Light bulb warm glow-on
+    tl.fromTo('.light-bulb',
+      { opacity: 0.3, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' },
+      0.3
+    );
+
+    // Beans scatter in
+    tl.fromTo('#coffeeBeans .bean',
+      { opacity: 0, y: 40, scale: 0.6 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.08, ease: 'back.out(1.5)' },
+      1.5
+    );
+
+    // Founding year fades in
+    tl.fromTo('#foundingYear',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' },
+      3
+    );
+
+    // Letterbox bars appear for cinematic feel
+    tl.to([letterboxTop, letterboxBottom],
+      { opacity: 1, duration: 1.5, ease: 'power2.in' },
+      5.5
+    );
+
+    // Light leak sweep
+    tl.fromTo('#lightLeak',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.8, ease: 'power2.in' },
+      6.5
+    );
+    tl.to('#lightLeak',
+      { opacity: 0, duration: 0.8, ease: 'power2.out' },
+      7.4
+    );
+
+    // Crossfade to scene 2
+    tl.call(() => crossfade(scene1, scene2, 0.8), null, 7.5);
+    tl.set(scene1, { opacity: 0 }, 8.3);
+
+    // ===== SCENE 2: The Struggle (8s -- 15s) =====
+    tl.set(scene2, { opacity: 1 }, 8);
+    tl.set('#quoteStruggle', { opacity: 0 }, 8);
+
+    // Hand-painted sign slides in from left
+    tl.fromTo('#handSign',
+      { opacity: 0, x: -120, rotate: -5 },
+      { opacity: 1, x: 0, rotate: 0, duration: 1, ease: 'power2.out' },
+      8.2
+    );
+
+    // Calendar X-marks stagger in
+    tl.fromTo('#calendarGrid .calendar-day.x-mark',
+      { opacity: 0, scale: 0.5 },
+      { opacity: 1, scale: 1, duration: 0.35, stagger: 0.12, ease: 'back.out(1.4)' },
+      9
+    );
+
+    // Quote types on
+    tl.fromTo('#quoteStruggle',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1.8, ease: 'power2.out' },
+      11.5
+    );
+
+    // Crossfade to scene 3
+    tl.call(() => crossfade(scene2, scene3, 0.7), null, 14.3);
+    tl.set(scene2, { opacity: 0 }, 15);
+
+    // ===== SCENE 3: The Breakthrough (15s -- 22s) =====
+    tl.set(scene3, { opacity: 1 }, 15);
+
+    // Newspaper enters with scale + slight rotation
+    tl.fromTo('#newspaper',
+      { opacity: 0, scale: 0.6, rotate: -8, y: 100 },
+      { opacity: 1, scale: 1, rotate: 0, y: 0, duration: 1.2, ease: 'power3.out' },
+      15.2
+    );
+
+    // Storefront reveal fades in behind
+    tl.fromTo('#storefrontReveal',
+      { opacity: 0 },
+      { opacity: 1, duration: 1.5, ease: 'power2.in' },
+      17.5
+    );
+
+    // Light leak for transition
+    tl.fromTo('#lightLeak',
+      { opacity: 0 },
+      { opacity: 0.8, duration: 0.5, ease: 'power2.in' },
+      21
+    );
+
+    // Crossfade to scene 4
+    tl.call(() => crossfade(scene3, scene4, 0.6), null, 21.4);
+    tl.set(scene3, { opacity: 0 }, 22);
+    tl.to('#lightLeak', { opacity: 0, duration: 0.5 }, 22);
+
+    // ===== SCENE 4: The Community (22s -- 30s) =====
+    tl.set(scene4, { opacity: 1 }, 22);
+
+    // Photos stagger fade-in with slight rotation
+    tl.fromTo(['#photo1', '#photo2', '#photo3', '#photo4'],
+      { opacity: 0, y: 50, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.3, ease: 'power2.out' },
+      22.3
+    );
+
+    // Map pins drop with bounce
+    tl.fromTo(['#pin1', '#pin2', '#pin3', '#pin4', '#pin5'],
+      { opacity: 0, y: -40, scale: 0.5 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.25, ease: 'back.out(2)' },
+      24.5
+    );
+
+    // Warm light leak
+    tl.fromTo('#lightLeak',
+      { opacity: 0 },
+      { opacity: 0.5, duration: 1, ease: 'sine.inOut' },
+      26
+    );
+    tl.to('#lightLeak', { opacity: 0, duration: 1.5 }, 28);
+
+    // Crossfade to scene 5
+    tl.call(() => crossfade(scene4, scene5, 0.6), null, 29.4);
+    tl.set(scene4, { opacity: 0 }, 30);
+
+    // ===== SCENE 5: The Impact (30s -- 38s) =====
+    tl.set(scene5, { opacity: 1 }, 30);
+
+    // Impact cards stagger reveal
+    tl.fromTo(['#impactCard1', '#impactCard2', '#impactCard3'],
+      { opacity: 0, y: 60, scale: 0.8 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.35, ease: 'back.out(1.7)' },
+      30.3
+    );
+
+    // Counter animations
+    const counterTargets = [
+      { el: '#counter1', target: 100, suffix: '+' },
+      { el: '#counter2', target: 50000, suffix: '+' },
+      { el: '#counter3', target: 1, suffix: 'M+' }
+    ];
+
+    counterTargets.forEach((ct, i) => {
+      const obj = { val: 0 };
+      tl.to(obj,
+        {
+          val: ct.target,
+          duration: 2,
+          ease: 'power2.out',
+          onUpdate: function() {
+            const el = document.querySelector(ct.el);
+            if (el) {
+              el.textContent = Math.round(obj.val).toLocaleString() + ct.suffix;
+            }
+          }
+        },
+        31 + i * 0.35
+      );
+    });
+
+    // Letterbox reappears for drama
+    tl.to([letterboxTop, letterboxBottom],
+      { opacity: 1, duration: 1, ease: 'power2.in' },
+      35
+    );
+
+    // Crossfade to scene 6
+    tl.call(() => crossfade(scene5, scene6, 0.8), null, 37.3);
+    tl.set(scene5, { opacity: 0 }, 38);
+
+    // ===== SCENE 6: The Future (38s -- 45s) =====
+    tl.set(scene6, { opacity: 1 }, 38);
+
+    // Logo scales up
+    tl.fromTo('#logoWordmark',
+      { opacity: 0, scale: 0.8, y: 30 },
+      { opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'power3.out' },
+      38.3
+    );
+
+    // Tagline types on
+    tl.fromTo('#tagline',
+      { opacity: 0, y: 20, letterSpacing: '12px' },
+      { opacity: 1, y: 0, letterSpacing: '6px', duration: 1, ease: 'power2.out' },
+      39.5
+    );
+
+    // Final line
+    tl.fromTo('#finalLine',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+      41
+    );
+
+    // Fade to black
+    tl.to('#hyperframes-canvas',
+      { opacity: 0, duration: 1.5, ease: 'power2.in' },
+      43.5
+    );
+
+    // ===== Frame adapter for HyperFrames =====
+    window.__hf_gsap = function(composition, currentTime) {
+      tl.time(currentTime);
+    };
+
+    // Auto-advance for standalone preview (remove in HyperFrames render)
+    let previewTime = 0;
+    const previewInterval = setInterval(function() {
+      previewTime += 1/30;
+      if (previewTime <= 45) {
+        tl.time(previewTime);
+      } else {
+        clearInterval(previewInterval);
+      }
+    }, 1000/30);
+
+  })();
+</script>
+
+</body>
+</html>

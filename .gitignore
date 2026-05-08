@@ -1,0 +1,7 @@
+node_modules/
+output/
+*.mp4
+*.mov
+.hyperframes/
+.DS_Store
+Thumbs.db

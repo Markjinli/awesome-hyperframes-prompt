@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080,height=1920">
+<title>Instagram Story Ad — Glow Skin</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+  :root {
+    --cream: #F8E8E0;
+    --gold: #D4A574;
+    --gold-shimmer: #C8A882;
+    --text-dark: #3A2E2A;
+    --text-white: #FFFFFF;
+    --badge-bg: rgba(212, 165, 116, 0.12);
+    --card-shadow: 0 8px 40px rgba(58, 46, 42, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: var(--cream);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Composition Container === */
+  .composition {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === Scene 1: Brand Intro (0–4s) === */
+  #scene1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    gap: 20px;
+  }
+
+  #scene1 .ornament-line {
+    width: 120px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+    opacity: 0.7;
+  }
+
+  #scene1 .brand-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 2px;
+    line-height: 1.2;
+    position: relative;
+  }
+
+  #scene1 .tagline {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  #scene1 .shimmer {
+    position: absolute;
+    top: -10%;
+    left: -20%;
+    width: 60%;
+    height: 140%;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.4) 45%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.4) 55%,
+      transparent 60%
+    );
+    pointer-events: none;
+    transform: skewX(-20deg);
+  }
+
+  /* === Scene 2: Product Hero (4–10s) === */
+  #scene2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--cream) 0%, #EFD5C3 100%);
+    gap: 40px;
+    padding: 200px 80px 160px;
+  }
+
+  #scene2 .product-label {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+
+  #scene2 .product-bottle {
+    width: 320px;
+    height: 480px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,232,224,0.95) 100%);
+    border-radius: 60px 60px 40px 40px;
+    box-shadow: 0 20px 60px rgba(58, 46, 42, 0.12), 0 0 0 1px rgba(212, 165, 116, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    text-align: center;
+    line-height: 1.3;
+    position: relative;
+  }
+
+  #scene2 .product-bottle::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 66px 66px 46px 46px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  #scene2 .product-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: center;
+  }
+
+  #scene2 .badge-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #scene2 .benefit-badge {
+    padding: 12px 28px;
+    background: var(--badge-bg);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+  }
+
+  /* === Scene 3: Social Proof / Review (10–14s) === */
+  #scene3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    gap: 28px;
+    padding: 200px 100px;
+  }
+
+  #scene3 .stars-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  #scene3 .star {
+    font-size: 56px;
+    color: var(--gold);
+    display: inline-block;
+  }
+
+  #scene3 .review-quote {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 760px;
+  }
+
+  #scene3 .review-attribution {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  #scene3 .review-badge {
+    margin-top: 12px;
+    padding: 10px 24px;
+    background: rgba(212, 165, 116, 0.1);
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  /* === Scene 4: CTA Outro (14–15s) === */
+  #scene4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--gold) 100%);
+    gap: 32px;
+  }
+
+  #scene4 .swipe-hint {
+    font-size: 22px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 1px;
+  }
+
+  #scene4 .swipe-arrow {
+    font-size: 40px;
+    color: var(--text-white);
+  }
+
+  #scene4 .cta-button {
+    padding: 22px 72px;
+    background: var(--text-white);
+    color: var(--text-dark);
+    font-size: 28px;
+    font-weight: 700;
+    border-radius: 60px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 32px rgba(58, 46, 42, 0.15);
+  }
+
+  #scene4 .cta-glow {
+    position: absolute;
+    width: 340px;
+    height: 80px;
+    border-radius: 60px;
+    background: transparent;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+  }
+
+  #scene4 .brand-logo-small {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 2px;
+  }
+
+  /* === Sparkle particles (Scene 3) === */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--gold-shimmer);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Scene 1: Brand Intro ===== -->
+<div id="scene1" class="composition"
+     data-composition-id="scene1-brand"
+     data-start="0"
+     data-duration="4"
+     data-track-index="1">
+  <div class="ornament-line" id="ornament-top"></div>
+  <div class="brand-name" id="brand-name">
+    GLOW SKIN
+    <div class="shimmer" id="shimmer"></div>
+  </div>
+  <div class="tagline" id="tagline">Radiance, naturally.</div>
+  <div class="ornament-line" id="ornament-bottom"></div>
+</div>
+
+<!-- ===== Scene 2: Product Hero ===== -->
+<div id="scene2" class="composition"
+     data-composition-id="scene2-product"
+     data-start="4"
+     data-duration="6"
+     data-track-index="1">
+  <div class="product-label" id="product-label">Our Best-Seller</div>
+  <div class="product-bottle" id="product-bottle">Vitamin C<br>Serum</div>
+  <div class="product-name" id="product-name">Vitamin C Serum</div>
+  <div class="badge-row" id="badge-row">
+    <span class="benefit-badge badge-1">Brightens</span>
+    <span class="benefit-badge badge-2">Hydrates</span>
+    <span class="benefit-badge badge-3">Protects</span>
+  </div>
+</div>
+
+<!-- ===== Scene 3: Social Proof ===== -->
+<div id="scene3" class="composition"
+     data-composition-id="scene3-review"
+     data-start="10"
+     data-duration="4"
+     data-track-index="1">
+  <div class="stars-row" id="stars-row">
+    <span class="star star-1">★</span>
+    <span class="star star-2">★</span>
+    <span class="star star-3">★</span>
+    <span class="star star-4">★</span>
+    <span class="star star-5">★</span>
+  </div>
+  <div class="review-quote" id="review-quote">"My skin has never felt this good"</div>
+  <div class="review-attribution" id="review-attribution">— Sarah, verified buyer</div>
+  <div class="review-badge" id="review-badge">4.9 ★  2,000+ reviews</div>
+</div>
+
+<!-- ===== Scene 4: CTA Outro ===== -->
+<div id="scene4" class="composition"
+     data-composition-id="scene4-cta"
+     data-start="14"
+     data-duration="1"
+     data-track-index="1">
+  <div class="cta-glow" id="cta-glow"></div>
+  <div class="swipe-hint" id="swipe-hint">Swipe Up</div>
+  <div class="swipe-arrow" id="swipe-arrow">↑</div>
+  <div class="cta-button" id="cta-button">Shop Now</div>
+  <div class="brand-logo-small" id="brand-logo-small">GLOW SKIN</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function setupTimeline(masterTL) {
+
+    // ==========================================================
+    // Scene 1: Brand Intro (0–4s)
+    // ==========================================================
+    const tl1 = gsap.timeline();
+
+    // Brand name fade-up
+    tl1.fromTo('#brand-name',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+      0
+    );
+
+    // Ornament lines draw in
+    tl1.fromTo('#ornament-top',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 0.7, duration: 0.6, ease: 'power2.inOut' },
+      0.3
+    );
+    tl1.fromTo('#ornament-bottom',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 0.7, duration: 0.6, ease: 'power2.inOut' },
+      0.4
+    );
+
+    // Tagline follows
+    tl1.fromTo('#tagline',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+      0.8
+    );
+
+    // Shimmer sweep across brand name
+    tl1.fromTo('#shimmer',
+      { x: '-120%' },
+      { x: '220%', duration: 0.7, ease: 'power2.inOut' },
+      2.5
+    );
+
+    // Gentle scale breath on brand name
+    tl1.to('#brand-name', {
+      scale: 1.02,
+      duration: 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: 1
+    }, 1.2);
+
+    // Scene exit
+    tl1.to('#scene1', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 3.4);
+
+    masterTL.add(tl1, 0);
+
+
+    // ==========================================================
+    // Scene 2: Product Hero (4–10s)
+    // ==========================================================
+    const tl2 = gsap.timeline();
+
+    // Crossfade in
+    tl2.set('#scene2', { opacity: 0 }, 0);
+    tl2.to('#scene2', { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0);
+
+    // Product label
+    tl2.fromTo('#product-label',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      0.3
+    );
+
+    // Product bottle scale-in
+    tl2.fromTo('#product-bottle',
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.7, ease: 'power2.out' },
+      0.5
+    );
+
+    // Continuous gentle float
+    tl2.to('#product-bottle', {
+      y: -6,
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 1.2);
+
+    // Product name
+    tl2.fromTo('#product-name',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      1.2
+    );
+
+    // Benefit badges stagger
+    tl2.fromTo('.benefit-badge',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.2, ease: 'power2.out' },
+      1.6
+    );
+
+    // Scene exit
+    tl2.to('#scene2', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 5.4);
+
+    masterTL.add(tl2, 4);
+
+
+    // ==========================================================
+    // Scene 3: Social Proof (10–14s)
+    // ==========================================================
+    const tl3 = gsap.timeline();
+
+    // Crossfade in
+    tl3.set('#scene3', { opacity: 0 }, 0);
+    tl3.to('#scene3', { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0);
+
+    // Stars pop in sequentially
+    tl3.fromTo('.star',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.3, stagger: 0.1, ease: 'back.out(2)' },
+      0.3
+    );
+
+    // Review quote fade-up
+    tl3.fromTo('#review-quote',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+      1.2
+    );
+
+    // Attribution
+    tl3.fromTo('#review-attribution',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, ease: 'power2.out' },
+      1.8
+    );
+
+    // Review badge
+    tl3.fromTo('#review-badge',
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      2.2
+    );
+
+    // Sparkle particles (subtle)
+    for (let i = 0; i < 8; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = (20 + Math.random() * 60) + '%';
+      sparkle.style.top = (20 + Math.random() * 60) + '%';
+      document.querySelector('#scene3').appendChild(sparkle);
+
+      tl3.fromTo(sparkle,
+        { opacity: 0, scale: 0 },
+        { opacity: 0.6, scale: 1, duration: 0.3, ease: 'back.out(1.7)' },
+        1 + Math.random() * 1.5
+      );
+      tl3.to(sparkle,
+        { opacity: 0, duration: 0.8, ease: 'power2.in' },
+        2.5 + Math.random() * 1
+      );
+    }
+
+    // Scene exit
+    tl3.to('#scene3', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 3.5);
+
+    masterTL.add(tl3, 10);
+
+
+    // ==========================================================
+    // Scene 4: CTA Outro (14–15s)
+    // ==========================================================
+    const tl4 = gsap.timeline();
+
+    tl4.set('#scene4', { opacity: 0 }, 0);
+    tl4.to('#scene4', { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0);
+
+    // Swipe hint
+    tl4.fromTo('#swipe-hint',
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+      0.1
+    );
+
+    // Arrow bounce
+    tl4.fromTo('#swipe-arrow',
+      { opacity: 0, y: -4 },
+      { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+      0.15
+    );
+    tl4.to('#swipe-arrow', {
+      y: -10,
+      duration: 0.4,
+      repeat: 1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 0.35);
+
+    // CTA button
+    tl4.fromTo('#cta-button',
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' },
+      0.25
+    );
+
+    // Gentle pulse
+    tl4.to('#cta-button', {
+      scale: 1.03,
+      duration: 0.6,
+      repeat: 1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 0.65);
+
+    // Glow pulse
+    tl4.to('#cta-glow', {
+      opacity: 0.5,
+      duration: 0.5,
+      repeat: 1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 0.65);
+
+    // Brand logo
+    tl4.fromTo('#brand-logo-small',
+      { opacity: 0 },
+      { opacity: 0.7, duration: 0.3, ease: 'power2.out' },
+      0.4
+    );
+
+    masterTL.add(tl4, 14);
+
+    return masterTL;
+  }
+
+  // ============================================================
+  // Master Timeline
+  // ============================================================
+  const master = gsap.timeline({ paused: true });
+  setupTimeline(master);
+
+  if (typeof window.__hf_registerTimeline === 'function') {
+    window.__hf_registerTimeline(master);
+  } else {
+    master.play();
+  }
+})();
+</script>
+
+</body>
+</html>

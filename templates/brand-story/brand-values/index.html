@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReForm -- Brand Values Manifesto</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --color-forest: #2D4A22;
+    --color-sage: #8CB369;
+    --color-warm-white: #FBF7F4;
+    --color-pine: #1A3A14;
+    --color-divider: rgba(140,179,105,0.3);
+    --font-sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap');
+
+  body {
+    background: #000;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #hyperframes-canvas {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--color-warm-white);
+  }
+
+  .composition {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== Organic Blob Decorations ===== */
+  .blob {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0;
+  }
+
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: rgba(140,179,105,0.06);
+    border-radius: 60% 40% 70% 30% / 50% 40% 60% 50%;
+    top: -120px; right: -100px;
+  }
+
+  .blob-2 {
+    width: 350px; height: 350px;
+    background: rgba(45,74,34,0.04);
+    border-radius: 40% 60% 30% 70% / 60% 30% 50% 40%;
+    bottom: -80px; left: -60px;
+  }
+
+  .blob-3 {
+    width: 280px; height: 280px;
+    background: rgba(140,179,105,0.07);
+    border-radius: 30% 70% 50% 50% / 50% 40% 60% 50%;
+    top: 50%; left: 10%;
+    transform: translateY(-50%);
+  }
+
+  /* ===== Value Word (shared) ===== */
+  .value-word {
+    font-family: var(--font-sans);
+    font-size: 120px;
+    font-weight: 800;
+    color: var(--color-forest);
+    letter-spacing: -4px;
+    line-height: 1;
+    text-align: center;
+    z-index: 2;
+    opacity: 0;
+  }
+
+  .value-description {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--color-pine);
+    line-height: 1.6;
+    text-align: center;
+    max-width: 700px;
+    z-index: 2;
+    opacity: 0;
+    margin-top: 16px;
+  }
+
+  .value-stat {
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-sage);
+    letter-spacing: 0.5px;
+    text-align: center;
+    z-index: 2;
+    opacity: 0;
+    margin-top: 12px;
+  }
+
+  /* ===== Scene 1: Sustainability (Split Screen) ===== */
+  .scene-sustainability {
+    background: var(--color-warm-white);
+    overflow: hidden;
+  }
+
+  .split-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 0;
+  }
+
+  .split-left, .split-right {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: flex 0.8s ease;
+  }
+
+  .split-left {
+    background: linear-gradient(135deg, #e0e0e0 0%, #b0b0b0 100%);
+    filter: saturate(0.3) brightness(0.7);
+    border-right: 2px solid var(--color-sage);
+  }
+
+  .split-right {
+    background: linear-gradient(160deg, #FBF7F4 0%, #e8f0e0 100%);
+    overflow: hidden;
+  }
+
+  .split-label {
+    position: absolute;
+    top: 40px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  .split-left .split-label { color: #666; }
+  .split-right .split-label { color: var(--color-sage); }
+
+  .factory-icon, .eco-icon {
+    font-size: 80px;
+    opacity: 0.3;
+  }
+
+  /* ===== Scene 2: Transparency ===== */
+  .scene-transparency {
+    background: var(--color-warm-white);
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .supply-chain {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .chain-node {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--color-warm-white);
+    border: 3px solid var(--color-divider);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-pine);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.6s ease;
+    opacity: 0.5;
+    position: relative;
+  }
+
+  .chain-node.lit {
+    border-color: var(--color-sage);
+    background: rgba(140,179,105,0.1);
+    box-shadow: 0 0 30px rgba(140,179,105,0.25);
+    opacity: 1;
+  }
+
+  .chain-connector {
+    width: 140px;
+    height: 3px;
+    background: var(--color-divider);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chain-connector::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 100%;
+    background: var(--color-sage);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .chain-connector.lit::after {
+    transform: scaleX(1);
+    transition: transform 1s ease;
+  }
+
+  /* ===== Scene 3: Quality ===== */
+  .scene-quality {
+    background: var(--color-warm-white);
+    overflow: hidden;
+  }
+
+  .quality-compare {
+    display: flex;
+    gap: 0;
+    border: 2px solid var(--color-divider);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(26,58,20,0.08);
+    z-index: 2;
+  }
+
+  .quality-left, .quality-right {
+    width: 380px;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .quality-left {
+    background: #f0ece8;
+  }
+
+  .quality-right {
+    background: var(--color-warm-white);
+  }
+
+  .quality-label-top {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--color-pine);
+  }
+
+  .wash-count {
+    font-family: var(--font-sans);
+    font-size: 60px;
+    font-weight: 800;
+    color: var(--color-forest);
+    line-height: 1;
+  }
+
+  .garment-visual {
+    width: 200px;
+    height: 240px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .garment-fast {
+    background: linear-gradient(135deg, #ccc, #999);
+    position: relative;
+  }
+
+  .garment-fast::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0,0,0,0.08) 6px, rgba(0,0,0,0.08) 7px);
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .garment-fast.torn::after { opacity: 1; }
+
+  .garment-reform {
+    background: linear-gradient(135deg, var(--color-sage), var(--color-forest));
+  }
+
+  /* ===== Scene 4: Community ===== */
+  .scene-community {
+    background: var(--color-warm-white);
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    z-index: 2;
+  }
+
+  .portrait {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(140,179,105,0.2), rgba(45,74,34,0.1));
+    border: 2px solid var(--color-divider);
+    opacity: 0;
+    transform: scale(0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
+
+  /* ===== Scene 5: Future ===== */
+  .scene-future {
+    background: var(--color-warm-white);
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .logo-reform {
+    font-family: var(--font-sans);
+    font-size: 80px;
+    font-weight: 700;
+    opacity: 0;
+  }
+
+  .logo-reform .re-text { color: var(--color-sage); }
+  .logo-reform .form-text { color: var(--color-pine); }
+
+  .stats-ticker {
+    position: absolute;
+    bottom: 60px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    z-index: 2;
+  }
+
+  .stat-pill {
+    padding: 12px 28px;
+    border-radius: 100px;
+    background: rgba(140,179,105,0.08);
+    border: 1px solid var(--color-divider);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-pine);
+    opacity: 0;
+  }
+
+  .final-tagline {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--color-forest);
+    opacity: 0;
+    z-index: 2;
+  }
+
+  /* ===== Thin Divider Utility ===== */
+  .thin-divider {
+    width: 80px;
+    height: 2px;
+    background: var(--color-divider);
+    margin: 0 auto;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="hyperframes-canvas">
+
+  <!-- ===== SCENE 1: Sustainability (0s-6s) ===== -->
+  <div class="composition scene-sustainability active"
+       data-composition-id="scene-1-sustainability"
+       data-start="0" data-duration="6" data-track-index="1">
+    <div class="split-container" id="splitContainer">
+      <div class="split-left" id="splitLeft">
+        <span class="split-label">Conventional</span>
+        <span class="factory-icon">&#127981;</span>
+      </div>
+      <div class="split-right" id="splitRight">
+        <span class="split-label">ReForm Way</span>
+        <span class="eco-icon">&#127793;</span>
+      </div>
+    </div>
+    <h1 class="value-word" id="wordSustainability">SUSTAINABILITY</h1>
+    <p class="value-description" id="descSustainability">78% less water. 62% less carbon. 100% more future.</p>
+    <div class="blob blob-1" id="blob1"></div>
+  </div>
+
+  <!-- ===== SCENE 2: Transparency (6s-12s) ===== -->
+  <div class="composition scene-transparency"
+       data-composition-id="scene-2-transparency"
+       data-start="6" data-duration="6" data-track-index="2">
+    <div class="supply-chain">
+      <div class="chain-node" id="node1">Seed</div>
+      <div class="chain-connector" id="conn1"></div>
+      <div class="chain-node" id="node2">Farm</div>
+      <div class="chain-connector" id="conn2"></div>
+      <div class="chain-node" id="node3">Mill</div>
+      <div class="chain-connector" id="conn3"></div>
+      <div class="chain-node" id="node4">Studio</div>
+      <div class="chain-connector" id="conn4"></div>
+      <div class="chain-node" id="node5">You</div>
+    </div>
+    <h1 class="value-word" id="wordTransparency">TRANSPARENCY</h1>
+    <p class="value-description" id="descTransparency">From seed to stitch. Every step visible.</p>
+    <div class="blob blob-2" id="blob2"></div>
+  </div>
+
+  <!-- ===== SCENE 3: Quality (12s-18s) ===== -->
+  <div class="composition scene-quality"
+       data-composition-id="scene-3-quality"
+       data-start="12" data-duration="6" data-track-index="3">
+    <div class="quality-compare" id="qualityCompare">
+      <div class="quality-left" id="qualityLeft">
+        <span class="quality-label-top">Fast Fashion</span>
+        <span class="wash-count" id="washFast">5</span>
+        <span style="font-size:14px;color:#888;">washes</span>
+        <div class="garment-visual garment-fast" id="garmentFast"></div>
+      </div>
+      <div class="quality-right" id="qualityRight">
+        <span class="quality-label-top">ReForm</span>
+        <span class="wash-count" id="washReform">50</span>
+        <span style="font-size:14px;color:var(--color-sage);">washes</span>
+        <div class="garment-visual garment-reform" id="garmentReform"></div>
+      </div>
+    </div>
+    <h1 class="value-word" id="wordQuality">QUALITY</h1>
+    <p class="value-description" id="descQuality">Designed to last. Guaranteed for life.</p>
+    <div class="blob blob-3" id="blob3"></div>
+  </div>
+
+  <!-- ===== SCENE 4: Community (18s-24s) ===== -->
+  <div class="composition scene-community"
+       data-composition-id="scene-4-community"
+       data-start="18" data-duration="6" data-track-index="4">
+    <div class="portrait-grid" id="portraitGrid">
+      <div class="portrait">&#128103;</div><div class="portrait">&#128104;</div><div class="portrait">&#128105;</div><div class="portrait">&#128526;</div>
+      <div class="portrait">&#128522;</div><div class="portrait">&#129299;</div><div class="portrait">&#128512;</div><div class="portrait">&#129303;</div>
+      <div class="portrait">&#128588;</div><div class="portrait">&#128170;</div><div class="portrait">&#128131;</div><div class="portrait">&#129321;</div>
+      <div class="portrait">&#128111;</div><div class="portrait">&#128113;</div><div class="portrait">&#129309;</div><div class="portrait">&#128109;</div>
+    </div>
+    <h1 class="value-word" id="wordCommunity">COMMUNITY</h1>
+    <p class="value-stat" id="statCommunity">45,000+ members and growing</p>
+    <div class="blob blob-1" id="blob4"></div>
+  </div>
+
+  <!-- ===== SCENE 5: Future (24s-30s) ===== -->
+  <div class="composition scene-future"
+       data-composition-id="scene-5-future"
+       data-start="24" data-duration="6" data-track-index="5">
+    <h1 class="value-word" id="wordFuture">FUTURE</h1>
+    <div class="logo-reform" id="logoReform">
+      <span class="re-text">re</span><span class="form-text">form</span>
+    </div>
+    <div class="thin-divider" id="finalDivider"></div>
+    <div class="final-tagline" id="finalTagline">Wear the change.</div>
+    <div class="stats-ticker">
+      <span class="stat-pill" id="pill1">Net Zero by 2030</span>
+      <span class="stat-pill" id="pill2">Circular by Design</span>
+      <span class="stat-pill" id="pill3">100% Recyclable Packaging</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<script>
+  (function() {
+    const tl = gsap.timeline({ paused: false });
+
+    // Scene element references
+    const scene1 = document.querySelector('[data-composition-id="scene-1-sustainability"]');
+    const scene2 = document.querySelector('[data-composition-id="scene-2-transparency"]');
+    const scene3 = document.querySelector('[data-composition-id="scene-3-quality"]');
+    const scene4 = document.querySelector('[data-composition-id="scene-4-community"]');
+    const scene5 = document.querySelector('[data-composition-id="scene-5-future"]');
+
+    function crossfade(fromEl, toEl, dur) {
+      if (fromEl) gsap.to(fromEl, { opacity: 0, duration: dur, ease: 'power2.inOut' });
+      if (toEl) gsap.set(toEl, { opacity: 1 });
+    }
+
+    function setActive(scene) {
+      [scene1, scene2, scene3, scene4, scene5].forEach(s => {
+        if (s) s.style.opacity = (s === scene) ? '1' : '0';
+      });
+    }
+
+    // ===== SCENE 1: Sustainability (0s-6s) =====
+    tl.set(scene1, { opacity: 1 }, 0);
+
+    // Blob breaths in
+    tl.fromTo('#blob1', { opacity: 0, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' }, 0.3);
+
+    // Split screen divider slides in
+    tl.fromTo('#splitLeft', { flex: '0 0 50%' }, { flex: '0 0 50%', duration: 0.1 }, 0);
+
+    // At 2.5s: left side collapses, right expands
+    tl.to('#splitLeft', { flex: '0 0 0%', duration: 1, ease: 'power2.inOut' }, 2.5);
+    tl.to('#splitRight', { flex: '1 1 100%', duration: 1, ease: 'power2.inOut' }, 2.5);
+
+    // Word drops in with bounce
+    tl.fromTo('#wordSustainability',
+      { opacity: 0, y: -80, scale: 0.7 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 3.2);
+
+    // Description fades up
+    tl.fromTo('#descSustainability',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 3.8);
+
+    // Crossfade to scene 2
+    tl.call(() => crossfade(scene1, scene2, 0.6), null, 5.5);
+    tl.set(scene1, { opacity: 0 }, 6.1);
+
+    // ===== SCENE 2: Transparency (6s-12s) =====
+    tl.set(scene2, { opacity: 1 }, 6);
+
+    // Blob
+    tl.fromTo('#blob2', { opacity: 0, scale: 0.9 },
+      { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 6.2);
+
+    // Supply chain nodes light up sequentially
+    const nodes = ['#node1', '#node2', '#node3', '#node4', '#node5'];
+    const conns = ['#conn1', '#conn2', '#conn3', '#conn4'];
+
+    nodes.forEach((nodeId, i) => {
+      tl.call(() => {
+        const el = document.querySelector(nodeId);
+        if (el) el.classList.add('lit');
+      }, null, 6.5 + i * 0.65);
+    });
+
+    conns.forEach((connId, i) => {
+      tl.call(() => {
+        const el = document.querySelector(connId);
+        if (el) el.classList.add('lit');
+      }, null, 7.15 + i * 0.65);
+    });
+
+    // Word
+    tl.fromTo('#wordTransparency',
+      { opacity: 0, y: -60, scale: 0.75 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.5)' }, 9.5);
+
+    // Description
+    tl.fromTo('#descTransparency',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 10.2);
+
+    // Crossfade
+    tl.call(() => crossfade(scene2, scene3, 0.5), null, 11.5);
+    tl.set(scene2, { opacity: 0 }, 12);
+
+    // ===== SCENE 3: Quality (12s-18s) =====
+    tl.set(scene3, { opacity: 1 }, 12);
+
+    // Blob
+    tl.fromTo('#blob3', { opacity: 0 },
+      { opacity: 1, duration: 1, ease: 'power2.out' }, 12.2);
+
+    // Quality comparison enters
+    tl.fromTo('#qualityCompare',
+      { opacity: 0, y: 40, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out' }, 12.3);
+
+    // Fast fashion garment degrades
+    tl.to('#garmentFast', { opacity: 0.5, duration: 0.6 }, 13.8);
+    tl.call(() => {
+      const el = document.querySelector('#garmentFast');
+      if (el) el.classList.add('torn');
+    }, null, 13.8);
+
+    // Word
+    tl.fromTo('#wordQuality',
+      { opacity: 0, y: -60, scale: 0.7 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.4)' }, 15);
+
+    // Description
+    tl.fromTo('#descQuality',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 15.6);
+
+    // Crossfade
+    tl.call(() => crossfade(scene3, scene4, 0.5), null, 17.5);
+    tl.set(scene3, { opacity: 0 }, 18);
+
+    // ===== SCENE 4: Community (18s-24s) =====
+    tl.set(scene4, { opacity: 1 }, 18);
+
+    // Blob
+    tl.fromTo('#blob4', { opacity: 0, scale: 0.7 },
+      { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' }, 18.2);
+
+    // Portrait grid populates in wave
+    const portraits = document.querySelectorAll('#portraitGrid .portrait');
+    tl.fromTo(portraits,
+      { opacity: 0, scale: 0.5, y: 20 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.4, stagger: {
+        each: 0.08,
+        from: 'start',
+        grid: [4, 4],
+        axis: 'y'
+      }, ease: 'back.out(1.3)' },
+      18.5
+    );
+
+    // Word
+    tl.fromTo('#wordCommunity',
+      { opacity: 0, y: -40, scale: 0.8 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.3)' }, 21);
+
+    // Stat
+    tl.fromTo('#statCommunity',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 21.5);
+
+    // Blob continuous breathing
+    tl.to('#blob4', {
+      scale: 1.05,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 22);
+
+    // Crossfade
+    tl.call(() => crossfade(scene4, scene5, 0.6), null, 23.5);
+    tl.set(scene4, { opacity: 0 }, 24.1);
+
+    // ===== SCENE 5: Future (24s-30s) =====
+    tl.set(scene5, { opacity: 1 }, 24);
+
+    // Word
+    tl.fromTo('#wordFuture',
+      { opacity: 0, y: -50, scale: 0.8 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.3)' }, 24.3);
+
+    // Logo
+    tl.fromTo('#logoReform',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 25.2);
+
+    // Divider
+    tl.fromTo('#finalDivider',
+      { opacity: 0, scaleX: 0 },
+      { opacity: 1, scaleX: 1, duration: 0.6, ease: 'power2.out' }, 25.8);
+
+    // Tagline
+    tl.fromTo('#finalTagline',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 26.4);
+
+    // Stats pills stagger in
+    tl.fromTo(['#pill1', '#pill2', '#pill3'],
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.35, ease: 'power2.out' }, 27.2);
+
+    // Fade to white
+    tl.to('#hyperframes-canvas',
+      { backgroundColor: '#FFFFFF', duration: 0.8, ease: 'power2.in' }, 29.2);
+
+    // Frame adapter
+    window.__hf_gsap = function(composition, currentTime) {
+      tl.time(currentTime);
+    };
+
+    // Standalone preview auto-advance
+    let pt = 0;
+    const iv = setInterval(function() {
+      pt += 1/30;
+      if (pt <= 30) tl.time(pt);
+      else clearInterval(iv);
+    }, 1000/30);
+
+  })();
+</script>
+
+</body>
+</html>

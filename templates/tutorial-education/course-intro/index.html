@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastering React 2026 — Course Intro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #1E293B;
+      --bg-secondary: #0F172A;
+      --bg-card: rgba(30, 41, 59, 0.9);
+      --accent: #3B82F6;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --highlight: #F59E0B;
+      --highlight-soft: rgba(245, 158, 11, 0.15);
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border-subtle: rgba(59, 130, 246, 0.15);
+      --border-card: rgba(59, 130, 246, 0.2);
+      --success: #22C55E;
+      --font-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow: hidden;
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+    }
+
+    /* ========== CANVAS / SCENE CONTAINER ========== */
+    .hf-canvas {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-primary);
+    }
+
+    .hf-scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .hf-scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ========== GRID OVERLAY (global) ========== */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ========== SCENE 1: HOOK QUESTION ========== */
+    .hook-container {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .hook-word {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 12px;
+      opacity: 0;
+      transform: scale(1.15);
+    }
+
+    .hook-accent-line {
+      width: 0px;
+      height: 2px;
+      background: var(--highlight);
+      margin: 24px auto 0;
+      border-radius: 1px;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 3px;
+      height: 56px;
+      background: var(--highlight);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: cursor-blink 0.8s step-end infinite;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ========== SCENE 2: COURSE OVERVIEW ========== */
+    .overview-wrapper {
+      width: 1200px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .overview-headline {
+      font-family: var(--font-sans);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 48px;
+      opacity: 0;
+    }
+
+    .curriculum-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+
+    .module-card {
+      background: rgba(59, 130, 246, 0.06);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .module-card:hover {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px 0 0 4px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .module-card:hover::before { opacity: 1; }
+
+    .module-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .module-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      font-family: var(--font-sans);
+    }
+
+    .module-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ========== SCENE 3: INSTRUCTOR INTRO ========== */
+    .instructor-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .instructor-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      opacity: 0;
+    }
+
+    .instructor-photo-inner {
+      font-family: var(--font-sans);
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      opacity: 0;
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.6; }
+      100% { transform: scale(1.08); opacity: 0; }
+    }
+
+    .instructor-info {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+
+    .instructor-name {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .instructor-title {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .instructor-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: inline-block;
+      padding: 8px 18px;
+      background: var(--highlight-soft);
+      color: var(--highlight);
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 20px;
+      opacity: 0;
+    }
+
+    /* ========== SCENE 4: CTA ========== */
+    .cta-wrapper {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .cta-urgency {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--highlight);
+      margin-bottom: 28px;
+      opacity: 0;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 20px 48px;
+      background: var(--accent);
+      color: var(--text-primary);
+      font-size: 24px;
+      font-weight: 700;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      opacity: 0;
+      box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .cta-button.glow {
+      animation: button-glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes button-glow {
+      0%, 100% { box-shadow: 0 0 0 rgba(59, 130, 246, 0); }
+      50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+    }
+
+    .cta-url {
+      margin-top: 32px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: var(--text-muted);
+      opacity: 0;
+    }
+
+    /* ========== FAKE CODE EDITOR (decorative) ========== */
+    .code-editor-visual {
+      position: absolute;
+      top: 80px;
+      right: 80px;
+      width: 420px;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .code-editor-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+    }
+
+    .editor-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .editor-dot.red { background: #F43F5E; }
+    .editor-dot.yellow { background: #F59E0B; }
+    .editor-dot.green { background: #22C55E; }
+
+    .editor-filename {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 12px;
+    }
+
+    .code-editor-body {
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .code-editor-body .keyword { color: #C084FC; }
+    .code-editor-body .function { color: #60A5FA; }
+    .code-editor-body .string { color: #34D399; }
+    .code-editor-body .comment { color: #64748B; font-style: italic; }
+    .code-editor-body .jsx { color: #F59E0B; }
+    .code-editor-body .prop { color: #38BDF8; }
+  </style>
+</head>
+<body>
+
+  <div class="hf-canvas" data-hf-project="course-intro" data-hf-duration="20" data-hf-resolution="1920x1080">
+
+    <!-- Global Grid Overlay -->
+    <div class="grid-overlay"></div>
+
+    <!-- ==================== SCENE 1: HOOK QUESTION (0s – 5s) ==================== -->
+    <div class="hf-scene active"
+         data-hf-scene="1"
+         data-hf-scene-start="0"
+         data-hf-scene-duration="5"
+         data-hf-scene-name="hook-question">
+
+      <div class="hook-container" data-hf-animate="stagger-words" data-hf-stagger-delay="0.15">
+        <span class="hook-word" data-hf-word="1">Still</span>
+        <span class="hook-word" data-hf-word="2">writing</span>
+        <span class="hook-word" data-hf-word="3">class</span>
+        <span class="hook-word" data-hf-word="4">components?</span>
+        <div class="hook-accent-line" data-hf-animate="line-grow" data-hf-animate-delay="0.3"></div>
+      </div>
+
+      <!-- Code editor visual in background -->
+      <div class="code-editor-visual">
+        <div class="code-editor-header">
+          <span class="editor-dot red"></span>
+          <span class="editor-dot yellow"></span>
+          <span class="editor-dot green"></span>
+          <span class="editor-filename">App.jsx</span>
+        </div>
+        <div class="code-editor-body">
+          <span class="keyword">import</span> React, { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;<br><br>
+          <span class="keyword">const</span> <span class="function">App</span> = () => {<br>
+          &nbsp;&nbsp;<span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(0);<br>
+          &nbsp;&nbsp;<span class="keyword">const</span> [data, setData] = <span class="function">useState</span>(<span class="keyword">null</span>);<br><br>
+          &nbsp;&nbsp;<span class="function">useEffect</span>(() => {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">fetchData</span>().<span class="function">then</span>(setData);<br>
+          &nbsp;&nbsp;}, []);<br><br>
+          &nbsp;&nbsp;<span class="keyword">return</span> (<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="jsx">&lt;div&gt;</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="jsx">&lt;h1&gt;</span>React 2026<span class="jsx">&lt;/h1&gt;</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="jsx">&lt;/div&gt;</span><br>
+          &nbsp;&nbsp;);<br>
+          };<br><br>
+          <span class="keyword">export default</span> <span class="function">App</span>;
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 2: COURSE OVERVIEW (5s – 11s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="2"
+         data-hf-scene-start="5"
+         data-hf-scene-duration="6"
+         data-hf-scene-name="course-overview">
+
+      <div class="overview-wrapper">
+        <h2 class="overview-headline" data-hf-animate="fade-in" data-hf-animate-delay="0.8">
+          Everything You Need to Master React in 2026
+        </h2>
+        <div class="curriculum-grid" data-hf-animate="stagger-cards" data-hf-stagger-delay="0.12">
+          <div class="module-card" data-hf-card="1">
+            <span class="module-number">1</span>
+            <h3 class="module-title">React Fundamentals Refresh</h3>
+            <p class="module-desc">Modern JSX, Virtual DOM, and the new React 19+ component model with best practices for 2026.</p>
+          </div>
+          <div class="module-card" data-hf-card="2">
+            <span class="module-number">2</span>
+            <h3 class="module-title">Hooks Deep Dive</h3>
+            <p class="module-desc">useState, useEffect, useMemo, useCallback, and the new useOptimistic and useFormState hooks.</p>
+          </div>
+          <div class="module-card" data-hf-card="3">
+            <span class="module-number">3</span>
+            <h3 class="module-title">Server Components & RSC</h3>
+            <p class="module-desc">React Server Components architecture, streaming, Suspense boundaries, and the mental model shift.</p>
+          </div>
+          <div class="module-card" data-hf-card="4">
+            <span class="module-number">4</span>
+            <h3 class="module-title">State Management in 2026</h3>
+            <p class="module-desc">From Context + useReducer to Zustand, Jotai, and the new React Compiler — what to use when.</p>
+          </div>
+          <div class="module-card" data-hf-card="5">
+            <span class="module-number">5</span>
+            <h3 class="module-title">Performance & Suspense</h3>
+            <p class="module-desc">Profiling, memoization strategies, lazy loading, streaming SSR, and the new React Compiler optimizations.</p>
+          </div>
+          <div class="module-card" data-hf-card="6">
+            <span class="module-number">6</span>
+            <h3 class="module-title">Full-Stack Next.js</h3>
+            <p class="module-desc">App Router, Server Actions, Edge Runtime, middleware, and deploying production-grade full-stack apps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 3: INSTRUCTOR INTRO (11s – 16s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="3"
+         data-hf-scene-start="11"
+         data-hf-scene-duration="5"
+         data-hf-scene-name="instructor-intro">
+
+      <div class="instructor-wrapper">
+        <div class="instructor-photo" data-hf-animate="fade-scale" data-hf-animate-delay="0.2">
+          <span class="instructor-photo-inner">SK</span>
+          <span class="pulse-ring"></span>
+        </div>
+        <div class="instructor-info" data-hf-animate="slide-right" data-hf-animate-delay="0.4">
+          <h2 class="instructor-name">Sarah Kim</h2>
+          <p class="instructor-title">Senior Frontend Engineer & React Core Contributor</p>
+          <div class="instructor-stats" data-hf-animate="stagger-pills" data-hf-stagger-delay="0.18">
+            <span class="stat-pill" data-hf-pill="1">12+ Years Experience</span>
+            <span class="stat-pill" data-hf-pill="2">50+ Conference Talks</span>
+            <span class="stat-pill" data-hf-pill="3">20K+ Students Taught</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 4: CALL TO ACTION (16s – 20s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="4"
+         data-hf-scene-start="16"
+         data-hf-scene-duration="4"
+         data-hf-scene-name="cta">
+
+      <div class="cta-wrapper">
+        <p class="cta-urgency" data-hf-animate="fade-shake" data-hf-animate-delay="0.3">
+          Launch Day Price — 40% Off
+        </p>
+        <button class="cta-button glow" data-hf-animate="scale-fade" data-hf-animate-delay="0.6">
+          Enroll Now — Early Bird Pricing
+        </button>
+        <p class="cta-url" data-hf-animate="fade-in" data-hf-animate-delay="1.0">
+          react2026.dev
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script>
+    /**
+     * HyperFrames Course Intro — Animation Controller
+     *
+     * This script manages scene transitions and animations for the 4-scene
+     * course introduction sequence. It reads data-hf-* attributes to determine
+     * timing, then applies GSAP animations accordingly.
+     *
+     * Total duration: 20 seconds
+     * Resolution: 1920x1080
+     */
+
+    (function () {
+      'use strict';
+
+      const scenes = document.querySelectorAll('.hf-scene');
+      const canvas = document.querySelector('.hf-canvas');
+      const totalDuration = 20; // seconds
+
+      // ── Scene timing data (from data-hf attributes) ──
+      const sceneTimeline = [
+        { id: 1, start: 0, duration: 5, name: 'hook-question' },
+        { id: 2, start: 5, duration: 6, name: 'course-overview' },
+        { id: 3, start: 11, duration: 5, name: 'instructor-intro' },
+        { id: 4, start: 16, duration: 4, name: 'cta' }
+      ];
+
+      // ── Helper: Activate a specific scene ──
+      function activateScene(sceneId) {
+        scenes.forEach(s => s.classList.remove('active'));
+        const target = document.querySelector(`[data-hf-scene="${sceneId}"]`);
+        if (target) {
+          target.classList.add('active');
+          animateScene(sceneId);
+        }
+      }
+
+      // ── GSAP Animation Sequences per Scene ──
+      function animateScene(sceneId) {
+        const tl = gsap.timeline();
+
+        switch (sceneId) {
+
+          // SCENE 1: Hook Question
+          case 1:
+            tl.to('[data-hf-word]', {
+              opacity: 1,
+              scale: 1,
+              duration: 0.4,
+              stagger: 0.15,
+              ease: 'back.out(1.5)'
+            })
+            .to('.hook-accent-line', {
+              width: 320,
+              duration: 0.6,
+              ease: 'power3.inOut'
+            }, '-=0.1');
+            break;
+
+          // SCENE 2: Course Overview
+          case 2:
+            tl.to('.overview-headline', {
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power2.out'
+            })
+            .to('.module-card', {
+              opacity: 1,
+              y: 0,
+              duration: 0.55,
+              stagger: 0.12,
+              ease: 'power3.out'
+            }, '-=0.1');
+            break;
+
+          // SCENE 3: Instructor Introduction
+          case 3:
+            tl.to('.instructor-photo', {
+              opacity: 1,
+              scale: 1,
+              duration: 0.5,
+              ease: 'back.out(1.4)'
+            })
+            .to('.instructor-info', {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              ease: 'power3.out'
+            }, '-=0.2')
+            .to('.stat-pill', {
+              opacity: 1,
+              duration: 0.35,
+              stagger: 0.18,
+              ease: 'power2.out'
+            }, '-=0.1');
+            break;
+
+          // SCENE 4: Call to Action
+          case 4:
+            tl.to('.cta-urgency', {
+              opacity: 1,
+              duration: 0.4,
+              ease: 'power2.out'
+            })
+            .to('.cta-button', {
+              opacity: 1,
+              scale: 1,
+              duration: 0.5,
+              ease: 'back.out(1.5)'
+            }, '-=0.1')
+            .to('.cta-url', {
+              opacity: 1,
+              duration: 0.4,
+              ease: 'power2.out'
+            }, '-=0.1');
+
+            // Subtle shake on urgency text every 2 seconds
+            gsap.to('.cta-urgency', {
+              x: -3,
+              duration: 0.08,
+              repeat: -1,
+              repeatDelay: 2,
+              yoyo: true,
+              repeatRefresh: true,
+              ease: 'power1.inOut'
+            });
+            break;
+        }
+      }
+
+      // ── Master Timeline: Scene Switching ──
+      function buildMasterTimeline() {
+        const mtl = gsap.timeline({ repeat: 0 });
+
+        sceneTimeline.forEach((scene, index) => {
+          mtl.call(() => {
+            // Deactivate all scenes, then activate the current one
+            scenes.forEach(s => s.classList.remove('active'));
+            const el = document.querySelector(`[data-hf-scene="${scene.id}"]`);
+            if (el) el.classList.add('active');
+            animateScene(scene.id);
+          }, null, scene.start);
+        });
+
+        return mtl;
+      }
+
+      // ── Initialize ──
+      function init() {
+        // Start with Scene 1
+        activateScene(1);
+
+        // Build and play the master timeline
+        const masterTL = buildMasterTimeline();
+        masterTL.play();
+
+        // Log scene transitions for debugging / HyperFrames integration
+        sceneTimeline.forEach(scene => {
+          gsap.delayedCall(scene.start, () => {
+            console.log(`[HyperFrames] Scene ${scene.id}: "${scene.name}" — starts at ${scene.start}s, duration ${scene.duration}s`);
+          });
+        });
+      }
+
+      // ── Clean animation state for re-renders ──
+      function resetAllScenes() {
+        scenes.forEach(s => s.classList.remove('active'));
+        gsap.set('.hook-word', { opacity: 0, scale: 1.15 });
+        gsap.set('.hook-accent-line', { width: 0 });
+        gsap.set('.overview-headline', { opacity: 0 });
+        gsap.set('.module-card', { opacity: 0, y: 60 });
+        gsap.set('.instructor-photo', { opacity: 0 });
+        gsap.set('.instructor-info', { opacity: 0, x: 40 });
+        gsap.set('.stat-pill', { opacity: 0 });
+        gsap.set('.cta-urgency', { opacity: 0 });
+        gsap.set('.cta-button', { opacity: 0 });
+        gsap.set('.cta-url', { opacity: 0 });
+      }
+
+      // ── Export for HyperFrames runtime ──
+      window.HyperFrames = window.HyperFrames || {};
+      window.HyperFrames.courseIntro = {
+        init,
+        resetAllScenes,
+        activateScene,
+        sceneTimeline,
+        animateScene,
+        totalDuration,
+        buildMasterTimeline
+      };
+
+      // Auto-init when the DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+
+</body>
+</html>

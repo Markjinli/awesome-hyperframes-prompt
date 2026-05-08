@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080,height=1920">
+<title>Short Reel — Day in the Life</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+  :root {
+    --orange: #FF6B35;
+    --yellow: #F7DC6F;
+    --dark: #1A1A2E;
+    --white: #FFFFFF;
+    --card-bg: rgba(255, 255, 255, 0.06);
+    --card-border: rgba(255, 255, 255, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: var(--dark);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Composition Container === */
+  .composition {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === Scene 1: Hook Title (0–3s) === */
+  #scene1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--orange) 0%, var(--dark) 55%);
+  }
+
+  #scene1 .hook-title {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    text-shadow: 0 4px 24px rgba(255, 107, 53, 0.4);
+  }
+
+  #scene1 .hook-subtitle {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--yellow);
+    margin-top: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  #scene1 .grain-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* === Scene 2: Vignette Cards (3–7s) === */
+  #scene2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    background: var(--dark);
+    padding: 120px 80px;
+  }
+
+  .vignette-card {
+    width: 100%;
+    max-width: 840px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 32px 40px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .vignette-card .card-icon {
+    font-size: 48px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 107, 53, 0.15);
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .vignette-card .card-label {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .vignette-card .card-time {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--yellow);
+    margin-top: 6px;
+  }
+
+  .vignette-card.active {
+    border-color: var(--yellow);
+    box-shadow: 0 0 32px rgba(247, 220, 111, 0.15);
+  }
+
+  /* === Scene 3: Bold Quote Typography (7–11s) === */
+  #scene3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    padding: 120px 80px;
+    gap: 32px;
+  }
+
+  #scene3 .quote-main {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--yellow);
+    text-align: center;
+    line-height: 1.25;
+    letter-spacing: -1px;
+  }
+
+  #scene3 .quote-sub {
+    font-size: 28px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* === Scene 4: Outro CTA (11–15s) === */
+  #scene4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--dark) 0%, #2D1B3D 100%);
+    gap: 28px;
+  }
+
+  #scene4 .profile-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    color: var(--white);
+    font-weight: 900;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+  }
+
+  #scene4 .handle {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: -0.5px;
+  }
+
+  #scene4 .cta-text {
+    font-size: 26px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  #scene4 .cta-ring {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 107, 53, 0.4);
+    pointer-events: none;
+  }
+
+  #scene4 .fade-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Scene 1: Hook Title ===== -->
+<div id="scene1" class="composition"
+     data-composition-id="scene1-hook"
+     data-start="0"
+     data-duration="3"
+     data-track-index="1">
+  <div class="grain-overlay"></div>
+  <div class="hook-title" id="hook-title">A DAY IN<br>MY LIFE</div>
+  <div class="hook-subtitle" id="hook-subtitle">Behind the scenes</div>
+</div>
+
+<!-- ===== Scene 2: Vignette Cards ===== -->
+<div id="scene2" class="composition"
+     data-composition-id="scene2-vignettes"
+     data-start="3"
+     data-duration="4"
+     data-track-index="1">
+  <div class="vignette-card card-1">
+    <div class="card-icon">🌅</div>
+    <div>
+      <div class="card-label">Morning Routine</div>
+      <div class="card-time">7:00 AM — Start the day right</div>
+    </div>
+  </div>
+  <div class="vignette-card card-2">
+    <div class="card-icon">💻</div>
+    <div>
+      <div class="card-label">Deep Work</div>
+      <div class="card-time">9:30 AM — Focus mode on</div>
+    </div>
+  </div>
+  <div class="vignette-card card-3">
+    <div class="card-icon">✨</div>
+    <div>
+      <div class="card-label">Creative Flow</div>
+      <div class="card-time">2:00 PM — Making things happen</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Scene 3: Bold Quote ===== -->
+<div id="scene3" class="composition"
+     data-composition-id="scene3-quote"
+     data-start="7"
+     data-duration="4"
+     data-track-index="1">
+  <div class="quote-main" id="quote-main">Create every day.</div>
+  <div class="quote-sub" id="quote-sub">Consistency beats talent —<br>show up even when it's hard.</div>
+</div>
+
+<!-- ===== Scene 4: Outro CTA ===== -->
+<div id="scene4" class="composition"
+     data-composition-id="scene4-outro"
+     data-start="11"
+     data-duration="4"
+     data-track-index="1">
+  <div class="cta-ring" id="cta-ring"></div>
+  <div class="profile-photo" id="profile-photo">M</div>
+  <div class="handle" id="handle">@creator</div>
+  <div class="cta-text" id="cta-text">Follow for more</div>
+  <div class="fade-overlay" id="fade-overlay"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  // Helper: HyperFrames composition time manager
+  // ============================================================
+  function setupTimeline(masterTL) {
+
+    // --- Scene 1: Hook Title (0–3s) ---
+    const tl1 = gsap.timeline();
+    tl1.fromTo('#hook-title',
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' },
+      0
+    );
+    tl1.fromTo('#hook-subtitle',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      0.5
+    );
+    // Gentle background pulse
+    tl1.to('#scene1', {
+      backgroundPosition: '0% 100%',
+      duration: 3,
+      ease: 'sine.inOut'
+    }, 0);
+    masterTL.add(tl1, 0);
+
+    // --- Scene 2: Vignette Cards (3–7s) ---
+    const tl2 = gsap.timeline();
+    // Scene entrance
+    tl2.set('#scene2', { opacity: 0 }, 0);
+    tl2.to('#scene2', { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0);
+
+    // Stagger card slide-in
+    tl2.fromTo('.vignette-card',
+      { x: 80, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.45, stagger: 0.15, ease: 'power2.out' },
+      0.1
+    );
+
+    // Active card highlight pulses
+    tl2.to('.card-1', { borderColor: 'rgba(247,220,111,0.6)', duration: 0.3 }, 0.25);
+    tl2.to('.card-1', { borderColor: 'rgba(255,255,255,0.12)', duration: 0.3 }, 1.1);
+    tl2.to('.card-2', { borderColor: 'rgba(247,220,111,0.6)', duration: 0.3 }, 1.2);
+    tl2.to('.card-2', { borderColor: 'rgba(255,255,255,0.12)', duration: 0.3 }, 2.1);
+    tl2.to('.card-3', { borderColor: 'rgba(247,220,111,0.6)', duration: 0.3 }, 2.2);
+    tl2.to('.card-3', { borderColor: 'rgba(255,255,255,0.12)', duration: 0.3 }, 3.1);
+
+    // Scene exit
+    tl2.to('#scene2', { opacity: 0, duration: 0.3, ease: 'power2.in' }, 3.7);
+    masterTL.add(tl2, 3);
+
+    // --- Scene 3: Bold Quote (7–11s) ---
+    const tl3 = gsap.timeline();
+    tl3.set('#scene3', { opacity: 0 }, 0);
+    tl3.to('#scene3', { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0);
+
+    // Typewriter stagger on quote text
+    const quoteEl = document.querySelector('#quote-main');
+    const quoteText = quoteEl.textContent;
+    quoteEl.innerHTML = '';
+    const chars = [];
+    for (let i = 0; i < quoteText.length; i++) {
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.textContent = quoteText[i];
+      span.style.display = 'inline-block';
+      quoteEl.appendChild(span);
+      chars.push(span);
+    }
+
+    tl3.fromTo('.char',
+      { opacity: 0, y: -8 },
+      { opacity: 1, y: 0, duration: 0.03, stagger: 0.03, ease: 'power2.out' },
+      0.2
+    );
+
+    // Subtitle follows
+    tl3.fromTo('#quote-sub',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+      1.6
+    );
+
+    // Scene exit
+    tl3.to('#scene3', { opacity: 0, duration: 0.3, ease: 'power2.in' }, 3.7);
+    masterTL.add(tl3, 7);
+
+    // --- Scene 4: Outro CTA (11–15s) ---
+    const tl4 = gsap.timeline();
+    tl4.set('#scene4', { opacity: 0 }, 0);
+    tl4.to('#scene4', { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0);
+
+    // Profile photo elastic scale
+    tl4.fromTo('#profile-photo',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2)' },
+      0.2
+    );
+
+    // Handle fade up
+    tl4.fromTo('#handle',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      0.6
+    );
+
+    // CTA text
+    tl4.fromTo('#cta-text',
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      0.8
+    );
+
+    // Infinite pulse ring
+    tl4.to('#cta-ring', {
+      scale: 1.15,
+      opacity: 0.2,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 0.5);
+
+    // Fade to black at the end
+    tl4.to('#fade-overlay', { opacity: 1, duration: 0.5, ease: 'power2.in' }, 3.5);
+    masterTL.add(tl4, 11);
+
+    return masterTL;
+  }
+
+  // ============================================================
+  // Master Timeline
+  // ============================================================
+  const master = gsap.timeline({ paused: true });
+  setupTimeline(master);
+
+  // ============================================================
+  // HyperFrames Frame Adapter
+  // If HyperFrames runtime is present, let it seek the timeline.
+  // ============================================================
+  if (typeof window.__hf_registerTimeline === 'function') {
+    window.__hf_registerTimeline(master);
+  } else {
+    // Standalone / dev mode: auto-play the timeline for preview
+    master.play();
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowBoard -- SaaS Feature Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-canvas: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --primary: #3B82F6;
+      --primary-dark: #2563EB;
+      --secondary: #6366F1;
+      --accent-green: #10B981;
+      --text-primary: #0F172A;
+      --text-muted: #64748B;
+      --border-subtle: #E2E8F0;
+      --border-card: #F1F5F9;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+      --canvas-width: 1920px;
+      --canvas-height: 1080px;
+    }
+
+    body {
+      background: #E2E8F0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    .hyperframes-canvas {
+      position: relative;
+      width: var(--canvas-width);
+      height: var(--canvas-height);
+      background: var(--bg-canvas);
+      overflow: hidden;
+    }
+
+    /* Subtle background gradient wash */
+    .bg-wash {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 30%, rgba(59, 130, 246, 0.06), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(99, 102, 241, 0.04), transparent);
+      pointer-events: none;
+    }
+
+    /* Composition base */
+    .composition {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* ============================================
+       SCENE 1: Hero + Value Prop (0s -- 5s)
+       ============================================ */
+    .comp-hero {
+      display: flex;
+      align-items: center;
+      padding: 80px 100px;
+      gap: 80px;
+    }
+
+    .hero-left {
+      flex: 0 0 45%;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      will-change: transform, opacity;
+    }
+
+    .hero-logo-mark {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .hero-logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-headline {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--text-primary);
+      will-change: transform, opacity;
+    }
+
+    .hero-headline .highlight {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subhead {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 440px;
+      will-change: transform, opacity;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 36px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: fit-content;
+      will-change: transform, opacity;
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .hero-right {
+      flex: 0 0 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform, opacity;
+    }
+
+    .kanban-mockup {
+      width: 720px;
+      height: 440px;
+      background: var(--bg-surface);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md), 0 10px 40px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-subtle);
+      padding: 24px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .kanban-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kanban-col-header {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-subtle);
+    }
+
+    .kanban-card {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kanban-card .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    .tag-design { background: #DBEAFE; color: #1D4ED8; }
+    .tag-dev { background: #FEF3C7; color: #B45309; }
+    .tag-bug { background: #FEE2E2; color: #B91C1C; }
+    .tag-done { background: #D1FAE5; color: #047857; }
+
+    /* ============================================
+       SCENE 2: Feature Highlights (5s -- 12s)
+       ============================================ */
+    .comp-features {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 100px;
+      gap: 40px;
+    }
+
+    .features-headline {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text-primary);
+    }
+
+    .feature-cards-row {
+      display: flex;
+      gap: 32px;
+    }
+
+    .feature-card {
+      width: 520px;
+      height: 320px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      padding: 36px;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      will-change: transform, opacity, box-shadow;
+    }
+
+    .feature-card .accent-strip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 16px 16px 0 0;
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card.focused .accent-strip {
+      opacity: 1;
+    }
+
+    .feature-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(99, 102, 241, 0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .feature-card-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .feature-card-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .feature-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .feature-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border-subtle);
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .feature-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    /* ============================================
+       SCENE 3: Data Chart / Performance (12s -- 17s)
+       ============================================ */
+    .comp-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 100px;
+      gap: 50px;
+    }
+
+    .data-headline {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text-primary);
+      text-align: center;
+      max-width: 900px;
+      will-change: transform, opacity;
+    }
+
+    .data-headline .num-highlight {
+      background: linear-gradient(135deg, var(--primary), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .data-row {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+      max-width: 1400px;
+      justify-content: center;
+    }
+
+    /* Donut chart */
+    .donut-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .donut-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .donut-value {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Bar chart */
+    .bar-chart-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .bar-chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 52px;
+    }
+
+    .bar-label {
+      width: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .bar-group {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      height: 100%;
+      align-items: flex-end;
+    }
+
+    .bar {
+      border-radius: 6px 6px 0 0;
+      min-width: 40px;
+    }
+
+    .bar.industry {
+      background: rgba(100, 116, 139, 0.2);
+    }
+
+    .bar.flowboard {
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+    }
+
+    /* KPI stat */
+    .kpi-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kpi-value {
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       SCENE 4: CTA / Outro (17s -- 20s)
+       ============================================ */
+    .comp-outro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      padding: 60px;
+    }
+
+    .outro-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .outro-headline {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      text-align: center;
+      position: relative;
+      will-change: transform, opacity;
+    }
+
+    .outro-underline {
+      width: 180px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+      margin-top: -16px;
+    }
+
+    .outro-cta {
+      padding: 18px 48px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+      will-change: transform;
+    }
+
+    .outro-caption {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 32px;
+      margin-top: 8px;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-muted);
+      will-change: transform, opacity;
+    }
+
+    .trust-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    /* Background shift for outro */
+    .bg-shift {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.02));
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity;
+    }
+  </style>
+</head>
+<body>
+  <div class="hyperframes-canvas" data-composition-id="flowboard-feature-demo">
+
+    <!-- Background wash & shift -->
+    <div class="bg-wash" data-track-index="0"></div>
+    <div class="bg-shift" data-element="bg-shift" data-track-index="0"></div>
+
+    <!-- ============================================
+         SCENE 1: Hero + Value Prop (0s -- 5s)
+         ============================================ -->
+    <div class="composition comp-hero"
+         data-composition-id="hero"
+         data-start="0"
+         data-duration="5"
+         data-track-index="1">
+      <div class="hero-left">
+        <div class="hero-logo" data-element="hero-logo">
+          <div class="hero-logo-mark">F</div>
+          <span class="hero-logo-text">FlowBoard</span>
+        </div>
+        <h1 class="hero-headline" data-element="hero-headline">
+          Projects That<br><span class="highlight">Flow</span>
+        </h1>
+        <p class="hero-subhead" data-element="hero-subhead">
+          The project management tool that adapts to your team, not the other way around.
+        </p>
+        <button class="hero-cta" data-element="hero-cta">
+          Try FlowBoard Free <span style="font-size: 16px;">&rarr;</span>
+        </button>
+      </div>
+      <div class="hero-right" data-element="hero-screenshot">
+        <div class="kanban-mockup">
+          <div class="kanban-col">
+            <div class="kanban-col-header">To Do</div>
+            <div class="kanban-card">User research<span class="tag tag-design">Design</span></div>
+            <div class="kanban-card">API integration<span class="tag tag-dev">Dev</span></div>
+            <div class="kanban-card">Copy review</div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header">In Progress</div>
+            <div class="kanban-card">Dashboard redesign<span class="tag tag-design">Design</span></div>
+            <div class="kanban-card">Fix login bug<span class="tag tag-bug">Bug</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header">Done</div>
+            <div class="kanban-card">Onboarding flow<span class="tag tag-done">Done</span></div>
+            <div class="kanban-card">v2.4 release<span class="tag tag-done">Done</span></div>
+            <div class="kanban-card">Blog post<span class="tag tag-done">Done</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 2: Feature Highlights (5s -- 12s)
+         ============================================ -->
+    <div class="composition comp-features"
+         data-composition-id="features"
+         data-start="5"
+         data-duration="7"
+         data-track-index="1">
+      <h2 class="features-headline" data-element="features-headline">Everything Your Team Needs</h2>
+      <div class="feature-cards-row">
+        <div class="feature-card" data-element="feature-card-1">
+          <div class="accent-strip"></div>
+          <div class="feature-card-icon">&#9776;</div>
+          <div class="feature-card-title">Kanban &amp; Timeline</div>
+          <div class="feature-card-desc">Visualize work your way. Switch between board, timeline, and list views instantly.</div>
+        </div>
+        <div class="feature-card" data-element="feature-card-2">
+          <div class="accent-strip"></div>
+          <div class="feature-card-icon">&#10024;</div>
+          <div class="feature-card-title">AI Sprint Planning</div>
+          <div class="feature-card-desc">Auto-assign tasks with AI that learns your team's velocity and workload patterns.</div>
+        </div>
+        <div class="feature-card" data-element="feature-card-3">
+          <div class="accent-strip"></div>
+          <div class="feature-card-icon">&#9997;</div>
+          <div class="feature-card-title">Real-Time Collab</div>
+          <div class="feature-card-desc">Edit together, see changes live. Multiplayer cursors and presence built-in.</div>
+        </div>
+      </div>
+      <div class="feature-dots">
+        <div class="feature-dot active" data-element="dot-1"></div>
+        <div class="feature-dot" data-element="dot-2"></div>
+        <div class="feature-dot" data-element="dot-3"></div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 3: Data Chart / Performance (12s -- 17s)
+         ============================================ -->
+    <div class="composition comp-data"
+         data-composition-id="data-chart"
+         data-start="12"
+         data-duration="5"
+         data-track-index="1">
+      <h2 class="data-headline" data-element="data-headline">
+        Teams Using FlowBoard Ship <span class="num-highlight">40% Faster</span>
+      </h2>
+      <div class="data-row">
+        <!-- Donut Chart -->
+        <div class="donut-container" data-element="donut-chart">
+          <div class="donut-label">On-Time Delivery</div>
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="#E2E8F0" stroke-width="16"/>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="url(#donutGrad)" stroke-width="16"
+                    stroke-linecap="round" stroke-dasharray="427.26" stroke-dashoffset="427.26"
+                    transform="rotate(-90 80 80)" data-element="donut-arc"/>
+            <defs>
+              <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3B82F6"/>
+                <stop offset="100%" stop-color="#10B981"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="donut-value" data-element="donut-percent">0%</div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="bar-chart-container" data-element="bar-chart">
+          <div class="bar-chart-title">Quarterly Delivery Rate</div>
+          <div class="bar-row">
+            <span class="bar-label">Q1</span>
+            <div class="bar-group">
+              <div class="bar industry" data-bar="industry-q1" style="height: 0;"></div>
+              <div class="bar flowboard" data-bar="flowboard-q1" style="height: 0;"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Q2</span>
+            <div class="bar-group">
+              <div class="bar industry" data-bar="industry-q2" style="height: 0;"></div>
+              <div class="bar flowboard" data-bar="flowboard-q2" style="height: 0;"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Q3</span>
+            <div class="bar-group">
+              <div class="bar industry" data-bar="industry-q3" style="height: 0;"></div>
+              <div class="bar flowboard" data-bar="flowboard-q3" style="height: 0;"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Q4</span>
+            <div class="bar-group">
+              <div class="bar industry" data-bar="industry-q4" style="height: 0;"></div>
+              <div class="bar flowboard" data-bar="flowboard-q4" style="height: 0;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Stat -->
+        <div class="kpi-container" data-element="kpi-stat">
+          <div class="kpi-value" data-element="kpi-number">0x</div>
+          <div class="kpi-label">Productivity Boost</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 4: CTA / Outro (17s -- 20s)
+         ============================================ -->
+    <div class="composition comp-outro"
+         data-composition-id="outro"
+         data-start="17"
+         data-duration="3"
+         data-track-index="1">
+      <div class="outro-logo-row">
+        <div class="hero-logo-mark">F</div>
+        <span class="hero-logo-text" style="font-size: 20px;">FlowBoard</span>
+      </div>
+      <h2 class="outro-headline" data-element="outro-headline">Start Flowing Today</h2>
+      <div class="outro-underline"></div>
+      <button class="outro-cta" data-element="outro-cta">Get Started Free</button>
+      <p class="outro-caption">No credit card required</p>
+      <div class="trust-badges">
+        <div class="trust-badge" data-element="badge-1">
+          <span class="trust-badge-dot"></span> SOC 2 Certified
+        </div>
+        <div class="trust-badge" data-element="badge-2">
+          <span class="trust-badge-dot"></span> GDPR Compliant
+        </div>
+        <div class="trust-badge" data-element="badge-3">
+          <span class="trust-badge-dot"></span> 99.9% Uptime SLA
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    /**
+     * FlowBoard -- SaaS Feature Demo
+     * HyperFrames Composition | 20s | 1920x1080
+     */
+
+    function comp(id) {
+      return document.querySelector(`[data-composition-id="${id}"]`);
+    }
+    function el(parent, name) {
+      return parent.querySelector(`[data-element="${name}"]`);
+    }
+
+    const master = gsap.timeline({ paused: false });
+
+    // -------------------------------------------------------
+    // SCENE 1: Hero + Value Prop (0s -- 5s)
+    // -------------------------------------------------------
+    const scene1 = comp("hero");
+
+    master.set(scene1, { opacity: 1 }, 0);
+
+    // Logo fade
+    master.fromTo(el(scene1, "hero-logo"),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.4, ease: "power2.out" },
+      0.2
+    );
+
+    // Headline slide up
+    master.fromTo(el(scene1, "hero-headline"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+      0.5
+    );
+
+    // Subheading fade in
+    master.fromTo(el(scene1, "hero-subhead"),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, ease: "power2.out" },
+      0.8
+    );
+
+    // Screenshot slide from right
+    master.fromTo(el(scene1, "hero-screenshot"),
+      { x: 60, opacity: 0, scale: 0.95 },
+      { x: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
+      0.7
+    );
+
+    // CTA button
+    master.fromTo(el(scene1, "hero-cta"),
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" },
+      1.1
+    );
+
+    // Exit scene 1
+    master.to(scene1, { opacity: 0, filter: "blur(4px)", duration: 0.3, ease: "power2.in" }, 4.7);
+
+    // -------------------------------------------------------
+    // SCENE 2: Feature Highlights (5s -- 12s)
+    // -------------------------------------------------------
+    const scene2 = comp("features");
+
+    master.set(scene2, { opacity: 0 }, 4.8);
+    master.to(scene2, { opacity: 1, duration: 0.3, ease: "power2.out" }, 5.0);
+
+    // Headline
+    master.fromTo(el(scene2, "features-headline"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      5.2
+    );
+
+    // Feature cards stagger
+    master.fromTo(el(scene2, "feature-card-1"),
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      5.5
+    );
+    master.fromTo(el(scene2, "feature-card-2"),
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      5.7
+    );
+    master.fromTo(el(scene2, "feature-card-3"),
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      5.9
+    );
+
+    // Card focus cycling with dot indicators
+    function focusCard(index, atTime) {
+      const cards = [el(scene2, "feature-card-1"), el(scene2, "feature-card-2"), el(scene2, "feature-card-3")];
+      const dots = [el(scene2, "dot-1"), el(scene2, "dot-2"), el(scene2, "dot-3")];
+
+      cards.forEach((card, i) => {
+        if (i === index) {
+          master.to(card, { boxShadow: "0 0 0 3px rgba(59,130,246,0.3), 0 8px 24px rgba(0,0,0,0.1)", duration: 0.3 }, atTime);
+          master.set(card, { className: "feature-card focused" }, atTime);
+        } else {
+          master.to(card, { boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)", duration: 0.3 }, atTime);
+          master.set(card, { className: "feature-card" }, atTime);
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          master.set(dot, { className: "feature-dot active" }, atTime);
+        } else {
+          master.set(dot, { className: "feature-dot" }, atTime);
+        }
+      });
+    }
+
+    focusCard(0, 6.5);
+    focusCard(1, 7.8);
+    focusCard(2, 9.1);
+
+    // Exit
+    master.to(scene2, { opacity: 0, filter: "blur(4px)", duration: 0.3, ease: "power2.in" }, 11.7);
+
+    // -------------------------------------------------------
+    // SCENE 3: Data Chart (12s -- 17s)
+    // -------------------------------------------------------
+    const scene3 = comp("data-chart");
+    const bgShift = document.querySelector('[data-element="bg-shift"]');
+
+    master.set(scene3, { opacity: 0 }, 11.8);
+    master.to(scene3, { opacity: 1, duration: 0.3, ease: "power2.out" }, 12.0);
+    master.to(bgShift, { opacity: 1, duration: 0.8 }, 11.8);
+
+    // Headline
+    master.fromTo(el(scene3, "data-headline"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      12.2
+    );
+
+    // Donut chart arc animation
+    const donutArc = el(scene3, "donut-arc");
+    const circumference = 2 * Math.PI * 68; // ~427.26
+    const targetOffset = circumference * (1 - 0.94); // 94%
+
+    master.fromTo(donutArc,
+      { strokeDashoffset: circumference },
+      { strokeDashoffset: targetOffset, duration: 1.5, ease: "power2.inOut" },
+      12.8
+    );
+
+    // Counter for donut percentage
+    const donutObj = { val: 0 };
+    master.to(donutObj,
+      {
+        val: 94,
+        duration: 1.5,
+        ease: "power2.out",
+        onUpdate: () => el(scene3, "donut-percent").textContent = Math.round(donutObj.val) + "%"
+      },
+      12.8
+    );
+
+    // Bar chart: industry bars
+    const industryHeights = [28, 32, 30, 35]; // ~60-70% of max (50px)
+    const flowboardHeights = [46, 48, 45, 50]; // ~90-95% of max
+
+    for (let q = 1; q <= 4; q++) {
+      master.fromTo(scene3.querySelector(`[data-bar="industry-q${q}"]`),
+        { height: 0 },
+        { height: industryHeights[q - 1] + "px", duration: 0.5, ease: "power2.out" },
+        13.4 + (q - 1) * 0.12
+      );
+      master.fromTo(scene3.querySelector(`[data-bar="flowboard-q${q}"]`),
+        { height: 0 },
+        { height: flowboardHeights[q - 1] + "px", duration: 0.5, ease: "power2.out" },
+        13.6 + (q - 1) * 0.12
+      );
+    }
+
+    // KPI counter
+    const kpiObj = { val: 0 };
+    master.to(kpiObj,
+      {
+        val: 2.3,
+        duration: 1.3,
+        ease: "power2.out",
+        onUpdate: () => el(scene3, "kpi-number").textContent = kpiObj.val.toFixed(1) + "x"
+      },
+      13.2
+    );
+
+    // Exit
+    master.to(scene3, { opacity: 0, filter: "blur(4px)", duration: 0.3, ease: "power2.in" }, 16.7);
+
+    // -------------------------------------------------------
+    // SCENE 4: CTA / Outro (17s -- 20s)
+    // -------------------------------------------------------
+    const scene4 = comp("outro");
+
+    master.set(scene4, { opacity: 0 }, 16.8);
+    master.to(scene4, { opacity: 1, duration: 0.3, ease: "power2.out" }, 17.0);
+    master.to(bgShift, { opacity: 1, duration: 0.5 }, 16.8);
+
+    // Headline
+    master.fromTo(el(scene4, "outro-headline"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+      17.3
+    );
+
+    // CTA button
+    const outroCta = el(scene4, "outro-cta");
+    master.fromTo(outroCta,
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" },
+      17.8
+    );
+
+    // CTA pulse
+    master.to(outroCta,
+      { scale: 1.03, duration: 0.8, repeat: 1, yoyo: true, ease: "sine.inOut" },
+      18.4
+    );
+
+    // Trust badges stagger
+    master.fromTo(el(scene4, "badge-1"),
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+      18.5
+    );
+    master.fromTo(el(scene4, "badge-2"),
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+      18.7
+    );
+    master.fromTo(el(scene4, "badge-3"),
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+      18.9
+    );
+
+    // Register HyperFrames frame adapter
+    window.__hf_gsap = (composition, currentTime) => {
+      master.time(currentTime);
+    };
+  </script>
+</body>
+</html>

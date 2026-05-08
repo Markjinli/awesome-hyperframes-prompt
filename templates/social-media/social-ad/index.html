@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920,height=1080">
+<title>Social Ad — CoinFlow Fintech</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+  :root {
+    --violet: #6C3CE1;
+    --mint: #00D4AA;
+    --amber: #FFB830;
+    --dark: #0D0D1A;
+    --light-bg: #F5F3FF;
+    --red: #FF4D6A;
+    --text-light: #FFFFFF;
+    --text-dark: #0D0D1A;
+    --card-dark: rgba(255, 255, 255, 0.04);
+    --card-border-dark: rgba(255, 255, 255, 0.08);
+    --card-light: #FFFFFF;
+    --card-border-light: rgba(108, 60, 225, 0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: var(--dark);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Composition Container === */
+  .composition {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === Scene 1: The Hook — Counter (0–6s) === */
+  #scene1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    gap: 28px;
+  }
+
+  #scene1 .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(108, 60, 225, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108, 60, 225, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  #scene1 .big-number {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 120px;
+    font-weight: 700;
+    color: var(--mint);
+    letter-spacing: -3px;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(0, 212, 170, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  #scene1 .hook-subtext {
+    font-size: 32px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  #scene1 .hook-subtext strong {
+    color: var(--mint);
+    font-weight: 700;
+  }
+
+  /* === Scene 2: Problem vs Solution (6–16s) === */
+  #scene2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    gap: 80px;
+    padding: 120px 160px;
+  }
+
+  #scene2 .panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 600px;
+  }
+
+  #scene2 .panel-label {
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  #scene2 .panel-label.problem {
+    color: var(--red);
+  }
+
+  #scene2 .panel-label.solution {
+    color: var(--mint);
+  }
+
+  #scene2 .item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px 32px;
+    background: var(--card-dark);
+    border: 1px solid var(--card-border-dark);
+    border-radius: 16px;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text-light);
+  }
+
+  #scene2 .item .icon {
+    font-size: 32px;
+    width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  #scene2 .item .icon.problem-icon { color: var(--red); }
+  #scene2 .item .icon.solution-icon { color: var(--mint); }
+
+  #scene2 .wipe-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--violet), transparent);
+    left: 50%;
+    pointer-events: none;
+  }
+
+  /* === Scene 3: Trust & Social Proof (16–24s) === */
+  #scene3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-bg);
+    gap: 48px;
+    padding: 100px 120px;
+  }
+
+  #scene3 .trust-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 48px 36px;
+    background: var(--card-light);
+    border: 1px solid var(--card-border-light);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(13, 13, 26, 0.04);
+    max-width: 440px;
+  }
+
+  #scene3 .trust-card .card-icon-large {
+    font-size: 56px;
+  }
+
+  #scene3 .trust-card .card-title {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: center;
+  }
+
+  #scene3 .trust-card .card-detail {
+    font-size: 20px;
+    font-weight: 500;
+    color: rgba(13, 13, 26, 0.6);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  #scene3 .stars-display {
+    display: flex;
+    gap: 6px;
+  }
+
+  #scene3 .star-icon {
+    font-size: 36px;
+    color: var(--amber);
+  }
+
+  #scene3 .rating-number {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  #scene3 .badge-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #scene3 .press-badge {
+    padding: 10px 20px;
+    background: rgba(108, 60, 225, 0.06);
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--violet);
+  }
+
+  #scene3 .security-icon {
+    font-size: 48px;
+  }
+
+  /* === Scene 4: CTA Finale (24–30s) === */
+  #scene4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6C3CE1 0%, #4A27B0 40%, #00D4AA 100%);
+    gap: 28px;
+  }
+
+  #scene4 .cta-heading {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: -1.5px;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  #scene4 .cta-subtext {
+    font-size: 28px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+  }
+
+  #scene4 .cta-button {
+    padding: 24px 72px;
+    background: var(--text-light);
+    color: var(--violet);
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    border-radius: 60px;
+    letter-spacing: -0.5px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  #scene4 .cta-glow-ring {
+    position: absolute;
+    width: 380px;
+    height: 88px;
+    border-radius: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+  }
+
+  #scene4 .store-badges {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  #scene4 .store-badge {
+    padding: 14px 32px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* === Global effects === */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Scene 1: The Hook — Counter (0–6s) ===== -->
+<div id="scene1" class="composition"
+     data-composition-id="scene1-hook"
+     data-start="0"
+     data-duration="6"
+     data-track-index="1">
+  <div class="grid-bg" id="grid-bg"></div>
+  <div class="big-number" id="user-counter">0</div>
+  <div class="hook-subtext" id="hook-subtext">
+    People already trust <strong>CoinFlow</strong>
+  </div>
+</div>
+
+<!-- ===== Scene 2: Problem vs Solution (6–16s) ===== -->
+<div id="scene2" class="composition"
+     data-composition-id="scene2-problem-solution"
+     data-start="6"
+     data-duration="10"
+     data-track-index="1">
+  <div class="wipe-line" id="wipe-line"></div>
+
+  <!-- Problem panel -->
+  <div class="panel" id="problem-panel">
+    <div class="panel-label problem">The Old Way</div>
+    <div class="item problem-item-1">
+      <span class="icon problem-icon">✕</span> Hidden fees
+    </div>
+    <div class="item problem-item-2">
+      <span class="icon problem-icon">✕</span> Slow transfers
+    </div>
+    <div class="item problem-item-3">
+      <span class="icon problem-icon">✕</span> Confusing UI
+    </div>
+  </div>
+
+  <!-- Solution panel -->
+  <div class="panel" id="solution-panel">
+    <div class="panel-label solution">With CoinFlow</div>
+    <div class="item solution-item-1">
+      <span class="icon solution-icon">✓</span> Zero hidden fees
+    </div>
+    <div class="item solution-item-2">
+      <span class="icon solution-icon">✓</span> Instant transfers
+    </div>
+    <div class="item solution-item-3">
+      <span class="icon solution-icon">✓</span> Beautiful design
+    </div>
+  </div>
+</div>
+
+<!-- ===== Scene 3: Trust & Social Proof (16–24s) ===== -->
+<div id="scene3" class="composition"
+     data-composition-id="scene3-trust"
+     data-start="16"
+     data-duration="8"
+     data-track-index="1">
+
+  <!-- Card 1: Ratings -->
+  <div class="trust-card trust-ratings" id="trust-ratings">
+    <div class="stars-display" id="stars-display">
+      <span class="star-icon s1">★</span>
+      <span class="star-icon s2">★</span>
+      <span class="star-icon s3">★</span>
+      <span class="star-icon s4">★</span>
+      <span class="star-icon s5">★</span>
+    </div>
+    <div class="rating-number" id="rating-number">4.8</div>
+    <div class="card-detail">App Store &amp; Google Play<br>50,000+ ratings</div>
+  </div>
+
+  <!-- Card 2: Press -->
+  <div class="trust-card trust-press" id="trust-press">
+    <div class="card-icon-large">📰</div>
+    <div class="card-title">Featured In</div>
+    <div class="badge-row" id="press-badges">
+      <span class="press-badge pb-1">TechCrunch</span>
+      <span class="press-badge pb-2">Forbes</span>
+      <span class="press-badge pb-3">Bloomberg</span>
+    </div>
+    <div class="card-detail">Trusted by leading<br>financial publications</div>
+  </div>
+
+  <!-- Card 3: Security -->
+  <div class="trust-card trust-security" id="trust-security">
+    <div class="security-icon">🔒</div>
+    <div class="card-title">Bank-Grade Security</div>
+    <div class="card-detail">256-bit encryption<br>SOC2 Type II certified<br>$500K FDIC insured</div>
+  </div>
+</div>
+
+<!-- ===== Scene 4: CTA Finale (24–30s) ===== -->
+<div id="scene4" class="composition"
+     data-composition-id="scene4-cta"
+     data-start="24"
+     data-duration="6"
+     data-track-index="1">
+  <div class="cta-glow-ring" id="cta-glow-ring"></div>
+  <div class="cta-heading" id="cta-heading">Start your financial<br>journey today</div>
+  <div class="cta-subtext" id="cta-subtext">Join 2M+ users. Free to start.</div>
+  <div class="cta-button" id="cta-button">Get CoinFlow Free</div>
+  <div class="store-badges" id="store-badges">
+    <span class="store-badge">App Store</span>
+    <span class="store-badge">Google Play</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function setupTimeline(masterTL) {
+
+    // ==========================================================
+    // Scene 1: Hook — Counter (0–6s)
+    // ==========================================================
+    const tl1 = gsap.timeline();
+
+    // Grid background fade in
+    tl1.fromTo('#grid-bg',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.8, ease: 'power2.out' },
+      0
+    );
+
+    // Counter roll-up
+    tl1.fromTo('#user-counter',
+      { textContent: 0 },
+      {
+        textContent: 2438921,
+        duration: 1.8,
+        snap: { textContent: 1 },
+        ease: 'power2.out',
+        onUpdate: function () {
+          var el = this.targets()[0];
+          var val = Math.round(parseFloat(el.textContent));
+          el.textContent = val.toLocaleString();
+        }
+      },
+      0.3
+    );
+
+    // Glow pulse after counter finishes
+    tl1.to('#user-counter', {
+      textShadow: '0 0 80px rgba(0, 212, 170, 0.5)',
+      duration: 0.6,
+      ease: 'sine.out'
+    }, 2.3);
+    tl1.to('#user-counter', {
+      textShadow: '0 0 60px rgba(0, 212, 170, 0.3)',
+      duration: 1,
+      ease: 'sine.inOut'
+    }, 2.9);
+
+    // Hook subtext
+    tl1.fromTo('#hook-subtext',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      1.2
+    );
+
+    // Floating particles in background
+    for (var i = 0; i < 12; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = (5 + Math.random() * 90) + '%';
+      p.style.top = (5 + Math.random() * 90) + '%';
+      p.style.width = (4 + Math.random() * 8) + 'px';
+      p.style.height = p.style.width;
+      p.style.background = Math.random() > 0.5 ?
+        'rgba(0, 212, 170, 0.25)' : 'rgba(108, 60, 225, 0.25)';
+      document.querySelector('#scene1').appendChild(p);
+
+      tl1.fromTo(p,
+        { opacity: 0, y: 0 },
+        { opacity: 0.5, y: -20 - Math.random() * 30, duration: 2 + Math.random() * 2, ease: 'sine.out' },
+        1 + Math.random() * 2
+      );
+      tl1.to(p,
+        { opacity: 0, duration: 0.8, ease: 'power2.in' },
+        4 + Math.random() * 1.5
+      );
+    }
+
+    // Scene exit
+    tl1.to('#scene1', { opacity: 0, duration: 0.4, ease: 'power2.in' }, 5.6);
+
+    masterTL.add(tl1, 0);
+
+
+    // ==========================================================
+    // Scene 2: Problem vs Solution (6–16s)
+    // ==========================================================
+    var tl2 = gsap.timeline();
+
+    tl2.set('#scene2', { opacity: 0 }, 0);
+    tl2.to('#scene2', { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0);
+
+    // Problem items stagger in from left
+    tl2.fromTo('.problem-item-1, .problem-item-2, .problem-item-3',
+      { x: -60, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: 'power2.out' },
+      0.3
+    );
+
+    // Problem label
+    tl2.fromTo('#problem-panel .panel-label',
+      { opacity: 0, y: -12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      0.15
+    );
+
+    // Wipe line draws
+    tl2.fromTo('#wipe-line',
+      { scaleY: 0 },
+      { scaleY: 1, duration: 0.6, ease: 'power2.inOut' },
+      0.5
+    );
+
+    // Solution items stagger in from right (at 5s mark = scene time 5s)
+    tl2.fromTo('.solution-item-1, .solution-item-2, .solution-item-3',
+      { x: 60, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: 'power2.out' },
+      5.0
+    );
+
+    // Solution label
+    tl2.fromTo('#solution-panel .panel-label',
+      { opacity: 0, y: -12 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      4.85
+    );
+
+    // Checkmark scale pops
+    tl2.fromTo('.solution-icon',
+      { scale: 0 },
+      { scale: 1, duration: 0.25, stagger: 0.12, ease: 'back.out(2)' },
+      5.05
+    );
+
+    // Subtle problem fade during solution phase
+    tl2.to('#problem-panel', { opacity: 0.3, duration: 0.5, ease: 'power2.in' }, 5.0);
+
+    // Scene exit
+    tl2.to('#scene2', { opacity: 0, duration: 0.4, ease: 'power2.in' }, 9.6);
+
+    masterTL.add(tl2, 6);
+
+
+    // ==========================================================
+    // Scene 3: Trust & Social Proof (16–24s)
+    // ==========================================================
+    var tl3 = gsap.timeline();
+
+    tl3.set('#scene3', { opacity: 0 }, 0);
+    tl3.to('#scene3', { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);
+
+    // Trust cards scale in with stagger
+    tl3.fromTo('.trust-card',
+      { scale: 0.88, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.55, stagger: 0.15, ease: 'back.out(1.4)' },
+      0.2
+    );
+
+    // Star rating fill (left to right)
+    tl3.fromTo('#stars-display .star-icon',
+      { opacity: 0, scale: 0 },
+      { opacity: 1, scale: 1, duration: 0.25, stagger: 0.08, ease: 'back.out(2)' },
+      0.8
+    );
+
+    // Rating number counts up
+    tl3.fromTo('#rating-number',
+      { textContent: 0 },
+      {
+        textContent: 4.8,
+        duration: 0.8,
+        snap: { textContent: 0.1 },
+        ease: 'power2.out',
+        onUpdate: function () {
+          var el = this.targets()[0];
+          el.textContent = parseFloat(el.textContent).toFixed(1);
+        }
+      },
+      0.9
+    );
+
+    // Press badges stagger
+    tl3.fromTo('.press-badge',
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.3, stagger: 0.1, ease: 'power2.out' },
+      1.4
+    );
+
+    // Security card icon glow
+    tl3.fromTo('#trust-security .security-icon',
+      { scale: 0.5, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' },
+      1.6
+    );
+
+    // Continuous subtle float on cards
+    tl3.to('.trust-card', {
+      y: -6,
+      duration: 3,
+      stagger: 0.1,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 2);
+
+    // Scene exit
+    tl3.to('#scene3', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 7.5);
+
+    masterTL.add(tl3, 16);
+
+
+    // ==========================================================
+    // Scene 4: CTA Finale (24–30s)
+    // ==========================================================
+    var tl4 = gsap.timeline();
+
+    tl4.set('#scene4', { opacity: 0 }, 0);
+    tl4.to('#scene4', { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);
+
+    // CTA heading scale in
+    tl4.fromTo('#cta-heading',
+      { scale: 0.85, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' },
+      0.2
+    );
+
+    // Subtext
+    tl4.fromTo('#cta-subtext',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      0.6
+    );
+
+    // CTA button
+    tl4.fromTo('#cta-button',
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' },
+      0.8
+    );
+
+    // Infinite pulse on button
+    tl4.to('#cta-button', {
+      scale: 1.04,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 1.3);
+
+    // Glow ring pulse
+    tl4.to('#cta-glow-ring', {
+      scale: 1.06,
+      opacity: 0.5,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    }, 1.3);
+
+    // Store badges
+    tl4.fromTo('.store-badge',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' },
+      1.2
+    );
+
+    // Fade to brand at end
+    tl4.to('#scene4', { opacity: 0, duration: 0.4, ease: 'power2.in' }, 5.6);
+
+    masterTL.add(tl4, 24);
+
+    return masterTL;
+  }
+
+  // ============================================================
+  // Master Timeline
+  // ============================================================
+  var master = gsap.timeline({ paused: true });
+  setupTimeline(master);
+
+  if (typeof window.__hf_registerTimeline === 'function') {
+    window.__hf_registerTimeline(master);
+  } else {
+    master.play();
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus AI -- Product Launch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #0A0A1A;
+      --bg-surface: #12122A;
+      --primary: #6C5CE7;
+      --secondary: #00D2FF;
+      --accent: #FF6B6B;
+      --text-primary: #FFFFFF;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(108, 92, 231, 0.3);
+      --canvas-width: 1920px;
+      --canvas-height: 1080px;
+    }
+
+    body {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    .hyperframes-canvas {
+      position: relative;
+      width: var(--canvas-width);
+      height: var(--canvas-height);
+      background: var(--bg-deep);
+      overflow: hidden;
+    }
+
+    /* Grid background texture */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108, 92, 231, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108, 92, 231, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* Composition base class */
+    .composition {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* ============================================
+       SCENE 1 -- Logo Reveal (0s -- 5s)
+       ============================================ */
+    .comp-logo-reveal {
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .logo-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--secondary);
+      box-shadow: 0 0 40px rgba(0, 210, 255, 0.6), 0 0 80px rgba(0, 210, 255, 0.3);
+      will-change: transform, opacity;
+    }
+
+    .logo-mark {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform, opacity;
+    }
+
+    .logo-hexagon {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border: 3px solid var(--primary);
+      border-radius: 24px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: linear-gradient(135deg, rgba(108, 92, 231, 0.2), rgba(0, 210, 255, 0.1));
+      box-shadow: 0 0 60px rgba(108, 92, 231, 0.4), inset 0 0 30px rgba(108, 92, 231, 0.1);
+    }
+
+    .logo-n {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: 64px;
+      color: var(--text-primary);
+      z-index: 1;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      letter-spacing: 4px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      will-change: transform, opacity;
+    }
+
+    /* ============================================
+       SCENE 2 -- Problem Statement (5s -- 11s)
+       ============================================ */
+    .comp-problem {
+      flex-direction: row;
+      padding: 80px 120px;
+      gap: 100px;
+    }
+
+    .problem-left {
+      flex: 0 0 40%;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .problem-headline {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .problem-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .problem-bullet {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-muted);
+      will-change: transform, opacity;
+    }
+
+    .bullet-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .problem-right {
+      flex: 0 0 55%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .network-diagram {
+      width: 100%;
+      height: 400px;
+      position: relative;
+    }
+
+    .network-node {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
+    }
+
+    .network-node.dim {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    .network-line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      transform-origin: left center;
+      opacity: 0.3;
+    }
+
+    /* ============================================
+       SCENE 3 -- Solution (11s -- 20s)
+       ============================================ */
+    .comp-solution {
+      padding: 60px 100px;
+    }
+
+    .hero-card {
+      width: 820px;
+      min-height: 520px;
+      background: rgba(18, 18, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 60px 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 44px;
+      box-shadow: 0 0 80px rgba(108, 92, 231, 0.15);
+      will-change: transform, opacity;
+    }
+
+    .hero-card-title {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .feature-pillars {
+      display: flex;
+      gap: 48px;
+      width: 100%;
+    }
+
+    .feature-pillar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      will-change: transform, opacity;
+    }
+
+    .pillar-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(108, 92, 231, 0.2), rgba(0, 210, 255, 0.1));
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .pillar-label {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .pillar-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       SCENE 4 -- Performance Metrics (20s -- 26s)
+       ============================================ */
+    .comp-metrics {
+      flex-direction: column;
+      padding: 60px 100px;
+      gap: 50px;
+    }
+
+    .metrics-headline {
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-cards {
+      display: flex;
+      gap: 40px;
+    }
+
+    .stat-card {
+      width: 340px;
+      height: 200px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      will-change: transform, opacity;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 56px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 18px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .chart-area {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .chart-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .chart-label {
+      width: 160px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .chart-bars {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      align-items: flex-end;
+      height: 48px;
+    }
+
+    .chart-bar {
+      height: 48px;
+      border-radius: 8px;
+      transition: none;
+    }
+
+    .chart-bar.before {
+      background: rgba(255, 107, 107, 0.3);
+    }
+
+    .chart-bar.after {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    /* ============================================
+       SCENE 5 -- CTA / Outro (26s -- 30s)
+       ============================================ */
+    .comp-outro {
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .outro-logo {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--primary);
+      border-radius: 20px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: linear-gradient(135deg, rgba(108, 92, 231, 0.3), rgba(0, 210, 255, 0.15));
+      will-change: transform, opacity;
+    }
+
+    .outro-logo-inner {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: 40px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .outro-headline {
+      font-size: 62px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .outro-cta {
+      padding: 18px 48px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(108, 92, 231, 0.4);
+      will-change: transform;
+    }
+
+    .outro-footer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    /* Vignette overlay */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(10, 10, 26, 0.6) 100%);
+      opacity: 0;
+      will-change: opacity;
+    }
+  </style>
+</head>
+<body>
+  <div class="hyperframes-canvas" data-composition-id="nexus-ai-launch">
+
+    <!-- Background Grid -->
+    <div class="bg-grid" data-track-index="0"></div>
+
+    <!-- ============================================
+         SCENE 1: Logo Reveal (0s -- 5s)
+         ============================================ -->
+    <div class="composition comp-logo-reveal"
+         data-composition-id="logo-reveal"
+         data-start="0"
+         data-duration="5"
+         data-track-index="1">
+      <div class="logo-dot" data-element="logo-dot"></div>
+      <div class="logo-mark" data-element="logo-mark" style="opacity: 0;">
+        <div class="logo-hexagon"></div>
+        <span class="logo-n">N</span>
+      </div>
+      <div class="logo-wordmark" data-element="logo-wordmark" style="opacity: 0;">Nexus AI</div>
+    </div>
+
+    <!-- ============================================
+         SCENE 2: Problem Statement (5s -- 11s)
+         ============================================ -->
+    <div class="composition comp-problem"
+         data-composition-id="problem-statement"
+         data-start="5"
+         data-duration="6"
+         data-track-index="1">
+      <div class="problem-left">
+        <h2 class="problem-headline" data-element="problem-headline">Your Data Is<br>Scattered</h2>
+        <div class="problem-bullets">
+          <div class="problem-bullet" data-element="bullet-1">
+            <span class="bullet-dot"></span>
+            <span>Silos slow decisions</span>
+          </div>
+          <div class="problem-bullet" data-element="bullet-2">
+            <span class="bullet-dot"></span>
+            <span>Manual workflows drain time</span>
+          </div>
+          <div class="problem-bullet" data-element="bullet-3">
+            <span class="bullet-dot"></span>
+            <span>Insights arrive too late</span>
+          </div>
+        </div>
+      </div>
+      <div class="problem-right">
+        <div class="network-diagram" data-element="network-diagram">
+          <div class="network-node dim" style="top: 10%; left: 15%;"></div>
+          <div class="network-node" style="top: 30%; left: 50%;"></div>
+          <div class="network-node dim" style="top: 60%; left: 25%;"></div>
+          <div class="network-node" style="top: 50%; left: 75%;"></div>
+          <div class="network-node dim" style="top: 80%; left: 55%;"></div>
+          <div class="network-node dim" style="top: 15%; left: 80%;"></div>
+          <div class="network-node" style="top: 70%; left: 85%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 3: Solution (11s -- 20s)
+         ============================================ -->
+    <div class="composition comp-solution"
+         data-composition-id="the-solution"
+         data-start="11"
+         data-duration="9"
+         data-track-index="1">
+      <div class="hero-card" data-element="hero-card">
+        <h2 class="hero-card-title">Meet Nexus AI</h2>
+        <div class="feature-pillars">
+          <div class="feature-pillar" data-element="pillar-1">
+            <div class="pillar-icon">&#9671;</div>
+            <div class="pillar-label">Unified Intelligence</div>
+            <div class="pillar-desc">Connect every data source in your organization</div>
+          </div>
+          <div class="feature-pillar" data-element="pillar-2">
+            <div class="pillar-icon">&#9889;</div>
+            <div class="pillar-label">Real-Time Insights</div>
+            <div class="pillar-desc">Get answers in milliseconds, not hours</div>
+          </div>
+          <div class="feature-pillar" data-element="pillar-3">
+            <div class="pillar-icon">&#9883;</div>
+            <div class="pillar-label">Autonomous Agents</div>
+            <div class="pillar-desc">AI that analyzes, decides, and takes action</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 4: Performance Metrics (20s -- 26s)
+         ============================================ -->
+    <div class="composition comp-metrics"
+         data-composition-id="performance-metrics"
+         data-start="20"
+         data-duration="6"
+         data-track-index="1">
+      <h2 class="metrics-headline" data-element="metrics-headline">Built for Scale</h2>
+      <div class="stat-cards">
+        <div class="stat-card" data-element="stat-card-1">
+          <div class="stat-value" data-counter="10" data-suffix="x">0x</div>
+          <div class="stat-label">Faster Decisions</div>
+        </div>
+        <div class="stat-card" data-element="stat-card-2">
+          <div class="stat-value" data-counter="99.9" data-suffix="%">0%</div>
+          <div class="stat-label">Uptime SLA</div>
+        </div>
+        <div class="stat-card" data-element="stat-card-3">
+          <div class="stat-value" data-counter="500" data-suffix="K+">0</div>
+          <div class="stat-label">Data Points / Second</div>
+        </div>
+      </div>
+      <div class="chart-area" data-element="chart-area">
+        <div class="chart-row">
+          <span class="chart-label">Speed</span>
+          <div class="chart-bars">
+            <div class="chart-bar before" data-chart="speed-before" style="width: 0;"></div>
+            <div class="chart-bar after" data-chart="speed-after" style="width: 0;"></div>
+          </div>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">Accuracy</span>
+          <div class="chart-bars">
+            <div class="chart-bar before" data-chart="accuracy-before" style="width: 0;"></div>
+            <div class="chart-bar after" data-chart="accuracy-after" style="width: 0;"></div>
+          </div>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">Cost Savings</span>
+          <div class="chart-bars">
+            <div class="chart-bar before" data-chart="cost-before" style="width: 0;"></div>
+            <div class="chart-bar after" data-chart="cost-after" style="width: 0;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCENE 5: CTA / Outro (26s -- 30s)
+         ============================================ -->
+    <div class="composition comp-outro"
+         data-composition-id="cta-outro"
+         data-start="26"
+         data-duration="4"
+         data-track-index="1">
+      <div class="outro-logo" data-element="outro-logo" style="opacity: 0;">
+        <span class="outro-logo-inner">N</span>
+      </div>
+      <h2 class="outro-headline" data-element="outro-headline">The Future Is Unified.</h2>
+      <button class="outro-cta" data-element="outro-cta">Join the Waitlist</button>
+      <p class="outro-footer" data-element="outro-footer">nexus.ai</p>
+    </div>
+
+    <!-- Vignette overlay for outro -->
+    <div class="vignette" data-element="vignette"></div>
+
+  </div>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    /**
+     * Nexus AI -- Product Launch
+     * HyperFrames Composition | 30s | 1920x1080
+     * Animation timeline driven by GSAP
+     */
+
+    // Helper: get scene by composition-id
+    function comp(id) {
+      return document.querySelector(`[data-composition-id="${id}"]`);
+    }
+
+    // Helper: get element within a scene by data-element attr
+    function el(parent, name) {
+      return parent.querySelector(`[data-element="${name}"]`);
+    }
+
+    // Master timeline
+    const master = gsap.timeline({ paused: false });
+
+    // -------------------------------------------------------
+    // SCENE 1: Logo Reveal (0s -- 5s)
+    // -------------------------------------------------------
+    const scene1 = comp("logo-reveal");
+    const logoDot = el(scene1, "logo-dot");
+    const logoMark = el(scene1, "logo-mark");
+    const logoWordmark = el(scene1, "logo-wordmark");
+    const grid = document.querySelector(".bg-grid");
+
+    // Show scene 1
+    master.set(scene1, { opacity: 1 }, 0);
+
+    // Grid slow pan
+    master.to(grid, { y: -20, duration: 30, ease: "none" }, 0);
+
+    // Logo dot pulse
+    master.fromTo(logoDot,
+      { scale: 0, opacity: 0 },
+      { scale: 1.5, opacity: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" },
+      0.2
+    );
+    master.to(logoDot,
+      { opacity: 0, scale: 0, duration: 0.3, ease: "power2.in" },
+      1.0
+    );
+
+    // Logo mark reveal
+    master.fromTo(logoMark,
+      { scale: 0.6, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" },
+      0.8
+    );
+
+    // Wordmark slide up
+    master.fromTo(logoWordmark,
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+      1.2
+    );
+
+    // Subtle glow pulse on logo
+    master.to(logoMark.querySelector(".logo-hexagon"),
+      { boxShadow: "0 0 80px rgba(108,92,231,0.6), inset 0 0 40px rgba(108,92,231,0.15)", duration: 2, repeat: 1, yoyo: true, ease: "sine.inOut" },
+      1.6
+    );
+
+    // Exit scene 1
+    master.to(scene1, { opacity: 0, duration: 0.4, ease: "power2.in" }, 4.6);
+
+    // -------------------------------------------------------
+    // SCENE 2: Problem Statement (5s -- 11s)
+    // -------------------------------------------------------
+    const scene2 = comp("problem-statement");
+
+    master.set(scene2, { opacity: 0 }, 4.8);
+    master.to(scene2, { opacity: 1, duration: 0.4, ease: "power2.out" }, 5.0);
+
+    // Headline
+    master.fromTo(el(scene2, "problem-headline"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+      5.2
+    );
+
+    // Staggered bullets
+    master.fromTo(el(scene2, "bullet-1"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+      5.8
+    );
+    master.fromTo(el(scene2, "bullet-2"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+      6.2
+    );
+    master.fromTo(el(scene2, "bullet-3"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+      6.6
+    );
+
+    // Network nodes pulse
+    const networkNodes = el(scene2, "network-diagram").querySelectorAll(".network-node");
+    networkNodes.forEach((node, i) => {
+      if (node.classList.contains("dim")) {
+        master.to(node,
+          { opacity: 1, boxShadow: "0 0 20px rgba(108,92,231,0.5)", duration: 0.5, ease: "power2.out" },
+          7.0 + i * 0.15
+        );
+      }
+      // Float continuously
+      master.to(node,
+        { y: gsap.utils.random(-8, 8), duration: 2.5, repeat: 1, yoyo: true, ease: "sine.inOut" },
+        5.5
+      );
+    });
+
+    // Exit
+    master.to(scene2, { opacity: 0, duration: 0.4, ease: "power2.in" }, 10.6);
+
+    // -------------------------------------------------------
+    // SCENE 3: Solution (11s -- 20s)
+    // -------------------------------------------------------
+    const scene3 = comp("the-solution");
+    const heroCard = el(scene3, "hero-card");
+
+    master.set(scene3, { opacity: 0 }, 10.8);
+    master.to(scene3, { opacity: 1, duration: 0.4, ease: "power2.out" }, 11.0);
+
+    // Hero card scale in
+    master.fromTo(heroCard,
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" },
+      11.2
+    );
+
+    // Feature pillars stagger
+    master.fromTo(el(scene3, "pillar-1"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      11.8
+    );
+    master.fromTo(el(scene3, "pillar-2"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      12.2
+    );
+    master.fromTo(el(scene3, "pillar-3"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      12.6
+    );
+
+    // Float animation on pillar icons
+    const pillarIcons = scene3.querySelectorAll(".pillar-icon");
+    pillarIcons.forEach((icon, i) => {
+      master.to(icon,
+        { y: -6, duration: 2.5, repeat: 2, yoyo: true, ease: "sine.inOut" },
+        13.0 + i * 0.3
+      );
+    });
+
+    // Hero card glow pulse
+    master.to(heroCard,
+      { boxShadow: "0 0 120px rgba(108,92,231,0.25)", duration: 3, repeat: 1, yoyo: true, ease: "sine.inOut" },
+      13.0
+    );
+
+    // Exit
+    master.to(scene3, { opacity: 0, duration: 0.4, ease: "power2.in" }, 19.6);
+
+    // -------------------------------------------------------
+    // SCENE 4: Performance Metrics (20s -- 26s)
+    // -------------------------------------------------------
+    const scene4 = comp("performance-metrics");
+
+    master.set(scene4, { opacity: 0 }, 19.8);
+    master.to(scene4, { opacity: 1, duration: 0.4, ease: "power2.out" }, 20.0);
+
+    // Headline
+    master.fromTo(el(scene4, "metrics-headline"),
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      20.2
+    );
+
+    // Stat cards stagger in
+    const statCards = [el(scene4, "stat-card-1"), el(scene4, "stat-card-2"), el(scene4, "stat-card-3")];
+    statCards.forEach((card, i) => {
+      master.fromTo(card,
+        { y: 30, opacity: 0, scale: 0.95 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.2)" },
+        20.5 + i * 0.2
+      );
+    });
+
+    // Counter animation for stat values
+    const counterTargets = [
+      { el: scene4.querySelector('[data-counter="10"]'), target: 10, suffix: "x" },
+      { el: scene4.querySelector('[data-counter="99.9"]'), target: 99.9, suffix: "%" },
+      { el: scene4.querySelector('[data-counter="500"]'), target: 500, suffix: "K+" },
+    ];
+
+    counterTargets.forEach(({ el, target, suffix }) => {
+      const counterObj = { val: 0 };
+      master.to(counterObj,
+        {
+          val: target,
+          duration: 1.2,
+          ease: "power2.out",
+          onUpdate: () => {
+            el.textContent = Math.round(counterObj.val) + suffix;
+          }
+        },
+        21.2
+      );
+    });
+
+    // Chart bars grow
+    const chartBars = {
+      before: [
+        { selector: '[data-chart="speed-before"]', target: 140 },
+        { selector: '[data-chart="accuracy-before"]', target: 200 },
+        { selector: '[data-chart="cost-before"]', target: 160 },
+      ],
+      after: [
+        { selector: '[data-chart="speed-after"]', target: 380 },
+        { selector: '[data-chart="accuracy-after"]', target: 420 },
+        { selector: '[data-chart="cost-after"]', target: 350 },
+      ],
+    };
+
+    // Animate "Before" bars
+    chartBars.before.forEach((bar, i) => {
+      const el = scene4.querySelector(bar.selector);
+      if (el) {
+        master.to(el,
+          { width: bar.target + "px", duration: 0.6, ease: "power2.out" },
+          22.0 + i * 0.15
+        );
+      }
+    });
+
+    // Animate "After" bars
+    chartBars.after.forEach((bar, i) => {
+      const el = scene4.querySelector(bar.selector);
+      if (el) {
+        master.to(el,
+          { width: bar.target + "px", duration: 0.6, ease: "power2.out" },
+          22.4 + i * 0.15
+        );
+      }
+    });
+
+    // Exit
+    master.to(scene4, { opacity: 0, duration: 0.4, ease: "power2.in" }, 25.6);
+
+    // -------------------------------------------------------
+    // SCENE 5: CTA / Outro (26s -- 30s)
+    // -------------------------------------------------------
+    const scene5 = comp("cta-outro");
+    const vignette = document.querySelector(".vignette");
+
+    master.set(scene5, { opacity: 0 }, 25.8);
+    master.to(scene5, { opacity: 1, duration: 0.4, ease: "power2.out" }, 26.0);
+
+    // Vignette
+    master.to(vignette, { opacity: 1, duration: 0.8 }, 25.8);
+
+    // Logo
+    master.fromTo(el(scene5, "outro-logo"),
+      { opacity: 0, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)" },
+      26.3
+    );
+
+    // Headline slide up
+    master.fromTo(el(scene5, "outro-headline"),
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+      26.8
+    );
+
+    // CTA button
+    const ctaBtn = el(scene5, "outro-cta");
+    master.fromTo(ctaBtn,
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" },
+      27.4
+    );
+
+    // CTA pulse loop
+    master.to(ctaBtn,
+      { scale: 1.04, duration: 1.2, repeat: 1, yoyo: true, ease: "sine.inOut" },
+      28.0
+    );
+
+    // Footer
+    master.fromTo(el(scene5, "outro-footer"),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5 },
+      28.5
+    );
+
+    // Register HyperFrames frame adapter for seeking
+    window.__hf_gsap = (composition, currentTime) => {
+      master.time(currentTime);
+    };
+  </script>
+</body>
+</html>
