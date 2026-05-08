@@ -3,243 +3,587 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unveiling — Product Launch Event Opener</title>
+<title>Pro X -- Product Launch Event Opener</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    --black: #000000;
+    --white: #F5F5F7;
+    --silver: #86868B;
+    --blue: #2997FF;
+    --surface: #1D1D1F;
+    --font-sans: 'Inter', -apple-system, 'SF Pro Display', sans-serif;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap');
+
   body {
-    width: 1920px; height: 1080px;
-    background: #000000;
+    background: #000;
     overflow: hidden;
-    font-family: 'Inter', sans-serif;
-    color: #FFFFFF;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ========== SCENE 1: The Spark (0-6s) ========== */
-  #scene-spark {
-    background: #000000;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 1;
-  }
-  .spark-dot {
-    width: 2px; height: 2px;
-    background: #FFFFFF;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.15);
-    opacity: 0;
-  }
-
-  /* ========== SCENE 2: The Line & Silhouette (6-12s) ========== */
-  #scene-silhouette {
-    background: #000000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    opacity: 0;
-  }
-  .horizon-line {
-    width: 0; height: 1px;
-    background: rgba(255,255,255,0.6);
-  }
-  .silhouette {
-    width: 400px; height: 300px;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, transparent 70%);
-    border-radius: 50%;
-    opacity: 0;
-    filter: blur(10px);
-  }
-
-  /* ========== SCENE 3: Edge Light (12-20s) ========== */
-  #scene-edge {
-    background: #000000;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-  }
-  .product-glow {
+  #hyperframes-canvas {
     position: relative;
-    width: 500px; height: 350px;
+    width: 1920px;
+    height: 1080px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--black);
   }
-  .edge-light {
+
+  .composition {
     position: absolute;
-    width: 500px; height: 350px;
-    border-radius: 30px;
-    background: transparent;
-    box-shadow:
-      inset 0 0 2px rgba(255,255,255,0.5),
-      0 0 40px rgba(255,255,255,0.08);
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== Spotlight System ===== */
+  .spotlight {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .spotlight-main {
+    width: 1920px;
+    height: 1800px;
+    top: -600px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse 800px 600px at 50% 35%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 30%, transparent 70%);
     opacity: 0;
   }
+
+  .spotlight-key {
+    width: 1920px;
+    height: 1080px;
+    top: 0;
+    left: 0;
+    background: radial-gradient(ellipse 1200px 800px at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 70%);
+    opacity: 0;
+  }
+
+  /* ===== Light Particles ===== */
   .particle {
     position: absolute;
-    width: 1px; height: 1px;
-    background: rgba(255,255,255,0.6);
     border-radius: 50%;
-    opacity: 0;
-  }
-  .product-label {
-    text-align: center; margin-top: 32px;
-    font-size: 18px; font-weight: 400;
-    letter-spacing: 8px;
-    color: rgba(255,255,255,0.4);
-    text-transform: uppercase;
+    background: rgba(255,255,255,0.6);
+    pointer-events: none;
+    z-index: 2;
     opacity: 0;
   }
 
-  /* ========== SCENE 4: The Reveal (20-25s) ========== */
-  #scene-reveal {
-    background: #000000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  /* ===== Product Silhouette ===== */
+  .product-silhouette {
+    position: relative;
+    width: 520px;
+    height: 340px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
+    border-radius: 26px;
+    border: 1px solid rgba(255,255,255,0.06);
+    z-index: 2;
+    overflow: hidden;
     opacity: 0;
   }
-  .spotlight {
-    position: absolute; top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%);
+
+  .product-silhouette::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.04) 100%);
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+
+  .product-silhouette.revealed::before {
+    opacity: 1;
+  }
+
+  .product-glint {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
     opacity: 0;
   }
-  .product-img {
-    width: 500px; height: 300px;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, transparent 60%);
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transform: scale(0.95);
+
+  .metallic-sweep {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+    z-index: 3;
+    pointer-events: none;
   }
+
+  /* ===== Product Name ===== */
   .product-name {
-    font-size: 64px; font-weight: 900;
-    letter-spacing: -2px;
-    color: #FFFFFF;
-    margin-top: 32px;
+    font-family: var(--font-sans);
+    font-size: 84px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -3px;
+    z-index: 2;
     opacity: 0;
-    transform: translateY(20px);
+    text-shadow: 0 0 80px rgba(255,255,255,0.15);
   }
-  .feature-line {
-    display: flex; align-items: center; gap: 12px;
+
+  .product-tagline {
+    font-family: var(--font-sans);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: -0.3px;
+    z-index: 2;
+    opacity: 0;
     margin-top: 12px;
-    opacity: 0;
   }
-  .feature-dot { width: 4px; height: 4px; background: #FFFFFF; border-radius: 50%; }
-  .feature-text { font-size: 16px; color: rgba(255,255,255,0.7); font-weight: 400; }
 
-  /* ========== SCENE 5: Finale (25-30s) ========== */
-  #scene-finale {
-    background: radial-gradient(ellipse at 50% 40%, #1A1A1A 0%, #000000 60%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  /* ===== Spec Cards (Glass Morphism) ===== */
+  .specs-container {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .spec-card {
+    position: absolute;
+    background: rgba(29,29,31,0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 22px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    min-width: 200px;
+  }
+
+  .spec-card .spec-value {
+    font-family: var(--font-sans);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .spec-card .spec-label {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--silver);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Card grid positions around product */
+  .spec-card.tl { top: 120px; left: 120px; }
+  .spec-card.tr { top: 120px; right: 120px; text-align: right; }
+  .spec-card.ml { top: 420px; left: 80px; }
+  .spec-card.mr { top: 420px; right: 80px; text-align: right; }
+  .spec-card.bl { bottom: 200px; left: 140px; }
+  .spec-card.br { bottom: 200px; right: 140px; text-align: right; }
+
+  /* ===== Climax Text ===== */
+  .climax-available {
+    font-family: var(--font-sans);
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: -1px;
+    z-index: 2;
+    opacity: 0;
+    text-shadow: 0 0 40px rgba(41,151,255,0.3);
+  }
+
+  .climax-price {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--silver);
+    letter-spacing: 0;
+    z-index: 2;
+    opacity: 0;
+    margin-top: 10px;
+  }
+
+  .climax-cta {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--blue);
+    letter-spacing: 0.5px;
+    z-index: 2;
+    opacity: 0;
+    margin-top: 6px;
+  }
+
+  /* ===== Intro Text ===== */
+  .intro-text {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--silver);
+    letter-spacing: 1px;
+    z-index: 2;
     opacity: 0;
   }
-  .cta-text {
-    font-size: 72px; font-weight: 900;
+
+  /* ===== Outro ===== */
+  .outro-logo {
+    font-family: var(--font-sans);
+    font-size: 60px;
+    font-weight: 800;
+    color: var(--white);
     letter-spacing: -2px;
-    color: #FFFFFF;
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  .cta-url {
-    font-size: 20px; font-weight: 400;
-    color: rgba(255,255,255,0.5);
-    margin-top: 20px;
-    letter-spacing: 2px;
+    z-index: 2;
     opacity: 0;
   }
 
-  .composition { position: absolute; inset: 0; }
+  .legal-text {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--silver);
+    letter-spacing: 0.5px;
+    z-index: 10;
+    opacity: 0;
+  }
+
+  /* ===== Thin Divider ===== */
+  .thin-divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin: 20px auto;
+    opacity: 0;
+    z-index: 2;
+  }
+
 </style>
 </head>
 <body>
 
-<!-- SCENE 1: Spark (0-6s) -->
-<div class="composition" id="scene-spark" data-composition-id="scene-1" data-start="0" data-duration="6" data-track-index="0">
-  <div class="spark-dot" id="spark-dot"></div>
-</div>
+<div id="hyperframes-canvas">
 
-<!-- SCENE 2: Silhouette (6-12s) -->
-<div class="composition" id="scene-silhouette" data-composition-id="scene-2" data-start="6" data-duration="6" data-track-index="0">
-  <div class="horizon-line" id="horizon-line"></div>
-  <div class="silhouette" id="silhouette"></div>
-</div>
+  <!-- ===== Global Light Layers ===== -->
+  <div class="spotlight spotlight-main" id="spotlightMain"></div>
+  <div class="spotlight spotlight-key" id="spotlightKey"></div>
+  <div class="legal-text" id="legalText">Battery life varies by use. See pro-x.com/specs for details.</div>
 
-<!-- SCENE 3: Edge Light (12-20s) -->
-<div class="composition" id="scene-edge" data-composition-id="scene-3" data-start="12" data-duration="8" data-track-index="0">
-  <div class="product-glow" id="product-glow">
-    <div class="edge-light" id="edge-light"></div>
-    <div class="particle" id="p1" style="top:20%;left:10%;"></div>
-    <div class="particle" id="p2" style="top:30%;left:80%;"></div>
-    <div class="particle" id="p3" style="top:60%;left:30%;"></div>
-    <div class="particle" id="p4" style="top:70%;left:70%;"></div>
-    <div class="particle" id="p5" style="top:40%;left:50%;"></div>
+  <!-- ===== SCENE 1: Darkness + Build-Up (0s-6s) ===== -->
+  <div class="composition active"
+       data-composition-id="scene-1-build-up"
+       data-start="0" data-duration="6" data-track-index="1">
+    <div class="intro-text" id="introText">Something big is coming.</div>
+    <div class="product-silhouette" id="silhouette1">
+      <div class="metallic-sweep" id="sweep1"></div>
+    </div>
+    <!-- Light particles -->
+    <div class="particle" id="p1" style="width:2px;height:2px;top:45%;left:48%;"></div>
+    <div class="particle" id="p2" style="width:1px;height:1px;top:48%;left:52%;"></div>
+    <div class="particle" id="p3" style="width:3px;height:3px;top:42%;left:50%;"></div>
+    <div class="particle" id="p4" style="width:1.5px;height:1.5px;top:50%;left:47%;"></div>
+    <div class="particle" id="p5" style="width:2px;height:2px;top:44%;left:53%;"></div>
   </div>
-  <div class="product-label" id="product-label">Coming Soon</div>
-</div>
 
-<!-- SCENE 4: Product Reveal (20-25s) -->
-<div class="composition" id="scene-reveal" data-composition-id="scene-4" data-start="20" data-duration="5" data-track-index="0">
-  <div class="spotlight" id="spotlight"></div>
-  <div class="product-img" id="product-img">
-    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-      <rect x="20" y="30" width="80" height="60" rx="12" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
-      <circle cx="60" cy="60" r="15" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-      <line x1="45" y1="45" x2="75" y2="75" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-    </svg>
+  <!-- ===== SCENE 2: The Reveal Begins (6s-12s) ===== -->
+  <div class="composition"
+       data-composition-id="scene-2-reveal"
+       data-start="6" data-duration="6" data-track-index="2">
+    <div class="product-silhouette" id="silhouette2">
+      <div class="product-glint" id="glint2" style="left:30%;"></div>
+      <div class="metallic-sweep" id="sweep2"></div>
+    </div>
+    <div class="product-name" id="productName">Pro X</div>
+    <div class="thin-divider" id="scene2Divider"></div>
+    <div class="product-tagline" id="productTagline">Power without compromise.</div>
   </div>
-  <div class="product-name" id="product-name">Nexus One</div>
-  <div class="feature-line" id="f1"><div class="feature-dot"></div><span class="feature-text">Revolutionary AI Engine</span></div>
-  <div class="feature-line" id="f2"><div class="feature-dot"></div><span class="feature-text">All-day Battery Life</span></div>
-  <div class="feature-line" id="f3"><div class="feature-dot"></div><span class="feature-text">Pro-grade Camera System</span></div>
-</div>
 
-<!-- SCENE 5: Finale (25-30s) -->
-<div class="composition" id="scene-finale" data-composition-id="scene-5" data-start="25" data-duration="5" data-track-index="0">
-  <div class="cta-text" id="cta-text">Available Today</div>
-  <div class="cta-url" id="cta-url">nexus.com/one</div>
+  <!-- ===== SCENE 3: Spec Fly-In Wave (12s-20s) ===== -->
+  <div class="composition"
+       data-composition-id="scene-3-specs"
+       data-start="12" data-duration="8" data-track-index="3">
+    <div class="product-silhouette revealed" id="silhouette3"
+         style="opacity:1;transform:translateY(40px);">
+      <div class="product-glint" id="glint3a" style="left:25%;opacity:1;"></div>
+      <div class="product-glint" id="glint3b" style="left:70%;opacity:1;"></div>
+    </div>
+    <div class="specs-container">
+      <div class="spec-card tl" id="specCard1">
+        <span class="spec-value">M4 Ultra</span>
+        <span class="spec-label">Next-gen performance</span>
+      </div>
+      <div class="spec-card tr" id="specCard2">
+        <span class="spec-value">32-core</span>
+        <span class="spec-label">Neural Engine</span>
+      </div>
+      <div class="spec-card ml" id="specCard3">
+        <span class="spec-value">64GB</span>
+        <span class="spec-label">Unified Memory</span>
+      </div>
+      <div class="spec-card mr" id="specCard4">
+        <span class="spec-value">18-hour</span>
+        <span class="spec-label">Battery Life</span>
+      </div>
+      <div class="spec-card bl" id="specCard5">
+        <span class="spec-value">XDR</span>
+        <span class="spec-label">Liquid Retina Display</span>
+      </div>
+      <div class="spec-card br" id="specCard6">
+        <span class="spec-value">1TB</span>
+        <span class="spec-label">Storage</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 4: Climax + CTA (20s-26s) ===== -->
+  <div class="composition"
+       data-composition-id="scene-4-climax"
+       data-start="20" data-duration="6" data-track-index="4">
+    <div class="product-silhouette revealed" id="silhouette4"
+         style="opacity:1;transform:translateY(-20px) scale(1.03);">
+      <div class="product-glint" style="left:25%;opacity:0.8;"></div>
+      <div class="product-glint" style="left:70%;opacity:0.8;"></div>
+    </div>
+    <div class="climax-available" id="climaxAvailable">Available today.</div>
+    <div class="climax-price" id="climaxPrice">Starting at $1,999</div>
+    <div class="climax-cta" id="climaxCta">Order at pro-x.com</div>
+  </div>
+
+  <!-- ===== SCENE 5: Outro (26s-30s) ===== -->
+  <div class="composition"
+       data-composition-id="scene-5-outro"
+       data-start="26" data-duration="4" data-track-index="5">
+    <div class="outro-logo" id="outroLogo">Pro X</div>
+  </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
 <script>
-  // Scene 1: The Spark (0-6s)
-  const s1 = gsap.timeline();
-  s1.to("#spark-dot", { opacity: 0.8, duration: 3, ease: "power3.out" })
-    .to("#spark-dot", { scale: 1.05, duration: 2, repeat: 1, yoyo: true, ease: "sine.inOut" }, "-=1")
-    .to("#scene-spark", { opacity: 0, duration: 0.5 });
+  (function() {
+    const tl = gsap.timeline({ paused: false });
 
-  // Scene 2: Horizon Line + Silhouette (6-12s)
-  const s2 = gsap.timeline();
-  s2.set("#scene-silhouette", { opacity: 1 })
-    .to("#horizon-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
-    .to("#silhouette", { opacity: 1, filter: "blur(4px)", duration: 2, ease: "power2.out" }, "-=0.8")
-    .to("#scene-silhouette", { opacity: 0, duration: 0.5, delay: 2 });
+    function crossfade(fromEl, toEl, dur) {
+      if (fromEl) gsap.to(fromEl, { opacity: 0, duration: dur, ease: 'power2.inOut' });
+      if (toEl) gsap.set(toEl, { opacity: 1 });
+    }
 
-  // Scene 3: Edge Light + Particles (12-20s)
-  const s3 = gsap.timeline();
-  s3.set("#scene-edge", { opacity: 1 })
-    .to("#edge-light", { opacity: 1, duration: 2, ease: "power2.out" })
-    .to(["#p1","#p2","#p3","#p4","#p5"], { opacity: 0.8, duration: 0.5, stagger: 0.2 }, "-=1")
-    .to("#p1", { x: 20, y: -15, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=0.5")
-    .to("#p2", { x: -25, y: 10, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=6")
-    .to("#p3", { x: 15, y: 20, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=7")
-    .to("#p4", { x: -10, y: -20, duration: 4.5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=6")
-    .to("#p5", { x: 5, y: -25, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=5")
-    .to("#product-label", { opacity: 1, duration: 1 }, "-=6")
-    .to("#scene-edge", { opacity: 0, duration: 0.5, delay: 2 });
+    const scene1 = document.querySelector('[data-composition-id="scene-1-build-up"]');
+    const scene2 = document.querySelector('[data-composition-id="scene-2-reveal"]');
+    const scene3 = document.querySelector('[data-composition-id="scene-3-specs"]');
+    const scene4 = document.querySelector('[data-composition-id="scene-4-climax"]');
+    const scene5 = document.querySelector('[data-composition-id="scene-5-outro"]');
 
-  // Scene 4: The Reveal (20-25s)
-  const s4 = gsap.timeline();
-  s4.set("#scene-reveal", { opacity: 1 })
-    .to("#spotlight", { opacity: 1, duration: 1.5, ease: "power2.inOut" })
-    .to("#product-img", { opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, "-=0.8")
-    .to("#product-name", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" })
-    .to(["#f1","#f2","#f3"], { opacity: 1, duration: 0.4, stagger: 0.2 })
-    .to("#scene-reveal", { opacity: 0, duration: 0.5, delay: 1 });
+    // ===== SCENE 1: Darkness + Build-Up (0s-6s) =====
+    tl.set(scene1, { opacity: 1 }, 0);
 
-  // Scene 5: Finale (25-30s)
-  const s5 = gsap.timeline();
-  s5.set("#scene-finale", { opacity: 1 })
-    .to("#cta-text", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.4)" })
-    .to("#cta-url", { opacity: 1, duration: 0.6 }, "-=0.3")
-    .to("#scene-finale", { opacity: 0, duration: 1, delay: 2 });
+    // Spotlight fades on, expanding from center-top
+    tl.fromTo('#spotlightMain',
+      { opacity: 0 },
+      { opacity: 1, duration: 2.5, ease: 'power3.in' }, 0.5);
 
-  window.__hf_gsap = function(comp, time) { gsap.globalTimeline.time(time); };
+    // Silhouette emerges from darkness
+    tl.fromTo('#silhouette1',
+      { opacity: 0, scale: 0.98, y: 15 },
+      { opacity: 0.25, scale: 1, y: 0, duration: 1.8, ease: 'power2.out' }, 2.5);
+
+    // Light particles drift
+    ['#p1','#p2','#p3','#p4','#p5'].forEach((pid, i) => {
+      tl.fromTo(pid,
+        { opacity: 0, y: 0, x: 0 },
+        { opacity: 0.7, y: -20 - Math.random() * 40, x: (Math.random() - 0.5) * 30,
+          duration: 3, ease: 'sine.inOut' }, 3 + i * 0.2);
+    });
+
+    // Intro text fades in
+    tl.fromTo('#introText',
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 4.5);
+
+    // Crossfade to scene 2
+    tl.call(() => crossfade(scene1, scene2, 0.5), null, 5.5);
+    tl.set(scene1, { opacity: 0 }, 6);
+
+    // ===== SCENE 2: The Reveal Begins (6s-12s) =====
+    tl.set(scene2, { opacity: 1 }, 6);
+
+    // Silhouette becomes more visible
+    tl.fromTo('#silhouette2',
+      { opacity: 0.25, scale: 0.98 },
+      { opacity: 0.6, scale: 1, duration: 1.5, ease: 'power2.out' }, 6.2);
+
+    // Metallic sweep across surface
+    tl.fromTo('#sweep2',
+      { top: '-100%' },
+      { top: '100%', duration: 1.8, ease: 'power2.inOut' }, 7);
+
+    // Edge glint appears
+    tl.fromTo('#glint2',
+      { opacity: 0 },
+      { opacity: 0.6, duration: 1.2, ease: 'power2.out' }, 7.5);
+
+    // Product name scales in
+    tl.fromTo('#productName',
+      { opacity: 0, y: 30, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out' }, 8.5);
+
+    // Divider
+    tl.fromTo('#scene2Divider',
+      { opacity: 0, scaleX: 0 },
+      { opacity: 1, scaleX: 1, duration: 0.5, ease: 'power2.out' }, 9);
+
+    // Tagline
+    tl.fromTo('#productTagline',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 9.2);
+
+    // Key light warms
+    tl.fromTo('#spotlightKey',
+      { opacity: 0 },
+      { opacity: 0.4, duration: 1.5, ease: 'power2.in' }, 10.5);
+
+    // Crossfade to scene 3
+    tl.call(() => crossfade(scene2, scene3, 0.5), null, 11.5);
+    tl.set(scene2, { opacity: 0 }, 12);
+
+    // ===== SCENE 3: Spec Fly-In Wave (12s-20s) =====
+    tl.set(scene3, { opacity: 1 }, 12);
+
+    // Full stage illumination
+    tl.to('#spotlightKey', { opacity: 0.7, duration: 1, ease: 'power2.out' }, 12);
+
+    // Product fully revealed
+    tl.fromTo('#silhouette3',
+      { opacity: 0.6 },
+      { opacity: 1, duration: 0.6, ease: 'power2.out' }, 12.1);
+
+    // Double edge glint
+    tl.to(['#glint3a', '#glint3b'], { opacity: 0.7, duration: 0.8 }, 12.3);
+
+    // Spec cards fly in from edges -- staggered wave pattern
+    const cardFlyIns = [
+      { id: '#specCard1', from: { x: -200, y: -100 }, at: 12.5 },
+      { id: '#specCard2', from: { x: 200, y: -100 }, at: 13 },
+      { id: '#specCard3', from: { x: -180, y: 0 }, at: 14 },
+      { id: '#specCard4', from: { x: 180, y: 0 }, at: 14.5 },
+      { id: '#specCard5', from: { x: -160, y: 100 }, at: 15.5 },
+      { id: '#specCard6', from: { x: 160, y: 100 }, at: 16 },
+    ];
+
+    cardFlyIns.forEach(card => {
+      tl.fromTo(card.id,
+        { opacity: 0, x: card.from.x, y: card.from.y, scale: 0.85 },
+        { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.5, ease: 'power3.out' },
+        card.at);
+    });
+
+    // Subtle float on cards after landing
+    cardFlyIns.forEach((card) => {
+      tl.to(card.id,
+        { y: -8, duration: 2.5, ease: 'sine.inOut', yoyo: true, repeat: 1 },
+        card.at + 0.6);
+    });
+
+    // Crossfade to scene 4
+    tl.call(() => crossfade(scene3, scene4, 0.5), null, 19.5);
+    tl.set(scene3, { opacity: 0 }, 20);
+
+    // ===== SCENE 4: Climax + CTA (20s-26s) =====
+    tl.set(scene4, { opacity: 1 }, 20);
+
+    // Full brightness
+    tl.to('#spotlightKey', { opacity: 1, duration: 1, ease: 'power2.out' }, 20);
+
+    // Product lifts up and scales
+    tl.fromTo('#silhouette4',
+      { opacity: 1, y: 40, scale: 1 },
+      { opacity: 1, y: -20, scale: 1.03, duration: 1, ease: 'power3.out' }, 20.2);
+
+    // "Available today." -- dramatic scale-in
+    tl.fromTo('#climaxAvailable',
+      { opacity: 0, scale: 0.8, y: 20 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: 'back.out(1.6)' }, 21.2);
+
+    // Price
+    tl.fromTo('#climaxPrice',
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 21.8);
+
+    // CTA URL
+    tl.fromTo('#climaxCta',
+      { opacity: 0, y: 8 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 22.3);
+
+    // Hold for breath
+    tl.to({}, { duration: 2.5 }, 22.8);
+
+    // Crossfade to scene 5
+    tl.call(() => crossfade(scene4, scene5, 0.6), null, 25.5);
+    tl.set(scene4, { opacity: 0 }, 26);
+
+    // ===== SCENE 5: Outro (26s-30s) =====
+    tl.set(scene5, { opacity: 1 }, 26);
+
+    // Spotlight shrinks to a point
+    tl.to('#spotlightKey', { opacity: 0, duration: 1.5, ease: 'power2.in' }, 26);
+    tl.to('#spotlightMain', { opacity: 0, duration: 2, ease: 'power2.inOut' }, 26);
+
+    // Logo appears
+    tl.fromTo('#outroLogo',
+      { opacity: 0, scale: 0.95, y: 10 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 26.5);
+
+    // Legal text
+    tl.fromTo('#legalText',
+      { opacity: 0 },
+      { opacity: 0.4, duration: 0.8, ease: 'power2.out' }, 27.5);
+
+    // Fade everything to black
+    tl.to(['#outroLogo', '#legalText', '#spotlightMain'],
+      { opacity: 0, duration: 0.8, ease: 'power2.in' }, 29.2);
+    tl.to('#hyperframes-canvas',
+      { opacity: 0, duration: 0.2 }, 29.8);
+
+    // ===== Frame Adapter for HyperFrames =====
+    window.__hf_gsap = function(composition, currentTime) {
+      tl.time(currentTime);
+    };
+
+    // Standalone preview auto-advance (remove when rendering in HyperFrames)
+    let pt = 0;
+    const iv = setInterval(function() {
+      pt += 1/30;
+      if (pt <= 30) tl.time(pt);
+      else clearInterval(iv);
+    }, 1000/30);
+
+  })();
 </script>
+
 </body>
 </html>

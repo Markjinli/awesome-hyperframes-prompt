@@ -1,217 +1,912 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Rise of Remote Work 2020-2026 — Trend Analysis</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rise of Remote Work 2020-2026 — Trend Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-page: #FAFAF9;
+      --bg-white: #FFFFFF;
+      --accent: #3B82F6;
+      --accent-light: #60A5FA;
+      --accent-lighter: #93C5FD;
+      --highlight: #F59E0B;
+      --text-headline: #1A1A1A;
+      --text-body: #374151;
+      --text-label: #6B7280;
+      --text-muted: #9CA3AF;
+      --border-light: #E5E7EB;
+      --border-med: #D1D5DB;
+      --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
 
-  body {
-    width: 1920px; height: 1080px;
-    background: #FBFBF9;
-    overflow: hidden;
-    font-family: 'Inter', sans-serif;
-    color: #1A1A1A;
-    -webkit-font-smoothing: antialiased;
-  }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-page);
+      color: var(--text-headline);
+      overflow: hidden;
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  .composition {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-  }
+    /* ========== CANVAS / SCENE ========== */
+    .hf-canvas {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-page);
+    }
 
-  /* ========== SCENE 1: Headline (0-5s) ========== */
-  #scene-headline { background: #FBFBF9; opacity: 1; }
-  .headline-content { text-align: center; max-width: 800px; }
-  .headline-kicker { font-size: 14px; font-weight: 600; letter-spacing: 6px; text-transform: uppercase; color: #2563EB; margin-bottom: 20px; }
-  .headline-title { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 700; line-height: 1.1; color: #1A1A1A; }
-  .headline-dek { font-size: 20px; color: #6B7280; margin-top: 16px; line-height: 1.6; }
-  .headline-rule { width: 60px; height: 2px; background: #2563EB; margin: 0 auto 20px; }
+    .hf-scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
 
-  /* ========== SCENE 2: The Shift (5-12s) ========== */
-  #scene-shift { background: #FBFBF9; }
-  .shift-layout { display: flex; gap: 80px; align-items: center; width: 75%; }
-  .shift-chart-area { flex: 1; }
-  .shift-text-area { flex: 1; }
-  .shift-year-label { font-size: 120px; font-weight: 900; color: rgba(0,0,0,0.04); line-height: 1; }
-  .shift-stat { font-size: 64px; font-weight: 800; color: #2563EB; line-height: 1; }
-  .shift-desc { font-size: 18px; color: #6B7280; margin-top: 12px; line-height: 1.6; }
-  .shift-line {
-    position: relative;
-    width: 400px; height: 200px;
-    border-left: 2px solid #E5E7EB;
-    border-bottom: 2px solid #E5E7EB;
-  }
+    .hf-scene.active { opacity: 1; pointer-events: auto; }
 
-  /* ========== SCENE 3: Timeline Milestones (12-20s) ========== */
-  #scene-timeline { background: #FBFBF9; }
-  .timeline-container { width: 75%; }
-  .timeline-section-title { font-size: 14px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #2563EB; margin-bottom: 40px; }
-  .timeline-track {
-    display: flex; gap: 40px;
-    position: relative;
-  }
-  .timeline-track::before {
-    content: ''; position: absolute; top: 28px; left: 0; right: 0; height: 2px; background: #E5E7EB;
-  }
-  .milestone { text-align: center; position: relative; flex: 1; opacity: 0; }
-  .milestone-dot { width: 12px; height: 12px; background: #2563EB; border-radius: 50%; margin: 22px auto 16px; position: relative; border: 4px solid #FBFBF9; }
-  .milestone-year { font-size: 16px; font-weight: 700; color: #2563EB; }
-  .milestone-label { font-size: 14px; color: #6B7280; margin-top: 4px; }
-  .milestone-value { font-size: 28px; font-weight: 800; color: #1A1A1A; margin-top: 8px; }
+    /* ========== SCENE 1: TITLE CARD & HOOK STAT ========== */
+    .scene1-wrapper {
+      text-align: center;
+      max-width: 1000px;
+      z-index: 2;
+      position: relative;
+    }
 
-  /* ========== SCENE 4: Regional Comparison (20-28s) ========== */
-  #scene-regions { background: #FBFBF9; }
-  .regions-layout { width: 75%; }
-  .regions-title { font-size: 14px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #2563EB; margin-bottom: 40px; }
-  .regions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
-  .region-card {
-    background: #FFFFFF;
-    border: 1px solid #F0F0ED;
-    border-radius: 12px;
-    padding: 32px;
-    opacity: 0;
-  }
-  .region-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .region-pct { font-size: 48px; font-weight: 800; color: #2563EB; }
-  .region-trend { font-size: 14px; color: #6B7280; margin-top: 4px; }
-</style>
+    .scene1-kicker {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      opacity: 0;
+    }
+
+    .scene1-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 24px;
+      transform: scaleX(0);
+      transform-origin: center;
+    }
+
+    .scene1-headline {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--text-headline);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .scene1-dek {
+      font-size: 20px;
+      color: var(--text-label);
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 0 auto 48px;
+      opacity: 0;
+    }
+
+    .scene1-hero-stat {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+    }
+
+    .scene1-hero-number {
+      font-family: var(--font-display);
+      font-size: 120px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .scene1-hero-label {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      color: var(--text-label);
+      max-width: 320px;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .scene1-source {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* ========== SCENE 2: LINE CHART ========== */
+    .scene2-wrapper {
+      width: 1200px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .scene2-chart-title {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0;
+    }
+
+    .scene2-chart-area {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 40px 50px 60px 90px;
+    }
+
+    .scene2-chart-area svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Chart grid lines */
+    .chart-grid-line {
+      stroke: #F3F4F6;
+      stroke-width: 1;
+    }
+
+    .chart-axis-line {
+      stroke: var(--border-med);
+      stroke-width: 1.5;
+    }
+
+    .chart-axis-label {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      fill: var(--text-label);
+    }
+
+    .chart-y-label {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      fill: var(--text-label);
+    }
+
+    /* Data elements */
+    .chart-line-path {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .chart-area-fill {
+      fill: url(#areaGradient);
+      opacity: 0;
+    }
+
+    .chart-data-dot {
+      fill: var(--accent);
+      stroke: var(--bg-white);
+      stroke-width: 2;
+      opacity: 0;
+    }
+
+    /* Callout annotation */
+    .chart-callout {
+      opacity: 0;
+    }
+
+    .chart-callout-line {
+      stroke: var(--highlight);
+      stroke-width: 1.5;
+      stroke-dasharray: 4,3;
+    }
+
+    .chart-callout-text {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      fill: var(--highlight);
+    }
+
+    .chart-callout-detail {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      fill: var(--text-label);
+    }
+
+    /* ========== SCENE 3: MILESTONE OVERLAY ========== */
+    .scene3-wrapper {
+      display: flex;
+      gap: 60px;
+      width: 1300px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .scene3-chart-bg {
+      flex: 1;
+      position: relative;
+      opacity: 0.3;
+    }
+
+    .scene3-timeline {
+      width: 460px;
+      position: relative;
+    }
+
+    .scene3-section-title {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+    }
+
+    /* Vertical timeline line */
+    .timeline-vertical-line {
+      position: absolute;
+      left: 11px;
+      top: 48px;
+      bottom: 0;
+      width: 2px;
+      background: var(--border-light);
+    }
+
+    .milestone-card {
+      position: relative;
+      padding-left: 36px;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    .milestone-card::before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-page);
+      border: 2px solid var(--accent);
+    }
+
+    .milestone-date {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .milestone-desc {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    /* ========== SCENE 4: REGIONAL COMPARISON + CLOSING ========== */
+    .scene4-wrapper {
+      width: 1100px;
+      z-index: 2;
+      position: relative;
+      text-align: center;
+    }
+
+    .scene4-section-title {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0;
+    }
+
+    .scene4-cards {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+
+    .region-card {
+      flex: 1;
+      background: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 28px 24px;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .region-name {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-headline);
+      margin-bottom: 16px;
+    }
+
+    .region-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #F3F4F6;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .region-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+    }
+
+    .region-bar-fill.na { background: var(--accent); }
+    .region-bar-fill.eu { background: var(--accent-light); }
+    .region-bar-fill.apac { background: var(--accent-lighter); }
+
+    .region-pct {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .region-desc {
+      font-size: 13px;
+      color: var(--text-label);
+    }
+
+    /* Closing statement */
+    .scene4-closing {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text-headline);
+      opacity: 0;
+      margin-bottom: 12px;
+    }
+
+    .scene4-closing-rule {
+      width: 0px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 16px;
+    }
+
+    .scene4-sources {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto;
+      opacity: 0;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
-<!-- SCENE 1: Headline (0-5s) -->
-<div class="composition" id="scene-headline" data-composition-id="scene-1" data-start="0" data-duration="5" data-track-index="0">
-  <div class="headline-content">
-    <div class="headline-rule" id="headline-rule"></div>
-    <div class="headline-kicker" id="headline-kicker">Market Analysis</div>
-    <h1 class="headline-title" id="headline-title">The Rise of<br>Remote Work</h1>
-    <p class="headline-dek" id="headline-dek">How a global experiment reshaped the workforce, 2020–2026</p>
-  </div>
-</div>
+  <div class="hf-canvas" data-hf-project="trend-analysis" data-hf-duration="20" data-hf-resolution="1920x1080">
 
-<!-- SCENE 2: The Shift (5-12s) -->
-<div class="composition" id="scene-shift" data-composition-id="scene-2" data-start="5" data-duration="7" data-track-index="0">
-  <div class="shift-layout">
-    <div class="shift-chart-area">
-      <div class="shift-year-label" id="shift-year">2020</div>
-      <svg viewBox="0 0 400 200" width="400" height="200" id="shift-svg">
-        <polyline fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-          points="20,180 80,170 140,150 200,130 260,100 320,60 380,30" opacity="0" id="shift-line-path"/>
-      </svg>
-    </div>
-    <div class="shift-text-area">
-      <div class="shift-stat" id="shift-stat">5.7%</div>
-      <div class="shift-desc" id="shift-desc">of the U.S. workforce worked remotely full-time in January 2020 — before the pandemic forced a global reckoning.</div>
-    </div>
-  </div>
-</div>
+    <!-- ==================== SCENE 1: TITLE & HOOK STAT (0s – 5s) ==================== -->
+    <div class="hf-scene active"
+         data-hf-scene="1"
+         data-hf-scene-start="0"
+         data-hf-scene-duration="5"
+         data-hf-scene-name="title-hook">
 
-<!-- SCENE 3: Timeline (12-20s) -->
-<div class="composition" id="scene-timeline" data-composition-id="scene-3" data-start="12" data-duration="8" data-track-index="0">
-  <div class="timeline-container">
-    <div class="timeline-section-title" id="timeline-title">Key Milestones</div>
-    <div class="timeline-track" id="timeline-track">
-      <div class="milestone" id="m1">
-        <div class="milestone-dot"></div>
-        <div class="milestone-year">2020</div>
-        <div class="milestone-label">Lockdowns Begin</div>
-        <div class="milestone-value">42%</div>
-      </div>
-      <div class="milestone" id="m2">
-        <div class="milestone-dot"></div>
-        <div class="milestone-year">2022</div>
-        <div class="milestone-label">Hybrid Emerges</div>
-        <div class="milestone-value">35%</div>
-      </div>
-      <div class="milestone" id="m3">
-        <div class="milestone-dot"></div>
-        <div class="milestone-year">2024</div>
-        <div class="milestone-label">Return-to-Office</div>
-        <div class="milestone-value">28%</div>
-      </div>
-      <div class="milestone" id="m4">
-        <div class="milestone-dot"></div>
-        <div class="milestone-year">2026</div>
-        <div class="milestone-label">New Normal</div>
-        <div class="milestone-value">32%</div>
+      <div class="scene1-wrapper">
+        <div class="scene1-kicker" data-hf-animate="fade-in">Data Analysis</div>
+        <div class="scene1-rule" data-hf-animate="rule-grow"></div>
+        <h1 class="scene1-headline" data-hf-animate="headline">
+          The Rise of<br>Remote Work
+        </h1>
+        <p class="scene1-dek" data-hf-animate="fade-in" data-hf-animate-delay="1.2">
+          How the global workforce transformed in six years &mdash; from office cubicles
+          to distributed teams spanning every continent.
+        </p>
+        <div class="scene1-hero-stat" data-hf-animate="fade-in" data-hf-animate-delay="2.0">
+          <span class="scene1-hero-number"
+                data-hf-animate="counter"
+                data-hf-counter-target="4"
+                data-hf-counter-suffix="x"
+                data-hf-counter-decimals="0">1x</span>
+          <span class="scene1-hero-label">Increase in remote workers worldwide since 2020</span>
+          <span class="scene1-source">Source: Global Workforce Survey, 2026</span>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- SCENE 4: Regional Comparison (20-28s) -->
-<div class="composition" id="scene-regions" data-composition-id="scene-4" data-start="20" data-duration="8" data-track-index="0">
-  <div class="regions-layout">
-    <div class="regions-title" id="regions-title">Regional Comparison — 2026</div>
-    <div class="regions-grid" id="regions-grid">
-      <div class="region-card" id="region-us">
-        <div class="region-name">🇺🇸 United States</div>
-        <div class="region-pct">32%</div>
-        <div class="region-trend">↑ 5.6x from 2020 baseline</div>
-      </div>
-      <div class="region-card" id="region-eu">
-        <div class="region-name">🇪🇺 European Union</div>
-        <div class="region-pct">38%</div>
-        <div class="region-trend">↑ 4.2x from 2020 baseline</div>
-      </div>
-      <div class="region-card" id="region-apac">
-        <div class="region-name">🌏 APAC</div>
-        <div class="region-pct">24%</div>
-        <div class="region-trend">↑ 3.1x from 2020 baseline</div>
-      </div>
-      <div class="region-card" id="region-latam">
-        <div class="region-name">🌎 Latin America</div>
-        <div class="region-pct">29%</div>
-        <div class="region-trend">↑ 7.2x from 2020 baseline</div>
+    <!-- ==================== SCENE 2: LINE CHART (5s – 13s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="2"
+         data-hf-scene-start="5"
+         data-hf-scene-duration="8"
+         data-hf-scene-name="line-chart">
+
+      <div class="scene2-wrapper">
+        <div class="scene2-chart-title" data-hf-animate="fade-in">
+          Remote Workers Worldwide (millions)
+        </div>
+        <div class="scene2-chart-area">
+          <svg viewBox="0 0 1060 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.15" />
+                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.0" />
+              </linearGradient>
+              <filter id="dotGlow">
+                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Horizontal grid lines -->
+            <line x1="0" y1="320" x2="1060" y2="320" class="chart-grid-line" />
+            <line x1="0" y1="240" x2="1060" y2="240" class="chart-grid-line" />
+            <line x1="0" y1="160" x2="1060" y2="160" class="chart-grid-line" />
+            <line x1="0" y1="80" x2="1060" y2="80" class="chart-grid-line" />
+            <line x1="0" y1="0" x2="1060" y2="0" class="chart-grid-line" />
+
+            <!-- Y-axis labels -->
+            <text x="-15" y="324" text-anchor="end" class="chart-axis-label">0M</text>
+            <text x="-15" y="244" text-anchor="end" class="chart-axis-label">50M</text>
+            <text x="-15" y="164" text-anchor="end" class="chart-axis-label">100M</text>
+            <text x="-15" y="84" text-anchor="end" class="chart-axis-label">150M</text>
+            <text x="-15" y="4" text-anchor="end" class="chart-axis-label">200M</text>
+
+            <!-- Y-axis title -->
+            <text x="-65" y="180" text-anchor="middle" class="chart-y-label"
+                  transform="rotate(-90 -65 180)">Remote Workers (millions)</text>
+
+            <!-- Axes -->
+            <line x1="0" y1="320" x2="1060" y2="320" class="chart-axis-line" />
+            <line x1="0" y1="320" x2="0" y2="0" class="chart-axis-line" />
+
+            <!-- Area fill under line -->
+            <path d="M0,291 L152,201 L303,143 L455,113 L606,90 L758,63 L909,43 L1060,13 L1060,320 L0,320 Z"
+                  class="chart-area-fill" data-hf-chart-area />
+
+            <!-- Main line path: data = [45,92,128,147,161,178,192] in millions -->
+            <!-- scaled: y = 320 - (value/200)*320; x = index * (1060/6) ≈ 151.4 -->
+            <path d="M0,248 L152,173 L303,115 L455,85 L606,62 L758,35 L909,20 L1060,13"
+                  class="chart-line-path"
+                  data-hf-chart-line
+                  stroke-dasharray="1200"
+                  stroke-dashoffset="1200" />
+
+            <!-- Data dots -->
+            <circle cx="0" cy="248" r="5" class="chart-data-dot" data-hf-dot="2020" />
+            <circle cx="152" cy="173" r="5" class="chart-data-dot" data-hf-dot="2021" />
+            <circle cx="303" cy="115" r="5" class="chart-data-dot" data-hf-dot="2022" />
+            <circle cx="455" cy="85" r="5" class="chart-data-dot" data-hf-dot="2023" />
+            <circle cx="606" cy="62" r="5" class="chart-data-dot" data-hf-dot="2024" />
+            <circle cx="758" cy="35" r="5" class="chart-data-dot" data-hf-dot="2025" />
+            <circle cx="909" cy="20" r="5" class="chart-data-dot" data-hf-dot="2026" />
+
+            <!-- X-axis labels -->
+            <text x="0" y="345" text-anchor="middle" class="chart-axis-label">2020</text>
+            <text x="152" y="345" text-anchor="middle" class="chart-axis-label">2021</text>
+            <text x="303" y="345" text-anchor="middle" class="chart-axis-label">2022</text>
+            <text x="455" y="345" text-anchor="middle" class="chart-axis-label">2023</text>
+            <text x="606" y="345" text-anchor="middle" class="chart-axis-label">2024</text>
+            <text x="758" y="345" text-anchor="middle" class="chart-axis-label">2025</text>
+            <text x="909" y="345" text-anchor="middle" class="chart-axis-label">2026</text>
+
+            <!-- Callout: Pandemic acceleration at 2021 -->
+            <g class="chart-callout" data-hf-callout="pandemic">
+              <line x1="152" y1="173" x2="200" y2="120" class="chart-callout-line" />
+              <circle cx="152" cy="173" r="4" fill="#F59E0B" />
+              <text x="208" y="112" class="chart-callout-text">Pandemic acceleration</text>
+              <text x="208" y="128" class="chart-callout-detail">+104% in 12 months</text>
+            </g>
+
+            <!-- Callout: Stabilization at 2026 -->
+            <g class="chart-callout" data-hf-callout="stable">
+              <line x1="909" y1="20" x2="850" y2="55" class="chart-callout-line" />
+              <circle cx="909" cy="20" r="4" fill="#F59E0B" />
+              <text x="690" y="60" class="chart-callout-text" text-anchor="end">Stabilizing at 192M</text>
+              <text x="690" y="76" class="chart-callout-detail" text-anchor="end">Growth rate normalizing</text>
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
+
+    <!-- ==================== SCENE 3: MILESTONE TIMELINE (13s – 17s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="3"
+         data-hf-scene-start="13"
+         data-hf-scene-duration="4"
+         data-hf-scene-name="milestones">
+
+      <div class="scene3-wrapper">
+        <!-- Faded background chart -->
+        <div class="scene3-chart-bg">
+          <svg viewBox="0 0 1060 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <path d="M0,248 L152,173 L303,115 L455,85 L606,62 L758,35 L909,20 L1060,13"
+                  fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" opacity="0.5" />
+            <circle cx="0" cy="248" r="4" fill="#3B82F6" opacity="0.5" />
+            <circle cx="152" cy="173" r="4" fill="#3B82F6" opacity="0.5" />
+            <circle cx="455" cy="85" r="4" fill="#3B82F6" opacity="0.5" />
+            <circle cx="909" cy="20" r="4" fill="#3B82F6" opacity="0.5" />
+          </svg>
+        </div>
+
+        <!-- Milestone timeline -->
+        <div class="scene3-timeline">
+          <div class="scene3-section-title" data-hf-animate="fade-in">Key Milestones</div>
+          <div class="timeline-vertical-line"></div>
+
+          <div class="milestone-card" data-hf-milestone="1">
+            <div class="milestone-date">March 2020</div>
+            <div class="milestone-desc">
+              Global lockdowns begin. 85% of companies mandate remote work overnight, triggering the largest workplace shift in modern history.
+            </div>
+          </div>
+          <div class="milestone-card" data-hf-milestone="2">
+            <div class="milestone-date">June 2021</div>
+            <div class="milestone-desc">
+              Hybrid work models emerge. 63% of high-growth companies adopt remote-first policies. Office vacancy rates hit record highs.
+            </div>
+          </div>
+          <div class="milestone-card" data-hf-milestone="3">
+            <div class="milestone-date">September 2022</div>
+            <div class="milestone-desc">
+              Return-to-office mandates begin. Tension between employers and employees on flexibility. "Quiet quitting" enters the lexicon.
+            </div>
+          </div>
+          <div class="milestone-card" data-hf-milestone="4">
+            <div class="milestone-date">January 2024</div>
+            <div class="milestone-desc">
+              Remote work infrastructure matures. VR collaboration tools reach enterprise adoption. Async communication becomes standard practice.
+            </div>
+          </div>
+          <div class="milestone-card" data-hf-milestone="5">
+            <div class="milestone-date">March 2026</div>
+            <div class="milestone-desc">
+              74% of knowledge workers are hybrid or fully remote. Remote work is no longer an experiment — it is the new default.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCENE 4: REGIONAL COMPARISON & CLOSING (17s – 20s) ==================== -->
+    <div class="hf-scene"
+         data-hf-scene="4"
+         data-hf-scene-start="17"
+         data-hf-scene-duration="3"
+         data-hf-scene-name="regional-closing">
+
+      <div class="scene4-wrapper">
+        <div class="scene4-section-title" data-hf-animate="fade-in">
+          Remote Workers by Region &mdash; 2026
+        </div>
+
+        <div class="scene4-cards">
+          <!-- North America -->
+          <div class="region-card" data-hf-region-card="na">
+            <div class="region-name">North America</div>
+            <div class="region-bar-bg">
+              <div class="region-bar-fill na" data-hf-region-bar="na" data-hf-region-pct="38"></div>
+            </div>
+            <div class="region-pct">38%</div>
+            <div class="region-desc">of global remote workforce &middot; 73M workers</div>
+          </div>
+
+          <!-- Europe -->
+          <div class="region-card" data-hf-region-card="eu">
+            <div class="region-name">Europe</div>
+            <div class="region-bar-bg">
+              <div class="region-bar-fill eu" data-hf-region-bar="eu" data-hf-region-pct="31"></div>
+            </div>
+            <div class="region-pct">31%</div>
+            <div class="region-desc">of global remote workforce &middot; 59M workers</div>
+          </div>
+
+          <!-- Asia-Pacific -->
+          <div class="region-card" data-hf-region-card="apac">
+            <div class="region-name">Asia-Pacific</div>
+            <div class="region-bar-bg">
+              <div class="region-bar-fill apac" data-hf-region-bar="apac" data-hf-region-pct="22"></div>
+            </div>
+            <div class="region-pct">22%</div>
+            <div class="region-desc">of global remote workforce &middot; 42M workers</div>
+          </div>
+        </div>
+
+        <!-- Closing statement -->
+        <p class="scene4-closing" data-hf-animate="fade-in" data-hf-animate-delay="0.6">
+          Remote work isn't the future. It's the present.
+        </p>
+        <div class="scene4-closing-rule" data-hf-animate="rule-grow" data-hf-animate-delay="0.9"></div>
+        <p class="scene4-sources" data-hf-animate="fade-in" data-hf-animate-delay="1.1">
+          Sources: Global Workforce Survey (2026), ILO Remote Work Report (2025),
+          McKinsey Future of Work (2025), Stanford WFH Research Project
+        </p>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script>
-  // Scene 1: NYT-style headline
-  const hTl = gsap.timeline();
-  hTl.set("#scene-headline", { opacity: 1 })
-    .fromTo("#headline-rule", { scaleX: 0, transformOrigin: "center" }, { scaleX: 1, duration: 0.8, ease: "power2.out" })
-    .fromTo("#headline-kicker", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, "-=0.3")
-    .fromTo("#headline-title", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.1")
-    .fromTo("#headline-dek", { opacity: 0 }, { opacity: 1, duration: 0.6 }, "-=0.3")
-    .to("#scene-headline", { opacity: 0, duration: 0.5, delay: 1 });
+  <!-- GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-  // Scene 2: The big shift
-  const sTl = gsap.timeline();
-  sTl.set("#scene-shift", { opacity: 1 })
-    .fromTo("#shift-year", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" })
-    .fromTo("#shift-line-path", { opacity: 0, strokeDasharray: 500, strokeDashoffset: 500 },
-      { opacity: 1, strokeDashoffset: 0, duration: 2, ease: "power2.inOut" })
-    .fromTo("#shift-stat", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, "-=1.5")
-    .fromTo("#shift-desc", { opacity: 0 }, { opacity: 1, duration: 0.6 }, "-=0.3")
-    .to("#scene-shift", { opacity: 0, duration: 0.5, delay: 1.5 });
+  <script>
+    /**
+     * HyperFrames Trend Analysis — Animation Controller
+     *
+     * 4-scene editorial data journalism video: "The Rise of Remote Work 2020–2026"
+     * NYT / Reuters aesthetic — clean, data-forward, serif display + sans-serif body.
+     *
+     * Features: SVG line chart draw animation, milestone timeline,
+     *           regional comparison bar charts, animated counter for hero stat.
+     *
+     * Total duration: 20 seconds
+     * Resolution: 1920x1080
+     */
 
-  // Scene 3: Timeline milestones
-  const tTl = gsap.timeline();
-  tTl.set("#scene-timeline", { opacity: 1 })
-    .fromTo("#timeline-title", { opacity: 0 }, { opacity: 1, duration: 0.5 })
-    .fromTo("#timeline-track .milestone", { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, stagger: 0.25, ease: "power2.out" })
-    .to("#scene-timeline", { opacity: 0, duration: 0.5, delay: 1.5 });
+    (function () {
+      'use strict';
 
-  // Scene 4: Regional cards
-  const regTl = gsap.timeline();
-  regTl.set("#scene-regions", { opacity: 1 })
-    .fromTo("#regions-title", { opacity: 0 }, { opacity: 1, duration: 0.5 })
-    .fromTo("#regions-grid .region-card", { opacity: 0, y: 30, scale: 0.97 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.15, ease: "power2.out" })
-    .to("#scene-regions", { opacity: 0, duration: 0.6, delay: 2 });
+      var scenes = document.querySelectorAll('.hf-scene');
+      var totalDuration = 20;
 
-  window.__hf_gsap = function(composition, currentTime) {
-    gsap.globalTimeline.time(currentTime);
-  };
-</script>
+      var sceneTimeline = [
+        { id: 1, start: 0,  duration: 5,  name: 'title-hook' },
+        { id: 2, start: 5,  duration: 8,  name: 'line-chart' },
+        { id: 3, start: 13, duration: 4,  name: 'milestones' },
+        { id: 4, start: 17, duration: 3,  name: 'regional-closing' }
+      ];
+
+      function activateScene(sceneId) {
+        scenes.forEach(function (s) { s.classList.remove('active'); });
+        var el = document.querySelector('[data-hf-scene="' + sceneId + '"]');
+        if (el) { el.classList.add('active'); animateScene(sceneId); }
+      }
+
+      // ── Counter animation helper ──
+      function animateCounter(el) {
+        var target = parseFloat(el.dataset.hfCounterTarget);
+        var suffix = el.dataset.hfCounterSuffix || '';
+        var decimals = parseInt(el.dataset.hfCounterDecimals) || 0;
+        var obj = { val: 1 };
+
+        gsap.to(obj, {
+          val: target,
+          duration: 1.5,
+          ease: 'power3.inOut',
+          onUpdate: function () {
+            el.textContent = obj.val.toFixed(decimals) + suffix;
+          }
+        });
+      }
+
+      function animateScene(sceneId) {
+        var tl = gsap.timeline();
+
+        switch (sceneId) {
+
+          // SCENE 1: Title Card & Hook Stat
+          case 1:
+            tl.to('.scene1-kicker', { opacity: 1, duration: 0.5, ease: 'power2.out' })
+              .to('.scene1-rule', { scaleX: 1, duration: 0.8, ease: 'power3.inOut' }, '-=0.2')
+              .to('.scene1-headline', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.3')
+              .to('.scene1-dek', { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+              .to('.scene1-hero-stat', { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.1');
+
+            // Counter animation for "4x"
+            var heroNum = document.querySelector('[data-hf-scene="1"] [data-hf-animate="counter"]');
+            if (heroNum) {
+              tl.call(function () { animateCounter(heroNum); }, null, '+=0');
+            }
+            break;
+
+          // SCENE 2: SVG Line Chart
+          case 2:
+            tl.to('.scene2-chart-title', { opacity: 1, duration: 0.4, ease: 'power2.out' })
+              // Draw the main line
+              .to('[data-hf-chart-line]', {
+                strokeDashoffset: 0,
+                duration: 2.5,
+                ease: 'power2.inOut'
+              }, '-=0.1')
+              // Fade in the area fill
+              .to('[data-hf-chart-area]', {
+                opacity: 1,
+                duration: 1.5,
+                ease: 'power2.out'
+              }, '-=2')
+              // Pop in data dots after the line reaches each point
+              .to('[data-hf-dot]', {
+                opacity: 1,
+                scale: 1,
+                duration: 0.3,
+                stagger: 0.28,
+                ease: 'back.out(2)'
+              }, '-=1.8')
+              // Show callout annotations
+              .to('[data-hf-callout="pandemic"]', {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out'
+              }, '-=0.8')
+              .to('[data-hf-callout="stable"]', {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out'
+              }, '-=0.3');
+            break;
+
+          // SCENE 3: Milestone Timeline
+          case 3:
+            tl.to('.scene3-section-title', { opacity: 1, duration: 0.4, ease: 'power2.out' })
+              .to('[data-hf-milestone]', {
+                opacity: 1,
+                x: 0,
+                duration: 0.45,
+                stagger: 0.18,
+                ease: 'power3.out'
+              }, '-=0.1');
+            break;
+
+          // SCENE 4: Regional Comparison & Closing
+          case 4:
+            tl.to('.scene4-section-title', { opacity: 1, duration: 0.4, ease: 'power2.out' })
+              // Stagger in regional cards
+              .to('[data-hf-region-card]', {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                stagger: 0.15,
+                ease: 'power2.out'
+              }, '-=0.1')
+              // Animate horizontal bars
+              .to('[data-hf-region-bar="na"]', {
+                width: '38%',
+                duration: 1,
+                ease: 'power3.inOut'
+              }, '-=0.4')
+              .to('[data-hf-region-bar="eu"]', {
+                width: '31%',
+                duration: 1,
+                ease: 'power3.inOut'
+              }, '-=0.8')
+              .to('[data-hf-region-bar="apac"]', {
+                width: '22%',
+                duration: 1,
+                ease: 'power3.inOut'
+              }, '-=0.8')
+              // Closing statement
+              .to('.scene4-closing', {
+                opacity: 1,
+                duration: 0.6,
+                ease: 'power2.out'
+              }, '+=0.2')
+              .to('.scene4-closing-rule', {
+                width: 200,
+                duration: 0.6,
+                ease: 'power3.inOut'
+              }, '-=0.3')
+              .to('.scene4-sources', {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out'
+              }, '-=0.2');
+
+            // Subtle gentle pulse on closing statement
+            gsap.to('.scene4-closing', {
+              scale: 1.02,
+              duration: 3,
+              repeat: -1,
+              yoyo: true,
+              ease: 'sine.inOut'
+            });
+            break;
+        }
+      }
+
+      function buildMasterTimeline() {
+        var mtl = gsap.timeline({ repeat: 0 });
+        sceneTimeline.forEach(function (scene) {
+          mtl.call(function () { activateScene(scene.id); }, null, scene.start);
+        });
+        return mtl;
+      }
+
+      function resetAllScenes() {
+        scenes.forEach(function (s) { s.classList.remove('active'); });
+        gsap.set('.scene1-kicker', { opacity: 0 });
+        gsap.set('.scene1-rule', { scaleX: 0 });
+        gsap.set('.scene1-headline', { opacity: 0, y: 10 });
+        gsap.set('.scene1-dek', { opacity: 0 });
+        gsap.set('.scene1-hero-stat', { opacity: 0 });
+        gsap.set('.scene2-chart-title', { opacity: 0 });
+        gsap.set('[data-hf-chart-line]', { strokeDashoffset: 1200 });
+        gsap.set('[data-hf-chart-area]', { opacity: 0 });
+        gsap.set('[data-hf-dot]', { opacity: 0 });
+        gsap.set('[data-hf-callout]', { opacity: 0 });
+        gsap.set('.scene3-section-title', { opacity: 0 });
+        gsap.set('[data-hf-milestone]', { opacity: 0, x: 20 });
+        gsap.set('.scene4-section-title', { opacity: 0 });
+        gsap.set('[data-hf-region-card]', { opacity: 0, y: 20 });
+        gsap.set('[data-hf-region-bar]', { width: '0%' });
+        gsap.set('.scene4-closing', { opacity: 0 });
+        gsap.set('.scene4-closing-rule', { width: 0 });
+        gsap.set('.scene4-sources', { opacity: 0 });
+      }
+
+      function init() {
+        activateScene(1);
+        var masterTL = buildMasterTimeline();
+        masterTL.play();
+
+        sceneTimeline.forEach(function (scene) {
+          gsap.delayedCall(scene.start, function () {
+            console.log('[HyperFrames] Scene ' + scene.id + ': "' + scene.name +
+              '" — ' + scene.start + 's–' + (scene.start + scene.duration) + 's');
+          });
+        });
+      }
+
+      window.HyperFrames = window.HyperFrames || {};
+      window.HyperFrames.trendAnalysis = {
+        init: init,
+        resetAllScenes: resetAllScenes,
+        activateScene: activateScene,
+        sceneTimeline: sceneTimeline,
+        animateScene: animateScene,
+        animateCounter: animateCounter,
+        totalDuration: totalDuration
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+
 </body>
 </html>
