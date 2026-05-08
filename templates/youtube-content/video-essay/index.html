@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Death of the Internet — Video Essay Opener</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #1A1A1A;
+    overflow: hidden;
+    font-family: 'Playfair Display', serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  /* ── Grain ── */
+  .film-grain {
+    position: absolute; inset: 0; z-index: 99; pointer-events: none;
+    opacity: 0.12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+
+  /* ── Vignette ── */
+  .film-vignette {
+    position: absolute; inset: 0; z-index: 98; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(26,26,26,0.7) 100%);
+  }
+
+  /* ═══════════════════ SCENE 1: Archive Grid (0–6s) ═══════════════════ */
+  #scene-grid {
+    background: #1A1A1A;
+    opacity: 1;
+    padding: 100px 180px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 16px;
+    align-content: center;
+  }
+  .archive-cell {
+    background: #2C2C2C;
+    border: 1px solid rgba(212,175,55,0.25);
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    will-change: transform, opacity;
+  }
+  .archive-cell::after {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(212,175,55,0.15);
+  }
+  .archive-img {
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #3A3A35, #2C2C2C);
+    filter: brightness(0.7) saturate(0.3) sepia(0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(212,175,55,0.3);
+  }
+  .archive-cell.cell-1 { transform: rotate(-0.5deg); }
+  .archive-cell.cell-4 { transform: rotate(0.8deg); }
+  .archive-cell.cell-8 { transform: rotate(-0.3deg); }
+
+  /* ═══════════════════ SCENE 2: Question (6–11s) ═══════════════════ */
+  #scene-question {
+    background: radial-gradient(ellipse at 50% 45%, #2A2A28 0%, #1A1A1A 55%);
+    flex-direction: column;
+  }
+  .gold-rule {
+    width: 800px; height: 1px;
+    background: rgba(212,175,55,0.6);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 700;
+    color: #F5F5F0;
+    text-align: center;
+    max-width: 1000px;
+    line-height: 1.25;
+    opacity: 0;
+    margin: 28px 0;
+    text-shadow: 0 0 40px rgba(212,175,55,0.2);
+  }
+  .question-text .highlight {
+    color: #D4AF37;
+    font-size: 60px;
+    font-weight: 900;
+  }
+
+  /* ═══════════════════ SCENE 3: Chapter Cards (11–17s) ═══════════════════ */
+  #scene-chapters {
+    background: radial-gradient(ellipse at 50% 50%, #242420 0%, #1A1A1A 55%);
+  }
+  .chapter-card {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    will-change: opacity;
+  }
+  .chapter-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 120px; font-weight: 900;
+    color: #D4AF37;
+    opacity: 0;
+    line-height: 1;
+    margin-right: 40px;
+  }
+  .chapter-divider {
+    width: 1px; height: 100px;
+    background: rgba(212,175,55,0.5);
+    transform: scaleY(0);
+    transform-origin: top center;
+    margin: 0 40px;
+  }
+  .chapter-info {
+    display: flex; flex-direction: column;
+    opacity: 0;
+  }
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 700;
+    color: #F5F5F0;
+    margin-bottom: 6px;
+  }
+  .chapter-dates {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 400; font-style: italic;
+    color: rgba(212,175,55,0.6);
+  }
+
+  /* ═══════════════════ SCENE 4: Invitation (17–20s) ═══════════════════ */
+  #scene-invitation {
+    background: radial-gradient(ellipse at 50% 50%, #222220 0%, #1A1A1A 55%);
+    flex-direction: column;
+  }
+  .glitched-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    width: 800px; height: 400px;
+    opacity: 0;
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .glitch-cell {
+    background: #2C2C2C;
+    border: 1px solid rgba(212,175,55,0.15);
+    filter: brightness(0.5);
+    will-change: filter;
+  }
+  .glitch-cell.pristine {
+    border-color: #D4AF37;
+    box-shadow: 0 0 30px rgba(212,175,55,0.15);
+    filter: brightness(1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; letter-spacing: 2px;
+    color: rgba(212,175,55,0.4);
+  }
+  .closing-line {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px; font-weight: 400;
+    color: #F5F5F0;
+    opacity: 0;
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 1000px;
+  }
+  .essay-credit {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 400;
+    color: #8A8A80;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="film-grain"></div>
+<div class="film-vignette"></div>
+
+<!-- ════════════════ SCENE 1: Archive Grid (0–6s) ════════════════ -->
+<div class="composition" id="scene-grid" data-composition-id="scene-1" data-start="0" data-duration="6" data-track-index="0">
+  <div class="archive-cell cell-1" id="cell-1"><div class="archive-img">Netscape 1995</div></div>
+  <div class="archive-cell cell-2" id="cell-2"><div class="archive-img">Geocities</div></div>
+  <div class="archive-cell cell-3" id="cell-3"><div class="archive-img">USENET</div></div>
+  <div class="archive-cell cell-4" id="cell-4"><div class="archive-img">Blogspot 2004</div></div>
+  <div class="archive-cell cell-5" id="cell-5"><div class="archive-img">Web 1.0</div></div>
+  <div class="archive-cell cell-6" id="cell-6"><div class="archive-img">RSS Feeds</div></div>
+  <div class="archive-cell cell-7" id="cell-7"><div class="archive-img">Forums</div></div>
+  <div class="archive-cell cell-8" id="cell-8"><div class="archive-img">FTP</div></div>
+  <div class="archive-cell cell-9" id="cell-9"><div class="archive-img">IRC</div></div>
+</div>
+
+<!-- ════════════════ SCENE 2: Question (6–11s) ════════════════ -->
+<div class="composition" id="scene-question" data-composition-id="scene-2" data-start="6" data-duration="5" data-track-index="0">
+  <div class="gold-rule" id="rule-top"></div>
+  <div class="question-text" id="question-text">
+    WHAT HAPPENED TO<br>THE INTERNET<br>WE WERE <span class="highlight">PROMISED</span>?
+  </div>
+  <div class="gold-rule" id="rule-bottom" style="transform-origin:right center;"></div>
+</div>
+
+<!-- ════════════════ SCENE 3: Chapter Cards (11–17s) ════════════════ -->
+<div class="composition" id="scene-chapters" data-composition-id="scene-3" data-start="11" data-duration="6" data-track-index="0">
+  <!-- Card I -->
+  <div class="chapter-card" id="card-1">
+    <div class="chapter-number" id="cn-1">I</div>
+    <div class="chapter-divider" id="cd-1"></div>
+    <div class="chapter-info" id="ci-1">
+      <div class="chapter-title">THE PROMISE</div>
+      <div class="chapter-dates">1995&ndash;2005</div>
+    </div>
+  </div>
+  <!-- Card II -->
+  <div class="chapter-card" id="card-2">
+    <div class="chapter-number" id="cn-2">II</div>
+    <div class="chapter-divider" id="cd-2"></div>
+    <div class="chapter-info" id="ci-2">
+      <div class="chapter-title">THE CAPTURE</div>
+      <div class="chapter-dates">2006&ndash;2016</div>
+    </div>
+  </div>
+  <!-- Card III -->
+  <div class="chapter-card" id="card-3">
+    <div class="chapter-number" id="cn-3">III</div>
+    <div class="chapter-divider" id="cd-3"></div>
+    <div class="chapter-info" id="ci-3">
+      <div class="chapter-title">THE WASTELAND</div>
+      <div class="chapter-dates">2017&ndash;now</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SCENE 4: Invitation (17–20s) ════════════════ -->
+<div class="composition" id="scene-invitation" data-composition-id="scene-4" data-start="17" data-duration="3" data-track-index="0">
+  <div class="glitched-grid" id="glitched-grid">
+    <div class="glitch-cell" id="gc-1"></div>
+    <div class="glitch-cell" id="gc-2"></div>
+    <div class="glitch-cell" id="gc-3"></div>
+    <div class="glitch-cell" id="gc-4"></div>
+    <div class="glitch-cell" id="gc-5"></div>
+    <div class="glitch-cell pristine" id="gc-6">CONNECTED</div>
+    <div class="glitch-cell" id="gc-7"></div>
+    <div class="glitch-cell" id="gc-8"></div>
+  </div>
+  <div class="closing-line" id="closing-line">The internet isn't dead. But it's on life support.</div>
+  <div class="essay-credit" id="essay-credit">THE DEATH OF THE INTERNET &mdash; a video essay</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // ── Scene 1: Archive Grid (0–6s) ──
+  const cellOrder = [5, 2, 4, 6, 8, 1, 3, 7, 9];
+  const s1 = gsap.timeline();
+
+  cellOrder.forEach((n, i) => {
+    s1.to("#cell-" + n, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, i * 0.25);
+  });
+
+  const kenBurnsTargets = [
+    { sel: "#cell-1", ox: "30%", oy: "40%" },
+    { sel: "#cell-3", ox: "60%", oy: "55%" },
+    { sel: "#cell-5", ox: "45%", oy: "30%" },
+    { sel: "#cell-7", ox: "70%", oy: "50%" },
+    { sel: "#cell-9", ox: "35%", oy: "65%" },
+  ];
+  kenBurnsTargets.forEach((t) => {
+    s1.to(t.sel, {
+      scale: 1.06,
+      transformOrigin: t.ox + " " + t.oy,
+      duration: 5,
+      ease: "none"
+    }, "+=2");
+  });
+
+  cellOrder.forEach((n, i) => {
+    const targetRow = Math.ceil(n / 3);
+    s1.to("#cell-" + n, { opacity: 0, duration: 0.5, ease: "power2.in" }, "+=4." + (3 - targetRow));
+  });
+  s1.to("#scene-grid", { opacity: 0, duration: 0.5 }, "-=0.5");
+
+  // ── Scene 2: The Question (6–11s) ──
+  const s2 = gsap.timeline();
+  s2.set("#scene-question", { opacity: 1 })
+    .to("#rule-top", { scaleX: 1, duration: 1.5, ease: "power3.inOut" })
+    .to("#question-text", { opacity: 1, y: 0, duration: 2, ease: "power3.out" }, "-=1")
+    .to("#rule-bottom", { scaleX: 1, duration: 1.5, ease: "power3.inOut" }, "-=1")
+    .to("#question-text", { scale: 1.008, duration: 4, yoyo: true, repeat: 1, ease: "sine.inOut" }, "+=0.5")
+    .to("#scene-question", { opacity: 0, duration: 1, ease: "power2.in" }, "+=2.5");
+
+  gsap.set("#question-text", { y: 15 });
+
+  // ── Scene 3: Chapter Cards (11–17s) ──
+  function chapterCardOut(cardNum, startTime) {
+    const c = gsap.timeline();
+    c.set("#card-" + cardNum, { opacity: 1 })
+      .to("#cn-" + cardNum, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" })
+      .to("#cd-" + cardNum, { scaleY: 1, duration: 0.5, ease: "power2.out" }, "-=0.5")
+      .to("#ci-" + cardNum, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "-=0.3")
+      .to("#card-" + cardNum, { opacity: 0, duration: 0.8, ease: "power2.in" }, "+=1.5");
+    c.play(startTime);
+  }
+
+  gsap.set("#scene-chapters", { opacity: 1 });
+  gsap.set(["#cn-1","#cn-2","#cn-3"], { scale: 1.1 });
+  gsap.set(["#ci-1","#ci-2","#ci-3"], { y: 15 });
+  chapterCardOut(1, 0);
+  chapterCardOut(2, 2.0);
+  chapterCardOut(3, 4.0);
+
+  const s3 = gsap.timeline();
+  s3.to("#scene-chapters", { opacity: 0, duration: 0.8, ease: "power2.in" }, "+=5.5");
+
+  // ── Scene 4: Invitation (17–20s) ──
+  const s4 = gsap.timeline();
+  s4.set("#scene-invitation", { opacity: 1 })
+    .to("#glitched-grid", { opacity: 1, duration: 1.2, ease: "power2.out" })
+    .to("#gc-6", { filter: "blur(0px) brightness(1)", duration: 1.2, ease: "power2.out" }, "-=1")
+    .to("#closing-line", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.6")
+    .to("#essay-credit", { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.4")
+    .to("#scene-invitation", { opacity: 0, duration: 1, ease: "power2.in" }, "+=1");
+
+  gsap.set("#closing-line", { y: 10 });
+  gsap.set("#gc-6", { filter: "blur(6px) brightness(0.5)" });
+
+  // ── HyperFrames adapter ──
+  window.__hf_gsap = function(composition, currentTime) {
+    gsap.globalTimeline.time(currentTime);
+  };
+</script>
+</body>
+</html>

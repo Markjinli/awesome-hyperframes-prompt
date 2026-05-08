@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unveiling — Product Launch Event Opener</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #000000;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== SCENE 1: The Spark (0-6s) ========== */
+  #scene-spark {
+    background: #000000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 1;
+  }
+  .spark-dot {
+    width: 2px; height: 2px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.15);
+    opacity: 0;
+  }
+
+  /* ========== SCENE 2: The Line & Silhouette (6-12s) ========== */
+  #scene-silhouette {
+    background: #000000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+  .horizon-line {
+    width: 0; height: 1px;
+    background: rgba(255,255,255,0.6);
+  }
+  .silhouette {
+    width: 400px; height: 300px;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  /* ========== SCENE 3: Edge Light (12-20s) ========== */
+  #scene-edge {
+    background: #000000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+  .product-glow {
+    position: relative;
+    width: 500px; height: 350px;
+  }
+  .edge-light {
+    position: absolute;
+    width: 500px; height: 350px;
+    border-radius: 30px;
+    background: transparent;
+    box-shadow:
+      inset 0 0 2px rgba(255,255,255,0.5),
+      0 0 40px rgba(255,255,255,0.08);
+    opacity: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 1px; height: 1px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .product-label {
+    text-align: center; margin-top: 32px;
+    font-size: 18px; font-weight: 400;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  /* ========== SCENE 4: The Reveal (20-25s) ========== */
+  #scene-reveal {
+    background: #000000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+  .spotlight {
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%);
+    opacity: 0;
+  }
+  .product-img {
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, transparent 60%);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  .product-name {
+    font-size: 64px; font-weight: 900;
+    letter-spacing: -2px;
+    color: #FFFFFF;
+    margin-top: 32px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .feature-line {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px;
+    opacity: 0;
+  }
+  .feature-dot { width: 4px; height: 4px; background: #FFFFFF; border-radius: 50%; }
+  .feature-text { font-size: 16px; color: rgba(255,255,255,0.7); font-weight: 400; }
+
+  /* ========== SCENE 5: Finale (25-30s) ========== */
+  #scene-finale {
+    background: radial-gradient(ellipse at 50% 40%, #1A1A1A 0%, #000000 60%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+  .cta-text {
+    font-size: 72px; font-weight: 900;
+    letter-spacing: -2px;
+    color: #FFFFFF;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  .cta-url {
+    font-size: 20px; font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-top: 20px;
+    letter-spacing: 2px;
+    opacity: 0;
+  }
+
+  .composition { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+
+<!-- SCENE 1: Spark (0-6s) -->
+<div class="composition" id="scene-spark" data-composition-id="scene-1" data-start="0" data-duration="6" data-track-index="0">
+  <div class="spark-dot" id="spark-dot"></div>
+</div>
+
+<!-- SCENE 2: Silhouette (6-12s) -->
+<div class="composition" id="scene-silhouette" data-composition-id="scene-2" data-start="6" data-duration="6" data-track-index="0">
+  <div class="horizon-line" id="horizon-line"></div>
+  <div class="silhouette" id="silhouette"></div>
+</div>
+
+<!-- SCENE 3: Edge Light (12-20s) -->
+<div class="composition" id="scene-edge" data-composition-id="scene-3" data-start="12" data-duration="8" data-track-index="0">
+  <div class="product-glow" id="product-glow">
+    <div class="edge-light" id="edge-light"></div>
+    <div class="particle" id="p1" style="top:20%;left:10%;"></div>
+    <div class="particle" id="p2" style="top:30%;left:80%;"></div>
+    <div class="particle" id="p3" style="top:60%;left:30%;"></div>
+    <div class="particle" id="p4" style="top:70%;left:70%;"></div>
+    <div class="particle" id="p5" style="top:40%;left:50%;"></div>
+  </div>
+  <div class="product-label" id="product-label">Coming Soon</div>
+</div>
+
+<!-- SCENE 4: Product Reveal (20-25s) -->
+<div class="composition" id="scene-reveal" data-composition-id="scene-4" data-start="20" data-duration="5" data-track-index="0">
+  <div class="spotlight" id="spotlight"></div>
+  <div class="product-img" id="product-img">
+    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <rect x="20" y="30" width="80" height="60" rx="12" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <circle cx="60" cy="60" r="15" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+      <line x1="45" y1="45" x2="75" y2="75" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    </svg>
+  </div>
+  <div class="product-name" id="product-name">Nexus One</div>
+  <div class="feature-line" id="f1"><div class="feature-dot"></div><span class="feature-text">Revolutionary AI Engine</span></div>
+  <div class="feature-line" id="f2"><div class="feature-dot"></div><span class="feature-text">All-day Battery Life</span></div>
+  <div class="feature-line" id="f3"><div class="feature-dot"></div><span class="feature-text">Pro-grade Camera System</span></div>
+</div>
+
+<!-- SCENE 5: Finale (25-30s) -->
+<div class="composition" id="scene-finale" data-composition-id="scene-5" data-start="25" data-duration="5" data-track-index="0">
+  <div class="cta-text" id="cta-text">Available Today</div>
+  <div class="cta-url" id="cta-url">nexus.com/one</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // Scene 1: The Spark (0-6s)
+  const s1 = gsap.timeline();
+  s1.to("#spark-dot", { opacity: 0.8, duration: 3, ease: "power3.out" })
+    .to("#spark-dot", { scale: 1.05, duration: 2, repeat: 1, yoyo: true, ease: "sine.inOut" }, "-=1")
+    .to("#scene-spark", { opacity: 0, duration: 0.5 });
+
+  // Scene 2: Horizon Line + Silhouette (6-12s)
+  const s2 = gsap.timeline();
+  s2.set("#scene-silhouette", { opacity: 1 })
+    .to("#horizon-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
+    .to("#silhouette", { opacity: 1, filter: "blur(4px)", duration: 2, ease: "power2.out" }, "-=0.8")
+    .to("#scene-silhouette", { opacity: 0, duration: 0.5, delay: 2 });
+
+  // Scene 3: Edge Light + Particles (12-20s)
+  const s3 = gsap.timeline();
+  s3.set("#scene-edge", { opacity: 1 })
+    .to("#edge-light", { opacity: 1, duration: 2, ease: "power2.out" })
+    .to(["#p1","#p2","#p3","#p4","#p5"], { opacity: 0.8, duration: 0.5, stagger: 0.2 }, "-=1")
+    .to("#p1", { x: 20, y: -15, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=0.5")
+    .to("#p2", { x: -25, y: 10, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=6")
+    .to("#p3", { x: 15, y: 20, duration: 7, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=7")
+    .to("#p4", { x: -10, y: -20, duration: 4.5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=6")
+    .to("#p5", { x: 5, y: -25, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" }, "-=5")
+    .to("#product-label", { opacity: 1, duration: 1 }, "-=6")
+    .to("#scene-edge", { opacity: 0, duration: 0.5, delay: 2 });
+
+  // Scene 4: The Reveal (20-25s)
+  const s4 = gsap.timeline();
+  s4.set("#scene-reveal", { opacity: 1 })
+    .to("#spotlight", { opacity: 1, duration: 1.5, ease: "power2.inOut" })
+    .to("#product-img", { opacity: 1, scale: 1, duration: 1, ease: "power3.out" }, "-=0.8")
+    .to("#product-name", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" })
+    .to(["#f1","#f2","#f3"], { opacity: 1, duration: 0.4, stagger: 0.2 })
+    .to("#scene-reveal", { opacity: 0, duration: 0.5, delay: 1 });
+
+  // Scene 5: Finale (25-30s)
+  const s5 = gsap.timeline();
+  s5.set("#scene-finale", { opacity: 1 })
+    .to("#cta-text", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.4)" })
+    .to("#cta-url", { opacity: 1, duration: 0.6 }, "-=0.3")
+    .to("#scene-finale", { opacity: 0, duration: 1, delay: 2 });
+
+  window.__hf_gsap = function(comp, time) { gsap.globalTimeline.time(time); };
+</script>
+</body>
+</html>

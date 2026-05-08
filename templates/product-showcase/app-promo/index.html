@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1.0">
+<title>PulseFit — App Promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --bg: #0F0F1A;
+    --orange: #FF6B35;
+    --purple: #A855F7;
+    --teal: #00F5D4;
+    --text: #FFFFFF;
+    --muted: rgba(255,255,255,0.7);
+    --gradient: linear-gradient(135deg, #FF6B35 0%, #A855F7 100%);
+    --canvas-w: 1080px;
+    --canvas-h: 1920px;
+  }
+
+  body { background:#000; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Outfit',sans-serif; overflow:hidden; }
+
+  .canvas {
+    position:relative; width:var(--canvas-w); height:var(--canvas-h);
+    background:var(--bg); overflow:hidden;
+  }
+
+  .scene {
+    position:absolute; inset:0; width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    opacity:0; will-change:transform,opacity; pointer-events:none;
+  }
+  .scene.active { opacity:1; pointer-events:auto; }
+
+  /* ────────── Shared Effects ────────── */
+  .grain {
+    position:absolute; inset:0; pointer-events:none; z-index:50;
+    opacity:.05;
+    background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .blob {
+    position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; will-change:transform;
+  }
+  .blob-1 { width:700px; height:700px; background:rgba(255,107,53,.25); top:-150px; left:-200px; }
+  .blob-2 { width:600px; height:600px; background:rgba(168,85,247,.25); bottom:-100px; right:-150px; }
+  .blob-3 { width:500px; height:500px; background:rgba(0,245,212,.12); top:50%; left:50%; transform:translate(-50%,-50%); }
+
+  /* ────────── Scene 1: Hook (0–4s) ────────── */
+  #scene-hook { z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
+  #scene-hook .label {
+    font-size:22px; font-weight:500; color:var(--teal);
+    letter-spacing:5px; text-transform:uppercase; opacity:0;
+  }
+  #scene-hook .brand {
+    font-size:120px; font-weight:900; letter-spacing:-2px; line-height:1;
+    background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    filter:drop-shadow(0 0 40px rgba(168,85,247,.4));
+    opacity:0; will-change:transform;
+  }
+  #scene-hook .tagline {
+    font-size:34px; font-weight:600; color:var(--text); opacity:0;
+  }
+  #scene-hook .icons {
+    display:flex; gap:32px; margin-top:20px;
+  }
+  #scene-hook .icon {
+    width:80px; height:80px; border-radius:22px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);
+    display:flex; align-items:center; justify-content:center; font-size:36px;
+    opacity:0; will-change:transform;
+  }
+
+  /* ────────── Scene 2: Features (4–10s) ────────── */
+  #scene-features { z-index:2; overflow:hidden; }
+  .accent-line {
+    position:absolute; height:3px; width:200%; border-radius:2px;
+    will-change:left;
+  }
+  .accent-line:nth-child(1) { top:22%; background:linear-gradient(90deg,transparent,rgba(168,85,247,.25),transparent); }
+  .accent-line:nth-child(2) { top:52%; background:linear-gradient(90deg,transparent,rgba(255,107,53,.25),transparent); }
+  .accent-line:nth-child(3) { top:82%; background:linear-gradient(90deg,transparent,rgba(0,245,212,.15),transparent); }
+
+  .burst {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:32px; opacity:0; will-change:transform,opacity;
+  }
+  .phone {
+    width:380px; height:680px; background:#1A1A2E; border-radius:48px;
+    border:3px solid rgba(255,255,255,.12); position:relative;
+    display:flex; flex-direction:column; align-items:center;
+    box-shadow:0 24px 80px rgba(0,0,0,.5);
+  }
+  .phone::before {
+    content:''; position:absolute; top:24px; left:50%; transform:translateX(-50%);
+    width:120px; height:14px; background:rgba(254,254,254,.15); border-radius:7px;
+  }
+  .phone .screen {
+    margin-top:54px; width:calc(100% - 40px); flex:1; margin-bottom:24px;
+    border-radius:28px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px; gap:16px;
+  }
+  .phone .screen-title { font-size:22px; font-weight:700; color:#fff; }
+  .phone .screen-row { display:flex; gap:14px; width:100%; }
+  .phone .screen-box {
+    flex:1; background:rgba(255,255,255,.06); border-radius:16px;
+    padding:18px; text-align:center; display:flex; flex-direction:column; gap:6px;
+  }
+  .phone .screen-num { font-size:28px; font-weight:800; color:var(--teal); }
+  .phone .screen-lbl { font-size:13px; color:rgba(255,255,255,.45); text-transform:uppercase; letter-spacing:.5px; }
+  .phone .screen-bar {
+    width:100%; height:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden;
+  }
+  .phone .screen-fill { height:100%; background:var(--gradient); border-radius:3px; }
+
+  .burst-stat {
+    font-size:64px; font-weight:900; letter-spacing:-1.5px; text-align:center; line-height:1.1;
+    will-change:transform,opacity;
+  }
+  .burst-stat.orange { background:linear-gradient(135deg,var(--orange),#FF8C5A); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .burst-stat.purple { background:linear-gradient(135deg,var(--purple),#C084FC); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .burst-stat.teal { color:var(--teal); }
+  .burst-sub { font-size:22px; color:var(--muted); }
+
+  .avatar-row { display:flex; }
+  .avatar { width:52px; height:52px; border-radius:50%; border:3px solid var(--bg); display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; margin-left:-10px; }
+  .avatar:first-child { margin-left:0; }
+
+  /* ────────── Scene 3: CTA (10–15s) ────────── */
+  #scene-cta {
+    z-index:3; background:var(--gradient); background-size:200% 200%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:28px; text-align:center; padding:80px 60px;
+  }
+  #scene-cta .logo-mark {
+    width:100px; height:100px; border-radius:26px;
+    background:rgba(255,255,255,.18); backdrop-filter:blur(10px);
+    display:flex; align-items:center; justify-content:center;
+    font-size:48px; opacity:0; will-change:transform;
+  }
+  #scene-cta .headline {
+    font-size:80px; font-weight:900; letter-spacing:-2px; color:var(--text);
+    text-shadow:0 4px 24px rgba(0,0,0,.3);
+    opacity:0; will-change:transform;
+  }
+  #scene-cta .subhead {
+    font-size:26px; font-weight:400; color:rgba(255,255,255,.9);
+    opacity:0;
+  }
+  #scene-cta .badges {
+    display:flex; gap:24px;
+  }
+  #scene-cta .badge {
+    padding:16px 44px; border:2px solid rgba(255,255,255,.5); border-radius:50px;
+    font-size:20px; font-weight:600; color:var(--text);
+    background:rgba(255,255,255,.1); backdrop-filter:blur(10px);
+    opacity:0; will-change:transform;
+  }
+  #scene-cta .rating {
+    display:flex; align-items:center; gap:14px; opacity:0;
+  }
+  #scene-cta .rating .score { font-size:44px; font-weight:900; color:var(--text); }
+  #scene-cta .rating .stars { font-size:32px; color:#FFD700; letter-spacing:4px; }
+
+  #scene-cta .cta-final {
+    font-size:26px; font-weight:800; color:var(--text); letter-spacing:3px;
+    text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.3);
+    opacity:.85; will-change:transform;
+  }
+</style>
+</head>
+<body>
+<div class="canvas" data-composition-id="pulsefit-app-promo">
+
+  <div class="blob blob-1" data-track-index="0"></div>
+  <div class="blob blob-2" data-track-index="0"></div>
+  <div class="blob blob-3" data-track-index="0"></div>
+  <div class="grain" data-track-index="0"></div>
+
+  <!-- Scene 1: Hook -->
+  <div class="scene active" id="scene-hook" data-composition-id="hook" data-start="0" data-duration="4" data-track-index="1">
+    <div class="label" id="el-hook-label">Introducing</div>
+    <div class="brand" id="el-hook-brand">PULSEFIT</div>
+    <div class="tagline" id="el-hook-tagline">Your AI Fitness Coach</div>
+    <div class="icons">
+      <div class="icon" id="el-icon-1">&#x1F4AA;</div>
+      <div class="icon" id="el-icon-2">&#x2764;&#xFE0F;</div>
+      <div class="icon" id="el-icon-3">&#x1F525;</div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Features -->
+  <div class="scene" id="scene-features" data-composition-id="features" data-start="4" data-duration="6" data-track-index="1">
+    <div class="accent-line" id="line-1"></div>
+    <div class="accent-line" id="line-2"></div>
+    <div class="accent-line" id="line-3"></div>
+
+    <div class="burst" id="burst-1">
+      <div class="phone"><div class="screen" style="background:linear-gradient(135deg,rgba(255,107,53,.2),#0F0F1A 60%);">
+        <div class="screen-title">Today's Workout</div>
+        <div class="screen-row">
+          <div class="screen-box"><div class="screen-num">45</div><div class="screen-lbl">min</div></div>
+          <div class="screen-box"><div class="screen-num">420</div><div class="screen-lbl">kcal</div></div>
+        </div>
+        <div class="screen-bar"><div class="screen-fill" style="width:65%"></div></div>
+      </div></div>
+      <div class="burst-stat orange">200+ WORKOUTS</div>
+      <div class="burst-sub">From HIIT to Yoga</div>
+    </div>
+
+    <div class="burst" id="burst-2">
+      <div class="phone"><div class="screen" style="background:linear-gradient(135deg,rgba(168,85,247,.2),#0F0F1A 60%);">
+        <div class="screen-title">Meal Plan</div>
+        <div class="screen-row">
+          <div class="screen-box"><div class="screen-num">2,200</div><div class="screen-lbl">cal/day</div></div>
+          <div class="screen-box"><div class="screen-num">140g</div><div class="screen-lbl">protein</div></div>
+        </div>
+        <div class="screen-bar"><div class="screen-fill" style="width:78%;background:#A855F7"></div></div>
+      </div></div>
+      <div class="burst-stat purple">MEAL PLANS BY AI</div>
+      <div class="burst-sub">Personalized. Precise. Delicious.</div>
+    </div>
+
+    <div class="burst" id="burst-3">
+      <div class="phone"><div class="screen" style="background:linear-gradient(135deg,rgba(0,245,212,.15),#0F0F1A 60%);">
+        <div class="screen-title">Community</div>
+        <div class="screen-row">
+          <div class="screen-box"><div class="screen-num">12.4K</div><div class="screen-lbl">steps</div></div>
+          <div class="screen-box"><div class="screen-num">#3</div><div class="screen-lbl">rank</div></div>
+        </div>
+      </div></div>
+      <div class="burst-stat teal">500K+ COMMUNITY</div>
+      <div class="burst-sub">Challenge friends. Crush goals together.</div>
+      <div class="avatar-row">
+        <div class="avatar" style="background:var(--orange);">&#x1F9D1;</div>
+        <div class="avatar" style="background:var(--purple);">&#x1F9D4;</div>
+        <div class="avatar" style="background:var(--teal);">&#x1F469;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: CTA -->
+  <div class="scene" id="scene-cta" data-composition-id="cta" data-start="10" data-duration="5" data-track-index="1">
+    <div class="logo-mark" id="el-cta-logo">&#x26A1;</div>
+    <div class="headline" id="el-cta-headline">Ready to Move?</div>
+    <div class="subhead" id="el-cta-subhead">Download free on iOS &amp; Android</div>
+    <div class="badges">
+      <div class="badge" id="el-badge-ios">&#x1F34E; App Store</div>
+      <div class="badge" id="el-badge-android">&#x1F4F1; Google Play</div>
+    </div>
+    <div class="rating" id="el-cta-rating">
+      <span class="score">4.9</span>
+      <span class="stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</span>
+    </div>
+    <div class="cta-final" id="el-cta-final">Download Now</div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  window.__hf_gsap = gsap;
+
+  (function() {
+    var tl = gsap.timeline({ paused: false });
+
+    // ── Blobs continuous ──
+    tl.to('.blob-1', { x:60, y:40, scale:1.1, duration:8, yoyo:true, repeat:1, ease:'sine.inOut' }, 0);
+    tl.to('.blob-2', { x:-50, y:-30, scale:1.15, duration:7, yoyo:true, repeat:2, ease:'sine.inOut' }, 0);
+    tl.to('.blob-3', { scale:1.2, opacity:.7, duration:5, yoyo:true, repeat:2, ease:'sine.inOut' }, 0);
+
+    // ── Scene 1: Hook (0–4s) ──
+    tl.fromTo('#el-hook-label', { opacity:0, y:12 }, { opacity:1, y:0, duration:.4, ease:'power2.out' }, .1);
+    tl.fromTo('#el-hook-brand', { scale:.7, opacity:0 }, { scale:1, opacity:1, duration:.7, ease:'back.out(1.7)' }, .3);
+    tl.to('#el-hook-brand', { y:-5, duration:2, yoyo:true, repeat:1, ease:'sine.inOut' }, 1);
+    tl.fromTo('#el-hook-tagline', { y:20, opacity:0 }, { y:0, opacity:1, duration:.45, ease:'power2.out' }, .8);
+    tl.fromTo('#el-icon-1', { y:-30, opacity:0, scale:.6 }, { y:0, opacity:1, scale:1, duration:.5, ease:'bounce.out' }, 1.2);
+    tl.fromTo('#el-icon-2', { y:-30, opacity:0, scale:.6 }, { y:0, opacity:1, scale:1, duration:.5, ease:'bounce.out' }, 1.32);
+    tl.fromTo('#el-icon-3', { y:-30, opacity:0, scale:.6 }, { y:0, opacity:1, scale:1, duration:.5, ease:'bounce.out' }, 1.44);
+    tl.to('#scene-hook', { opacity:0, duration:.25, ease:'power2.in' }, 3.75);
+
+    // ── Scene 2: Features (4–10s) ──
+    tl.set('#scene-features', { opacity:1 }, 4.0);
+    tl.fromTo('#line-1', { left:'-100%' }, { left:'100%', duration:3, ease:'linear', repeat:1 }, 4.1);
+    tl.fromTo('#line-2', { left:'-100%' }, { left:'100%', duration:3.2, ease:'linear', repeat:1 }, 4.2);
+    tl.fromTo('#line-3', { left:'-100%' }, { left:'100%', duration:2.8, ease:'linear', repeat:1 }, 4.0);
+
+    // Burst 1 (4–6s)
+    tl.fromTo('#burst-1', { y:80, opacity:0 }, { y:0, opacity:1, duration:.4, ease:'power4.out' }, 4.0);
+    tl.fromTo('#burst-1 .burst-stat', { scale:.8, opacity:0 }, { scale:1.05, opacity:1, duration:.45, ease:'back.out(1.4)' }, 4.25);
+    tl.to('#burst-1 .burst-stat', { scale:1, duration:.2, ease:'power2.out' }, 4.7);
+    tl.to('#burst-1', { y:-60, opacity:0, duration:.3, ease:'power2.in' }, 5.7);
+
+    // Burst 2 (6–8s)
+    tl.set('#burst-2', { y:80, opacity:0 }, 5.8);
+    tl.to('#burst-2', { y:0, opacity:1, duration:.4, ease:'power4.out' }, 6.0);
+    tl.fromTo('#burst-2 .burst-stat', { scale:.8, opacity:0 }, { scale:1.05, opacity:1, duration:.45, ease:'back.out(1.4)' }, 6.25);
+    tl.to('#burst-2 .burst-stat', { scale:1, duration:.2, ease:'power2.out' }, 6.7);
+    tl.to('#burst-2', { y:-60, opacity:0, duration:.3, ease:'power2.in' }, 7.7);
+
+    // Burst 3 (8–10s)
+    tl.set('#burst-3', { y:80, opacity:0 }, 7.8);
+    tl.to('#burst-3', { y:0, opacity:1, duration:.4, ease:'power4.out' }, 8.0);
+    tl.fromTo('#burst-3 .burst-stat', { scale:.8, opacity:0 }, { scale:1.05, opacity:1, duration:.45, ease:'back.out(1.4)' }, 8.25);
+    tl.to('#burst-3 .burst-stat', { scale:1, duration:.2, ease:'power2.out' }, 8.7);
+    tl.to('#burst-3', { y:-60, opacity:0, duration:.3, ease:'power2.in' }, 9.7);
+
+    tl.to('#scene-features', { opacity:0, duration:.15, ease:'power2.in' }, 9.85);
+
+    // ── Scene 3: CTA (10–15s) ──
+    tl.set('#scene-cta', { opacity:1 }, 10.0);
+    tl.to('#scene-cta', { backgroundPosition:'100% 100%', duration:5, ease:'linear' }, 10);
+    tl.fromTo('#el-cta-logo', { scale:0, opacity:0 }, { scale:1.1, opacity:1, duration:.5, ease:'elastic.out(1,.3)' }, 10.3);
+    tl.to('#el-cta-logo', { scale:1, duration:.2, ease:'power2.out' }, 10.8);
+    tl.fromTo('#el-cta-headline', { y:30, opacity:0 }, { y:0, opacity:1, duration:.6, ease:'power3.out' }, 10.9);
+    tl.fromTo('#el-cta-subhead', { opacity:0 }, { opacity:1, duration:.4, ease:'power2.out' }, 11.3);
+    tl.fromTo('#el-badge-ios', { y:40, opacity:0 }, { y:0, opacity:1, duration:.5, ease:'power2.out' }, 11.7);
+    tl.fromTo('#el-badge-android', { y:40, opacity:0 }, { y:0, opacity:1, duration:.5, ease:'power2.out' }, 11.85);
+    tl.fromTo('#el-cta-rating', { opacity:0, scale:.9 }, { opacity:1, scale:1, duration:.5, ease:'back.out(1.2)' }, 12.4);
+    tl.fromTo('#el-cta-final', { opacity:0, y:12 }, { opacity:.9, y:0, duration:.4, ease:'power2.out' }, 13.0);
+    tl.to('#el-cta-final', { scale:1.04, duration:.8, yoyo:true, repeat:2, ease:'sine.inOut' }, 13.4);
+
+    // Register hyperframes adapters
+    window.__hf_timeline = tl;
+    window.__hf_duration = 15;
+    window.__hf_play = function() { tl.play(); };
+    window.__hf_pause = function() { tl.pause(); };
+    window.__hf_seek = function(t) { tl.seek(t); };
+    window.__hf_reset = function() { tl.seek(0); tl.pause(); };
+
+    tl.play();
+  })();
+</script>
+</body>
+</html>

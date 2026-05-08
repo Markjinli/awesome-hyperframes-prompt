@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOMENTUM — Kinetic Typography</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0A0A0A;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  #scene-kinetic {
+    opacity: 1;
+    background: radial-gradient(ellipse at 50% 50%, #0D1A1A 0%, #0A0A0A 60%);
+  }
+
+  .letter-container {
+    display: flex; gap: 8px;
+  }
+
+  .letter {
+    font-size: 180px;
+    color: #00F0FF;
+    text-shadow:
+      0 0 10px rgba(0,240,255,0.8),
+      0 0 40px rgba(0,240,255,0.4),
+      0 0 80px rgba(0,240,255,0.2),
+      0 0 120px rgba(0,240,255,0.1);
+    opacity: 0;
+    position: relative;
+  }
+
+  .grid-bg {
+    position: absolute; inset: 0; opacity: 0.04; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.3) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.15), transparent);
+    opacity: 0; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="scan-line" id="scan-line" style="top: 50%;"></div>
+
+<div class="composition" id="scene-kinetic" data-composition-id="scene-kinetic" data-start="0" data-duration="10" data-track-index="0">
+  <div class="letter-container" id="word">
+    <span class="letter" data-char="M">M</span>
+    <span class="letter" data-char="O">O</span>
+    <span class="letter" data-char="M">M</span>
+    <span class="letter" data-char="E">E</span>
+    <span class="letter" data-char="N">N</span>
+    <span class="letter" data-char="T">T</span>
+    <span class="letter" data-char="U">U</span>
+    <span class="letter" data-char="M">M</span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  const letters = document.querySelectorAll('.letter');
+  const tl = gsap.timeline();
+
+  // Random start positions for each letter (explode in)
+  const randomPositions = [
+    { x: -600, y: -300, r: -120 },
+    { x: 500, y: 350, r: 90 },
+    { x: -400, y: 200, r: -45 },
+    { x: 300, y: -400, r: 180 },
+    { x: 700, y: -150, r: -60 },
+    { x: -500, y: -250, r: 45 },
+    { x: -200, y: 400, r: -90 },
+    { x: 450, y: 100, r: 30 },
+  ];
+
+  // Phase 1: Letters explode in from random positions (0-3s)
+  letters.forEach((letter, i) => {
+    const pos = randomPositions[i];
+    tl.fromTo(letter,
+      { x: pos.x, y: pos.y, rotation: pos.r, opacity: 0, scale: 0.3 },
+      { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" },
+      i * 0.15
+    );
+  });
+
+  // Phase 2: Letters settle and breathe together (3-6s)
+  tl.to(letters, {
+    scale: 1.08,
+    duration: 1.5,
+    stagger: 0.05,
+    repeat: 1,
+    yoyo: true,
+    ease: "sine.inOut"
+  }, "+=0.3");
+
+  // Scan line sweeps
+  tl.fromTo("#scan-line",
+    { top: "0%", opacity: 0 },
+    { top: "100%", opacity: 0.6, duration: 2, ease: "power1.inOut" },
+    "-=2"
+  );
+
+  // Phase 3: Group pulse (6-8s)
+  tl.to("#word", {
+    scale: 1.15,
+    duration: 0.4,
+    repeat: 3,
+    yoyo: true,
+    ease: "power2.inOut"
+  }, "-=0.5");
+
+  // Phase 4: Disperse + fade (8-10s)
+  letters.forEach((letter, i) => {
+    const pos = randomPositions[i];
+    tl.to(letter, {
+      x: pos.x * 2, y: pos.y * 2, rotation: pos.r, opacity: 0, scale: 0.2,
+      duration: 0.6, ease: "power2.in"
+    }, "+=0.1");
+  });
+
+  // Final black
+  tl.to("#scene-kinetic", { opacity: 0, duration: 0.3 }, "-=0.3");
+
+  window.__hf_gsap = function(comp, time) { gsap.globalTimeline.time(time); };
+</script>
+</body>
+</html>

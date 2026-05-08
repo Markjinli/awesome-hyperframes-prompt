@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepTech — YouTube Channel Intro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #141414;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    width: 1920px; height: 1080px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  /* ── Background Grid ── */
+  .bg-grid {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* ═══════════════════ SCENE 1: Product Montage (0–6s) ═══════════════════ */
+  #scene-montage { opacity: 1; }
+  .product-shot {
+    position: absolute;
+    width: 600px; height: 400px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  .product-shot .diagonal-accent {
+    position: absolute;
+    width: 200%; height: 2px;
+    background: #FF0050;
+    transform: rotate(-45deg);
+    opacity: 0;
+  }
+  .product-frame {
+    width: 500px; height: 340px;
+    background: #2A2A2A;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .product-label {
+    position: absolute; bottom: -10px;
+    font-size: 18px; font-weight: 600;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0;
+  }
+  .product-img-placeholder {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle at 40% 35%, #3A3A3A, #1A1A1A);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255,0,80,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; color: rgba(255,255,255,0.15);
+  }
+  .montage-flash {
+    position: absolute; inset: 0;
+    background: #FFFFFF;
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .montage-bg-dark { background: #141414; }
+  .montage-bg-light { background: #FFFFFF; }
+
+  /* ═══════════════════ SCENE 2: Identity Reveal (6–11s) ═══════════════════ */
+  #scene-identity { background: #141414; }
+  .logo-mark {
+    position: absolute;
+    font-family: 'Inter', sans-serif;
+    font-size: 220px; font-weight: 900;
+    color: #FF0050;
+    opacity: 0;
+    top: 180px;
+    text-shadow: 0 0 40px rgba(255,0,80,0.6), 0 0 100px rgba(255,0,80,0.3);
+    line-height: 1;
+  }
+  .logo-mark-accent {
+    position: absolute;
+    width: 180px; height: 4px;
+    background: #00D4FF;
+    top: 235px;
+    opacity: 0;
+  }
+  .channel-name-container {
+    position: absolute;
+    top: 460px;
+    display: flex; gap: 0;
+    font-size: 120px; font-weight: 900;
+    opacity: 0;
+  }
+  .channel-name-letter {
+    display: inline-block;
+    color: #FFFFFF;
+    opacity: 0;
+    transform: scale(0);
+  }
+  .channel-name-letter.light { font-weight: 300; }
+  .red-underline {
+    position: absolute;
+    top: 600px; left: 50%; transform: translateX(-50%) scaleX(0);
+    width: 620px; height: 4px;
+    background: #FF0050;
+    transform-origin: left center;
+    opacity: 0;
+  }
+  .tagline-reveal {
+    position: absolute;
+    top: 640px;
+    font-size: 24px; font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 2px;
+    opacity: 0;
+  }
+  .glow-halo {
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,0,80,0.2) 0%, transparent 70%);
+    top: 200px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════ SCENE 3: CTA + Schedule (11–15s) ═══════════════════ */
+  #scene-cta { background: #141414; }
+  .cta-left {
+    position: absolute; left: 150px; top: 50%; transform: translateY(-50%);
+    width: 900px;
+  }
+  .cta-headline {
+    font-size: 64px; font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    clip-path: inset(0 100% 0 0);
+    margin-bottom: 20px;
+  }
+  .cta-subline {
+    font-size: 22px; font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    opacity: 0;
+  }
+  .cta-right {
+    position: absolute; right: 150px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .platform-card {
+    width: 340px; height: 70px;
+    background: #2A2A2A;
+    border-radius: 12px;
+    border-left: 4px solid #FF0050;
+    display: flex; align-items: center;
+    padding: 0 24px;
+    font-size: 18px; font-weight: 600;
+    color: #FFFFFF;
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  .platform-dot {
+    width: 10px; height: 10px;
+    background: #FF0050;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+  .accent-slash {
+    position: absolute; inset: -10%;
+    width: 200%; height: 4px;
+    background: #FF0050;
+    transform: rotate(-35deg);
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(2px);
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ SCENE 1: Product Montage (0–6s) ════════════════ -->
+<div class="composition" id="scene-montage" data-composition-id="scene-1" data-start="0" data-duration="6" data-track-index="0">
+  <div class="bg-grid"></div>
+
+  <!-- Product 1: Smartphone — center, dark bg -->
+  <div class="product-shot montage-bg-dark" id="prod-1" style="top: 100px; left: 660px;">
+    <div class="diagonal-accent" id="accent-1"></div>
+    <div class="product-frame"><div class="product-img-placeholder">📱</div></div>
+    <div class="product-label" id="label-1">REVIEWED</div>
+  </div>
+
+  <!-- Product 2: Laptop — left, dark bg -->
+  <div class="product-shot montage-bg-dark" id="prod-2" style="top: 300px; left: 200px;">
+    <div class="diagonal-accent" id="accent-2"></div>
+    <div class="product-frame"><div class="product-img-placeholder">💻</div></div>
+    <div class="product-label" id="label-2">TESTED</div>
+  </div>
+
+  <!-- Product 3: Headphones — right, light bg -->
+  <div class="product-shot montage-bg-light" id="prod-3" style="top: 120px; left: 1000px;">
+    <div class="diagonal-accent" id="accent-3"></div>
+    <div class="product-frame" style="background:#F5F5F5;border-color:rgba(0,0,0,0.1);">
+      <div class="product-img-placeholder" style="color:rgba(0,0,0,0.1);">🎧</div>
+    </div>
+    <div class="product-label" id="label-3" style="color:#141414;">COMPARED</div>
+  </div>
+
+  <!-- Product 4: Smartwatch — center, dark bg -->
+  <div class="product-shot montage-bg-dark" id="prod-4" style="top: 400px; left: 720px;">
+    <div class="diagonal-accent" id="accent-4"></div>
+    <div class="product-frame"><div class="product-img-placeholder">⌚</div></div>
+    <div class="product-label" id="label-4">ANALYZED</div>
+  </div>
+
+  <!-- Product 5: GPU — left, light bg -->
+  <div class="product-shot montage-bg-light" id="prod-5" style="top: 500px; left: 140px;">
+    <div class="diagonal-accent" id="accent-5"></div>
+    <div class="product-frame" style="background:#F5F5F5;border-color:rgba(0,0,0,0.1);">
+      <div class="product-img-placeholder" style="color:rgba(0,0,0,0.1);">🖥️</div>
+    </div>
+    <div class="product-label" id="label-5" style="color:#141414;">BENCHMARKED</div>
+  </div>
+
+  <!-- Product 6: Keyboard — right, dark bg -->
+  <div class="product-shot montage-bg-dark" id="prod-6" style="top: 550px; left: 1020px;">
+    <div class="diagonal-accent" id="accent-6"></div>
+    <div class="product-frame"><div class="product-img-placeholder">⌨️</div></div>
+    <div class="product-label" id="label-6">RATED</div>
+  </div>
+
+  <div class="montage-flash" id="montage-flash"></div>
+</div>
+
+<!-- ════════════════ SCENE 2: Identity Reveal (6–11s) ════════════════ -->
+<div class="composition" id="scene-identity" data-composition-id="scene-2" data-start="6" data-duration="5" data-track-index="0">
+  <div class="bg-grid"></div>
+  <div class="glow-halo" id="glow-halo"></div>
+  <div class="logo-mark" id="logo-mark">D</div>
+  <div class="logo-mark-accent" id="logo-accent" style="left: 810px;"></div>
+  <div class="channel-name-container" id="channel-name" style="left: 50%; transform: translateX(-50%);">
+    <span class="channel-name-letter" style="font-weight:900;">D</span>
+    <span class="channel-name-letter" style="font-weight:900;">E</span>
+    <span class="channel-name-letter" style="font-weight:900;">E</span>
+    <span class="channel-name-letter" style="font-weight:900;">P</span>
+    <span class="channel-name-letter" style="font-weight:300;">T</span>
+    <span class="channel-name-letter" style="font-weight:300;">E</span>
+    <span class="channel-name-letter" style="font-weight:300;">C</span>
+    <span class="channel-name-letter" style="font-weight:300;">H</span>
+  </div>
+  <div class="red-underline" id="red-underline"></div>
+  <div class="tagline-reveal" id="tagline-reveal">Deeper reviews. Smarter choices.</div>
+</div>
+
+<!-- ════════════════ SCENE 3: CTA + Schedule (11–15s) ════════════════ -->
+<div class="composition" id="scene-cta" data-composition-id="scene-3" data-start="11" data-duration="4" data-track-index="0">
+  <div class="bg-grid"></div>
+  <div class="cta-left">
+    <div class="cta-headline" id="cta-headline">EVERY TUESDAY<br>&amp; FRIDAY</div>
+    <div class="cta-subline" id="cta-subline">Join <span style="color:#FF0050;font-weight:600;">500K+</span> tech enthusiasts</div>
+  </div>
+  <div class="cta-right">
+    <div class="platform-card" id="plat-1"><div class="platform-dot"></div>YouTube  ·  @deeptech</div>
+    <div class="platform-card" id="plat-2"><div class="platform-dot"></div>Instagram  ·  @deeptech</div>
+    <div class="platform-card" id="plat-3"><div class="platform-dot"></div>TikTok  ·  @deeptech</div>
+  </div>
+  <div class="accent-slash" id="accent-slash" style="top: 200px; left: -400px;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // ── Scene 1: Product Montage (0–6s) ──
+  const prodOrder = [
+    { id: "#prod-1", accent: "#accent-1", label: "#label-1", time: 0 },
+    { id: "#prod-2", accent: "#accent-2", label: "#label-2", time: 0.9 },
+    { id: "#prod-3", accent: "#accent-3", label: "#label-3", time: 1.8 },
+    { id: "#prod-4", accent: "#accent-4", label: "#label-4", time: 2.7 },
+    { id: "#prod-5", accent: "#accent-5", label: "#label-5", time: 3.6 },
+    { id: "#prod-6", accent: "#accent-6", label: "#label-6", time: 4.5 }
+  ];
+
+  const s1 = gsap.timeline();
+  prodOrder.forEach((p, i) => {
+    s1.call(() => { gsap.set(p.id, { scale: 0.85, opacity: 0 }); })
+      .to(p.id, { opacity: 1, scale: 1.02, duration: 0.35, ease: "expo.out" })
+      .to(p.id, { scale: 1, duration: 0.15, ease: "power2.out" })
+      .to(p.accent, { opacity: 0.8, duration: 0.1 }, "-=0.4")
+      .to(p.accent, { opacity: 0, duration: 0.15 }, "+=0.15")
+      .to(p.label, { opacity: 1, duration: 0.2, ease: "power2.out" }, "-=0.3");
+
+    if (i < prodOrder.length - 1) {
+      s1.to("#montage-flash", { opacity: 0.1, duration: 0.05 })
+        .to("#montage-flash", { opacity: 0, duration: 0.05 });
+      s1.to([p.id, p.label], { opacity: 0, duration: 0.2 }, "+=0.3");
+    }
+  });
+
+  s1.to(["#prod-6", "#label-6", "#scene-montage"], { opacity: 0, duration: 0.3 });
+
+  // ── Scene 2: Identity Reveal (6–11s) ──
+  const s2 = gsap.timeline();
+  const letters = gsap.utils.toArray("#channel-name .channel-name-letter");
+
+  s2.set("#scene-identity", { opacity: 1 })
+    .set("#glow-halo", { opacity: 0.5 })
+    .to("#glow-halo", { opacity: 0.7, scale: 1.1, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut" })
+    .to("#logo-mark", { opacity: 1, scale: 1, duration: 0.8, ease: "elastic.out(1,0.4)" })
+    .to("#logo-accent", { opacity: 1, duration: 0.15 })
+    .to(letters, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.04,
+      ease: "back.out(2)"
+    }, "-=0.6")
+    .to("#red-underline", {
+      opacity: 1,
+      scaleX: 1,
+      duration: 0.8,
+      ease: "power3.inOut"
+    }, "-=0.2")
+    .to("#tagline-reveal", {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "+=0.2")
+    .to("#logo-mark", {
+      scale: 1.04,
+      duration: 2,
+      yoyo: true,
+      repeat: -1,
+      ease: "sine.inOut"
+    }, "+=0.5")
+    .to("#scene-identity", { opacity: 0, duration: 0.4 }, "+=3");
+
+  gsap.set("#tagline-reveal", { y: 15 });
+  gsap.set("#logo-mark", { scale: 0 });
+
+  // ── Scene 3: CTA + Schedule (11–15s) ──
+  const s3 = gsap.timeline();
+  s3.set("#scene-cta", { opacity: 1 })
+    .to("#cta-headline", { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power3.inOut" })
+    .to("#cta-subline", { opacity: 1, duration: 0.5, ease: "power2.out" }, "-=0.2")
+    .to("#plat-1", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, "-=0.3")
+    .to("#plat-2", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, "+=0.15")
+    .to("#plat-3", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, "+=0.15")
+    .to("#accent-slash", { opacity: 0.6, duration: 0.3, ease: "power2.out" }, "+=1.5")
+    .to("#accent-slash", { opacity: 0, duration: 0.2, ease: "power2.in" })
+    .to("#scene-cta", { opacity: 0, duration: 0.3 }, "+=0.2");
+
+  // ── HyperFrames adapter ──
+  window.__hf_gsap = function(composition, currentTime) {
+    gsap.globalTimeline.time(currentTime);
+  };
+</script>
+</body>
+</html>

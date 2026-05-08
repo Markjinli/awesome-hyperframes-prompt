@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Reveal Montage</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0A0A0A;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+
+  /* Scene 1: Typewriter (0-3s) */
+  #scene-type {
+    background: #0A0A0A;
+    justify-content: flex-start;
+    padding-left: 160px;
+    opacity: 1;
+  }
+  .typewriter-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px; font-weight: 400;
+    color: #FFFFFF;
+    border-right: 3px solid #FF3366;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* Scene 2: Glitch (3-6s) */
+  #scene-glitch {
+    background: #0A0A0A;
+  }
+  .glitch-text {
+    font-size: 80px; font-weight: 900;
+    letter-spacing: -2px;
+    color: #FFFFFF;
+    position: relative;
+  }
+  .glitch-text.clone {
+    position: absolute;
+    top: 0; left: 0;
+    opacity: 0;
+  }
+
+  /* Scene 3: Wipe Reveal (6-9s) */
+  #scene-wipe {
+    background: #FFFFFF;
+  }
+  .wipe-text {
+    font-size: 72px; font-weight: 900;
+    color: #0A0A0A;
+    letter-spacing: -2px;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  /* Scene 4: Scale Burst (9-12s) */
+  #scene-scale {
+    background: #0A0A0A;
+  }
+  .scale-text {
+    font-size: 96px; font-weight: 900;
+    letter-spacing: -3px;
+    color: #FF3366;
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  /* Scene 5: Stagger Words (12-15s) */
+  #scene-stagger {
+    background: #0A0A0A;
+    display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+    max-width: 900px; margin: 0 auto;
+  }
+  .stagger-word {
+    font-size: 56px; font-weight: 800;
+    color: #FFFFFF;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .stagger-word.accent { color: #FF3366; }
+</style>
+</head>
+<body>
+
+<!-- SCENE 1: Typewriter (0-3s) -->
+<div class="composition" id="scene-type" data-composition-id="scene-1" data-start="0" data-duration="3" data-track-index="0">
+  <div class="typewriter-text" id="typewriter">The future is not written.</div>
+</div>
+
+<!-- SCENE 2: Glitch (3-6s) -->
+<div class="composition" id="scene-glitch" data-composition-id="scene-2" data-start="3" data-duration="3" data-track-index="0">
+  <div class="glitch-text" id="glitch-text">BREAK THE RULES</div>
+  <div class="glitch-text clone" id="glitch-clone-1" style="color:#FF3366; clip-path:inset(0 0 60% 0);">BREAK THE RULES</div>
+  <div class="glitch-text clone" id="glitch-clone-2" style="color:#00F0FF; clip-path:inset(60% 0 0 0);">BREAK THE RULES</div>
+</div>
+
+<!-- SCENE 3: Wipe (6-9s) -->
+<div class="composition" id="scene-wipe" data-composition-id="scene-3" data-start="6" data-duration="3" data-track-index="0">
+  <div class="wipe-text" id="wipe-text">DESIGN EVERYTHING</div>
+</div>
+
+<!-- SCENE 4: Scale Burst (9-12s) -->
+<div class="composition" id="scene-scale" data-composition-id="scene-4" data-start="9" data-duration="3" data-track-index="0">
+  <div class="scale-text" id="scale-text">NOW.</div>
+</div>
+
+<!-- SCENE 5: Stagger (12-15s) -->
+<div class="composition" id="scene-stagger" data-composition-id="scene-5" data-start="12" data-duration="3" data-track-index="0">
+  <span class="stagger-word" id="sw1">Create</span>
+  <span class="stagger-word accent" id="sw2">Without</span>
+  <span class="stagger-word" id="sw3">Limits</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // Scene 1: Typewriter
+  const tTl = gsap.timeline();
+  tTl.set("#scene-type", { opacity: 1 })
+    .fromTo("#typewriter", { width: 0 }, { width: "22ch", duration: 2, ease: "steps(22)" })
+    .to("#typewriter", { borderRightColor: "transparent", duration: 0.1, repeat: 2, yoyo: true })
+    .to("#scene-type", { opacity: 0, duration: 0.3 });
+
+  // Scene 2: Glitch
+  const gTl = gsap.timeline();
+  gTl.set("#scene-glitch", { opacity: 1 })
+    .to("#glitch-text", { opacity: 1, duration: 0.1 })
+    .to("#glitch-clone-1", { opacity: 1, x: -4, duration: 0.05 }, "+=0.3")
+    .to("#glitch-clone-2", { opacity: 1, x: 4, duration: 0.05 }, "-=0.03")
+    .to(["#glitch-clone-1","#glitch-clone-2"], { opacity: 0, duration: 0.05 })
+    .to("#glitch-clone-1", { opacity: 1, x: 3, duration: 0.04 }, "+=0.5")
+    .to("#glitch-clone-2", { opacity: 1, x: -3, duration: 0.04 }, "-=0.02")
+    .to(["#glitch-clone-1","#glitch-clone-2"], { opacity: 0, duration: 0.05 })
+    .to("#glitch-text", { opacity: 0.9, duration: 0.1 }, "+=0.8")
+    .to("#glitch-clone-1", { opacity: 1, x: -6, duration: 0.04 })
+    .to("#glitch-clone-2", { opacity: 1, x: 6, duration: 0.04 }, "+=0.01")
+    .to(["#glitch-clone-1","#glitch-clone-2","#glitch-text"], { opacity: 0, duration: 0.1 })
+    .to("#scene-glitch", { opacity: 0, duration: 0.2 });
+
+  // Scene 3: Wipe
+  const wTl = gsap.timeline();
+  wTl.set("#scene-wipe", { opacity: 1 })
+    .to("#wipe-text", { clipPath: "inset(0 0 0 0)", duration: 1.5, ease: "power2.inOut" })
+    .to("#wipe-text", { clipPath: "inset(0 0 0 100%)", duration: 0.6, ease: "power2.in" })
+    .to("#scene-wipe", { opacity: 0, duration: 0.3 });
+
+  // Scene 4: Scale Burst
+  const sTl = gsap.timeline();
+  sTl.set("#scene-scale", { opacity: 1 })
+    .to("#scale-text", { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" })
+    .to("#scale-text", { scale: 1.05, duration: 0.8, repeat: 1, yoyo: true, ease: "sine.inOut" })
+    .to("#scale-text", { opacity: 0, scale: 2, duration: 0.5, ease: "power2.in" })
+    .to("#scene-scale", { opacity: 0, duration: 0.2 });
+
+  // Scene 5: Stagger
+  const stTl = gsap.timeline();
+  stTl.set("#scene-stagger", { opacity: 1 })
+    .to(["#sw1","#sw2","#sw3"], { opacity: 1, y: 0, duration: 0.5, stagger: 0.25, ease: "power2.out" })
+    .to(["#sw1","#sw2","#sw3"], { opacity: 0, y: -20, duration: 0.4, stagger: 0.1, ease: "power2.in" }, "+=1")
+    .to("#scene-stagger", { opacity: 0, duration: 0.2 });
+
+  window.__hf_gsap = function(comp, time) { gsap.globalTimeline.time(time); };
+</script>
+</body>
+</html>

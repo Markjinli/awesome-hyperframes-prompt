@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letters Never Sent — Emotional Brand Short</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #2B2B2B;
+    overflow: hidden;
+    font-family: 'Caveat', cursive;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .composition {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  /* ── Paper Texture Overlay ── */
+  .paper-texture {
+    position: absolute; inset: 0; z-index: 98; pointer-events: none;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0.17  0 0.8 0 0 0.66  0 0 0.7 0 0.51  0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
+    background-size: 512px 512px;
+    animation: paperDrift 20s linear infinite;
+  }
+  @keyframes paperDrift { 0% { background-position: 0 0; } 100% { background-position: 512px 512px; } }
+
+  /* ── Vignette ── */
+  .vignette {
+    position: absolute; inset: 0; z-index: 97; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(43,43,43,0.7) 100%);
+  }
+
+  /* ═══════════════════ SCENE 1: Old Letters (0–7s) ═══════════════════ */
+  #scene-letters {
+    background: radial-gradient(ellipse at 45% 40%, #3A3530 0%, #2B2B2B 65%);
+    opacity: 1;
+  }
+  .envelope {
+    position: absolute;
+    width: 220px; height: 150px;
+    background: linear-gradient(135deg, #E8D5C0, #D9C7B2);
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  .envelope::after {
+    content: '';
+    position: absolute; inset: 12px;
+    border: 1.5px solid rgba(196,168,130,0.5);
+    border-radius: 2px;
+  }
+  .envelope-1 { top: 280px; left: 400px; transform: rotate(-6deg); }
+  .envelope-2 { top: 340px; left: 660px; transform: rotate(3deg); }
+  .envelope-3 { top: 420px; left: 560px; transform: rotate(-2deg); }
+  .envelope-4 { top: 500px; left: 720px; transform: rotate(5deg); width: 180px; }
+  .envelope-5 { top: 250px; left: 820px; transform: rotate(-4deg); width: 200px; }
+  .envelope-top {
+    position: absolute; top: 310px; left: 900px;
+    z-index: 2;
+  }
+  .unsent-word {
+    position: absolute;
+    font-family: 'Caveat', cursive;
+    font-size: 96px; font-weight: 400;
+    color: #C4A882;
+    text-shadow: 0 4px 20px rgba(196,168,130,0.4), 0 0 60px rgba(196,168,130,0.15);
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    top: 580px; left: 50%; transform: translateX(-50%);
+  }
+
+  /* ═══════════════════ SCENE 2: Ink Spreads (7–14s) ═══════════════════ */
+  #scene-ink {
+    background: radial-gradient(ellipse at 50% 40%, #353028 0%, #2B2B2B 60%);
+  }
+  .ink-blot {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle at 48% 45%, #1E232B 0%, rgba(30,35,43,0.8) 30%, transparent 65%);
+    border-radius: 50%;
+    opacity: 0;
+    clip-path: circle(0% at 50% 45%);
+    filter: blur(8px);
+  }
+  .ink-face {
+    position: absolute; width: 300px; height: 400px;
+    border-radius: 45% 45% 40% 40%;
+    background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(30,35,43,0.25) 100%);
+    opacity: 0;
+    top: 250px;
+  }
+  .ink-quote {
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; font-style: italic;
+    color: #E8D5C0;
+    opacity: 0;
+    top: 680px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  /* ═══════════════════ SCENE 3: Fading Memories (14–22s) ═══════════════════ */
+  #scene-memories {
+    background: radial-gradient(ellipse at 50% 50%, #38332E 0%, #2B2B2B 55%);
+    flex-direction: row; flex-wrap: wrap;
+    align-content: center; gap: 20px;
+    padding: 100px 200px;
+  }
+  .photo-cell {
+    width: 280px; height: 200px;
+    background: #3A3530;
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(196,168,130,0.3);
+    will-change: transform, opacity, filter;
+  }
+  .photo-cell::before {
+    content: '';
+    position: absolute; inset: 8px;
+    border: 1px solid rgba(196,168,130,0.2);
+  }
+  .photo-cell img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.4) brightness(0.8);
+  }
+  .photo-word {
+    position: absolute;
+    font-family: 'Caveat', cursive;
+    font-size: 42px;
+    color: #C4A882;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    opacity: 0;
+    z-index: 3;
+  }
+  .photo-word:nth-child(1) { top: 280px; left: 280px; transform: rotate(-5deg); }
+  .photo-word:nth-child(2) { top: 320px; left: 620px; transform: rotate(3deg); }
+  .photo-word:nth-child(3) { top: 380px; left: 480px; transform: rotate(-2deg); }
+  .photo-word:nth-child(4) { top: 440px; left: 780px; transform: rotate(4deg); font-size: 34px; }
+
+  /* ═══════════════════ SCENE 4: Reconnection (22–30s) ═══════════════════ */
+  #scene-reconnect {
+    background: radial-gradient(ellipse at 50% 40%, #D9C7B2 0%, #C4A882 35%, #2B2B2B 90%);
+  }
+  .hand-left, .hand-right {
+    position: absolute;
+    width: 120px; height: 180px;
+    background: rgba(30,30,30,0.7);
+    border-radius: 40% 40% 30% 30%;
+    box-shadow: 0 0 60px rgba(196,168,130,0.3);
+    top: 380px;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  .hand-left { left: 480px; }
+  .hand-right { right: 480px; }
+  .bridge-text {
+    position: absolute;
+    font-family: 'Caveat', cursive;
+    font-size: 64px; font-weight: 400;
+    color: #E8D5C0;
+    text-shadow: 0 0 30px rgba(196,168,130,0.6), 0 0 80px rgba(196,168,130,0.3);
+    top: 420px; left: 50%; transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .bridge-text span { opacity: 0; display: inline-block; }
+  .phone-screen {
+    position: absolute;
+    width: 260px; height: 480px;
+    background: linear-gradient(180deg, #F5F0E8, #E8D5C0);
+    border-radius: 28px;
+    border: 3px solid #C4A882;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(196,168,130,0.3);
+    bottom: -520px; left: 830px;
+    opacity: 0;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 30px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: #2B2B2B;
+  }
+
+  /* ═══════════════════ SCENE 5: The App (30–35s) ═══════════════════ */
+  #scene-app {
+    background: radial-gradient(ellipse at 50% 50%, #3A3530 0%, #2B2B2B 55%);
+  }
+  .app-card {
+    width: 800px; height: 540px;
+    background: linear-gradient(180deg, #F5F0E8 0%, #E8D5C0 100%);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(196,168,130,0.3);
+    opacity: 0;
+    padding: 40px 50px;
+    display: flex; flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    will-change: transform, opacity;
+  }
+  .app-logo-text {
+    font-family: 'Caveat', cursive;
+    font-size: 36px; font-weight: 400;
+    color: #C4A882;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .app-editor {
+    flex: 1;
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 18px; color: #2B2B2B;
+    line-height: 1.6;
+    position: relative;
+  }
+  .app-cursor {
+    display: inline-block;
+    width: 2px; height: 18px;
+    background: #C4A882;
+    vertical-align: text-bottom;
+    animation: cursorBlink 1s step-end infinite;
+  }
+  @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .app-badges {
+    display: flex; gap: 16px;
+    margin-top: 20px; justify-content: center;
+  }
+  .app-badge {
+    font-size: 13px; color: #C4A882;
+    border: 1px solid rgba(196,168,130,0.4);
+    border-radius: 20px;
+    padding: 6px 16px;
+    opacity: 0;
+  }
+
+  /* ═══════════════════ SCENE 6: Warm Ending (35–40s) ═══════════════════ */
+  #scene-ending {
+    background: radial-gradient(ellipse at 50% 45%, #353028 0%, #2B2B2B 65%);
+  }
+  .final-logo {
+    font-family: 'Caveat', cursive;
+    font-size: 88px; font-weight: 400;
+    color: #C4A882;
+    text-shadow: 0 0 40px rgba(196,168,130,0.5), 0 0 100px rgba(196,168,130,0.2);
+    opacity: 0;
+    transform: scale(0.9);
+    margin-bottom: 24px;
+  }
+  .final-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; font-style: italic;
+    color: #E8D5C0;
+    opacity: 0;
+  }
+  .candle-flame {
+    position: absolute;
+    bottom: 200px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 30px;
+    background: linear-gradient(0deg, #C4A882, #E8D5C0, #FFF8E7);
+    border-radius: 50% 50% 20% 20%;
+    opacity: 0;
+    box-shadow: 0 0 20px rgba(196,168,130,0.6), 0 0 60px rgba(196,168,130,0.3);
+  }
+</style>
+</head>
+<body>
+
+<div class="paper-texture"></div>
+<div class="vignette"></div>
+
+<!-- ════════════════ SCENE 1: Old Letters (0–7s) ════════════════ -->
+<div class="composition" id="scene-letters" data-composition-id="scene-1" data-start="0" data-duration="7" data-track-index="0">
+  <div class="envelope envelope-1" id="env-1"></div>
+  <div class="envelope envelope-2" id="env-2"></div>
+  <div class="envelope envelope-3" id="env-3"></div>
+  <div class="envelope envelope-4" id="env-4"></div>
+  <div class="envelope envelope-5 envelope-top" id="env-5"></div>
+  <div class="unsent-word" id="unsent-word">Unsent.</div>
+</div>
+
+<!-- ════════════════ SCENE 2: Ink Spreads (7–14s) ════════════════ -->
+<div class="composition" id="scene-ink" data-composition-id="scene-2" data-start="7" data-duration="7" data-track-index="0">
+  <div class="ink-blot" id="ink-blot"></div>
+  <div class="ink-face" id="ink-face"></div>
+  <div class="ink-quote" id="ink-quote">Every silence has a shape.</div>
+</div>
+
+<!-- ════════════════ SCENE 3: Fading Memories (14–22s) ════════════════ -->
+<div class="composition" id="scene-memories" data-composition-id="scene-3" data-start="14" data-duration="8" data-track-index="0">
+  <div class="photo-cell" id="photo-1"></div>
+  <div class="photo-cell" id="photo-2"></div>
+  <div class="photo-cell" id="photo-3"></div>
+  <div class="photo-cell" id="photo-4"></div>
+  <div class="photo-cell" id="photo-5"></div>
+  <div class="photo-cell" id="photo-6"></div>
+  <div class="photo-word" id="word-missed">missed</div>
+  <div class="photo-word" id="word-goodbye">goodbye</div>
+  <div class="photo-word" id="word-sorry">sorry</div>
+  <div class="photo-word" id="word-shouldve">I should have...</div>
+</div>
+
+<!-- ════════════════ SCENE 4: Reconnection (22–30s) ════════════════ -->
+<div class="composition" id="scene-reconnect" data-composition-id="scene-4" data-start="22" data-duration="8" data-track-index="0">
+  <div class="hand-left" id="hand-left"></div>
+  <div class="hand-right" id="hand-right"></div>
+  <div class="bridge-text" id="bridge-text"></div>
+  <div class="phone-screen" id="phone-screen">
+    <span style="text-align:center;color:#C4A882;font-family:'Caveat',cursive;font-size:20px;">Letters Never Sent</span>
+  </div>
+</div>
+
+<!-- ════════════════ SCENE 5: The App (30–35s) ════════════════ -->
+<div class="composition" id="scene-app" data-composition-id="scene-5" data-start="30" data-duration="5" data-track-index="0">
+  <div class="app-card" id="app-card">
+    <div class="app-logo-text">Letters Never Sent</div>
+    <div class="app-editor" id="app-editor">
+      Dear Mom, I never told you<span class="app-cursor"></span>
+    </div>
+    <div class="app-badges">
+      <div class="app-badge" id="badge-1">Write Freely</div>
+      <div class="app-badge" id="badge-2">Send or Save</div>
+      <div class="app-badge" id="badge-3">No Pressure</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SCENE 6: Warm Ending (35–40s) ════════════════ -->
+<div class="composition" id="scene-ending" data-composition-id="scene-6" data-start="35" data-duration="5" data-track-index="0">
+  <div style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;">
+    <div class="final-logo" id="final-logo">Letters Never Sent</div>
+    <div class="final-tagline" id="final-tagline">The words you never wrote. Finally heard.</div>
+  </div>
+  <div class="candle-flame" id="candle-flame"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // ── Scene 1: Old Letters (0–7s) ──
+  const s1 = gsap.timeline();
+  s1.to("#env-1", { opacity: 1, duration: 0.8, ease: "power2.out" })
+    .to("#env-2", { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.5")
+    .to("#env-3", { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.5")
+    .to("#env-4", { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.5")
+    .to("#env-5", { opacity: 1, y: -30, duration: 0.8, ease: "power2.out" }, "-=0.5")
+    .to("#env-5", { y: -45, duration: 6, ease: "sine.inOut", yoyo: true, repeat: -1 }, "-=0.1")
+    .to("#unsent-word", { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 2.2, ease: "power3.inOut" }, "-=5")
+    .to("#unsent-word", { opacity: 0, duration: 0.8, ease: "power2.in" }, "+=3")
+    .to("#scene-letters", { opacity: 0, duration: 1.5, ease: "power2.in" }, "-=1.2");
+
+  // ── Scene 2: Ink Spreads (7–14s) ──
+  const s2 = gsap.timeline();
+  s2.set("#scene-ink", { opacity: 1 })
+    .to("#ink-blot", { opacity: 1, clipPath: "circle(50% at 50% 45%)", duration: 4, ease: "power2.inOut" })
+    .to("#ink-face", { opacity: 0.3, duration: 2.5, ease: "power2.out" }, "-=3")
+    .to("#ink-quote", { opacity: 1, duration: 2, ease: "power3.out" }, "+=0.5")
+    .to("#ink-quote", { opacity: 0, duration: 1, ease: "power2.in" }, "+=2.5")
+    .to("#scene-ink", { opacity: 0, duration: 1.5, ease: "power2.in" }, "-=1.2");
+
+  // ── Scene 3: Fading Memories (14–22s) ──
+  const s3 = gsap.timeline();
+  const photos = ["#photo-1","#photo-2","#photo-3","#photo-4","#photo-5","#photo-6"];
+  s3.set("#scene-memories", { opacity: 1 })
+    .to(photos, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.3, ease: "power2.out" });
+  photos.forEach((p, i) => {
+    s3.to(p, { filter: "saturate(0.2) blur(1px)", duration: 5, ease: "none" }, "+=0");
+    if (i % 2 === 0) {
+      s3.to(p, { rotation: 1, duration: 8, ease: "sine.inOut", yoyo: true, repeat: -1 }, "-=7");
+    } else {
+      s3.to(p, { rotation: -0.8, duration: 7, ease: "sine.inOut", yoyo: true, repeat: -1 }, "-=7");
+    }
+  });
+  const wordStagger = 1.8;
+  s3.to("#word-missed", { opacity: 1, duration: 0.8 }, "+=0.5")
+    .to("#word-goodbye", { opacity: 1, duration: 0.8 }, "+=" + wordStagger)
+    .to("#word-sorry", { opacity: 1, duration: 0.8 }, "+=" + wordStagger)
+    .to("#word-shouldve", { opacity: 1, duration: 0.8 }, "+=" + wordStagger);
+  s3.to("#scene-memories", { opacity: 0, duration: 2, ease: "power2.in" }, "+=2");
+
+  // ── Scene 4: Reconnection (22–30s) ──
+  const s4 = gsap.timeline();
+  const bridgeChars = "It's never too late.".split("");
+  const bridgeContainer = document.getElementById("bridge-text");
+  bridgeContainer.innerHTML = bridgeChars.map(c => `<span>${c === ' ' ? '&nbsp;' : c}</span>`).join("");
+  const bridgeSpans = bridgeContainer.querySelectorAll("span");
+
+  s4.set("#scene-reconnect", { opacity: 1 })
+    .to("#hand-left", { opacity: 1, x: 80, duration: 2.5, ease: "power3.out" })
+    .to("#hand-right", { opacity: 1, x: -80, duration: 2.5, ease: "power3.out" }, "-=2.5")
+    .to(bridgeSpans, { opacity: 1, duration: 0.04, stagger: { each: 0.04, from: "center" }, ease: "none" }, "-=1")
+    .to("#phone-screen", {
+      opacity: 1,
+      bottom: 150,
+      duration: 1.5,
+      ease: "power3.out"
+    }, "-=2")
+    .to("#phone-screen", { boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 60px rgba(196,168,130,0.5)", duration: 2, yoyo: true, repeat: -1, ease: "sine.inOut" }, "+=0.2")
+    .to("#scene-reconnect", { opacity: 0, duration: 1.5, ease: "power2.in" }, "+=4");
+
+  // ── Scene 5: The App (30–35s) ──
+  const s5 = gsap.timeline();
+  s5.set("#scene-app", { opacity: 1 })
+    .to("#app-card", { opacity: 1, scale: 1, duration: 1, ease: "power3.out" })
+    .to("#badge-1", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" })
+    .to("#badge-2", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3")
+    .to("#badge-3", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3")
+    .to("#scene-app", { opacity: 0, duration: 1.5, ease: "power2.in" }, "+=2.5");
+  gsap.set(["#badge-1","#badge-2","#badge-3"], { y: 20 });
+
+  // ── Scene 6: Warm Ending (35–40s) ──
+  const s6 = gsap.timeline();
+  s6.set("#scene-ending", { opacity: 1 })
+    .to("#final-logo", { opacity: 1, scale: 1, duration: 2, ease: "power3.out" })
+    .to("#final-tagline", { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=1")
+    .to("#candle-flame", { opacity: 0.8, duration: 1.2, ease: "power2.out" }, "-=1.5")
+    .to("#scene-ending", { opacity: 0, duration: 1.5, ease: "power2.in" }, "+=2.5");
+
+  // Candle flicker
+  gsap.to("#candle-flame", {
+    opacity: gsap.utils.random(0.5, 0.9),
+    scaleY: gsap.utils.random(0.8, 1.2),
+    duration: 0.15,
+    repeat: -1,
+    repeatRefresh: true,
+    ease: "none",
+    delay: 4.5
+  });
+
+  // ── HyperFrames adapter ──
+  window.__hf_gsap = function(composition, currentTime) {
+    gsap.globalTimeline.time(currentTime);
+  };
+</script>
+</body>
+</html>
