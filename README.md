@@ -70,19 +70,41 @@ npx hyperframes preview   # 浏览器实时预览
 npx hyperframes render    # 导出 MP4
 ```
 
+## 渲染预览
+
+每个模板都包含完整渲染的 MP4 和 GIF 预览。点击查看效果：
+
+| 模板 | 分类 | 时长 | 预览 |
+|------|------|------|------|
+| **Kinetic Title "MOMENTUM"** | 动态排版 | 10s | [MP4](./output/mp4/motion-typography--kinetic-title.mp4) · [GIF](./output/gif/motion-typography--kinetic-title.gif) |
+| **Product Launch Event** | 活动宣传 | 30s | [MP4](./output/mp4/event-promo--product-launch-event.mp4) · [GIF](./output/gif/event-promo--product-launch-event.gif) |
+| **Tech Product Launch** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--tech-product-launch.mp4) · [GIF](./output/gif/product-showcase--tech-product-launch.gif) |
+| **SaaS Feature Demo** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--saas-feature-demo.mp4) · [GIF](./output/gif/product-showcase--saas-feature-demo.gif) |
+| **App Promo** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--app-promo.mp4) · [GIF](./output/gif/product-showcase--app-promo.gif) |
+| **Company Origin** | 品牌故事 | 30s | [MP4](./output/mp4/brand-story--company-origin.mp4) · [GIF](./output/gif/brand-story--company-origin.gif) |
+| **Brand Values** | 品牌故事 | 30s | [MP4](./output/mp4/brand-story--brand-values.mp4) · [GIF](./output/gif/brand-story--brand-values.gif) |
+| **Creative Intro** | 电影感 | 12s | [MP4](./output/mp4/cinematic--creative-intro.mp4) · [GIF](./output/gif/cinematic--creative-intro.gif) |
+| **Emotional Story** | 电影感 | 30s | [MP4](./output/mp4/cinematic--emotional-story.mp4) · [GIF](./output/gif/cinematic--emotional-story.gif) |
+| **Social Ad** | 社交媒体 | 30s | [MP4](./output/mp4/social-media--social-ad.mp4) · [GIF](./output/gif/social-media--social-ad.gif) |
+| **Short Reel** | 社交媒体 | 15s | [MP4](./output/mp4/social-media--short-reel.mp4) · [GIF](./output/gif/social-media--short-reel.gif) |
+| **Video Essay** | YouTube | 20s | [MP4](./output/mp4/youtube-content--video-essay.mp4) · [GIF](./output/gif/youtube-content--video-essay.gif) |
+| **Channel Intro** | YouTube | 10s | [MP4](./output/mp4/youtube-content--channel-intro.mp4) · [GIF](./output/gif/youtube-content--channel-intro.gif) |
+
+> 共 13 个模板已完成 MP4/GIF 渲染。更多模板持续渲染中。
+
 ## 模板速览
 
-| 分类 | 模板数量 | 适用场景 |
-|------|---------|---------|
-| 产品宣传 | WIP | 科技产品发布、SaaS 功能演示、App 介绍 |
-| 社交媒体 | WIP | 抖音/TikTok 短视频、Instagram Story/Reel |
-| 教程教育 | WIP | 在线课程、知识科普、操作指南 |
-| 数据可视化 | WIP | 数据报告、KPI 展示、趋势分析 |
-| 品牌故事 | WIP | 企业文化、创始人访谈、品牌纪录片 |
-| 活动宣传 | WIP | 大会预告、直播预热、促销活动 |
-| 电影感 | WIP | 创意短片、情绪表达、艺术实验 |
-| YouTube | WIP | 频道片头、视频解说、内容回顾 |
-| 动态排版 | WIP | 文字动画、标题序列、转场设计 |
+| 分类 | 模板数量 | 已渲染 | 适用场景 |
+|------|---------|--------|---------|
+| 产品宣传 | 3 | ✅ 3 | 科技产品发布、SaaS 功能演示、App 介绍 |
+| 社交媒体 | 2 | ✅ 2 | 短视频、社交广告 |
+| 教程教育 | 2 | ⏳ | 在线课程、知识科普 |
+| 数据可视化 | 2 | ⏳ | 数据报告、KPI 展示、趋势分析 |
+| 品牌故事 | 2 | ✅ 2 | 企业文化、创始人访谈 |
+| 活动宣传 | 2 | ✅ 1 | 大会预告、直播预热 |
+| 电影感 | 2 | ✅ 2 | 创意短片、情绪表达 |
+| YouTube | 2 | ✅ 2 | 频道片头、视频解说 |
+| 动态排版 | 2 | ✅ 1 | 文字动画、标题序列 |
 
 > 持续更新中，欢迎 PR 贡献你的模板！
 

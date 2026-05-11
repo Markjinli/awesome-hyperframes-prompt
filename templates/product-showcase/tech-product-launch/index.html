@@ -459,7 +459,7 @@
   </style>
 </head>
 <body>
-  <div class="hyperframes-canvas" data-composition-id="nexus-ai-launch">
+  <div class="hyperframes-canvas" data-composition-id="nexus-ai-launch" data-width="1920" data-height="1080">
 
     <!-- Background Grid -->
     <div class="bg-grid" data-track-index="0"></div>
@@ -628,16 +628,18 @@
 
     // Helper: get scene by composition-id
     function comp(id) {
-      return document.querySelector(`[data-composition-id="${id}"]`);
+      return document.querySelector('[data-composition-id="' + id + '"]');
     }
 
     // Helper: get element within a scene by data-element attr
     function el(parent, name) {
-      return parent.querySelector(`[data-element="${name}"]`);
+      return parent.querySelector('[data-element="' + name + '"]');
     }
 
     // Master timeline
-    const master = gsap.timeline({ paused: false });
+    const master = gsap.timeline({ paused: true });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["nexus-ai-launch"] = master;
 
     // -------------------------------------------------------
     // SCENE 1: Logo Reveal (0s -- 5s)

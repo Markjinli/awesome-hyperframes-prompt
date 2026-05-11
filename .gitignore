@@ -1,7 +1,6 @@
 node_modules/
-output/
-*.mp4
-*.mov
 .hyperframes/
 .DS_Store
 Thumbs.db
+# Ignore temp MP4/MOV but keep output/ previews
+*.mov

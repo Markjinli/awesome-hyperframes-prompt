@@ -286,7 +286,7 @@
 </head>
 <body>
 
-<div id="hyperframes-canvas">
+<div id="hyperframes-canvas" data-composition-id="hyperframes-canvas" data-width="1920" data-height="1080">
 
   <!-- ===== Global Light Layers ===== -->
   <div class="spotlight spotlight-main" id="spotlightMain"></div>
@@ -386,7 +386,9 @@
 
 <script>
   (function() {
-    const tl = gsap.timeline({ paused: false });
+    const tl = gsap.timeline({ paused: true });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["hyperframes-canvas"] = tl;
 
     function crossfade(fromEl, toEl, dur) {
       if (fromEl) gsap.to(fromEl, { opacity: 0, duration: dur, ease: 'power2.inOut' });
@@ -574,13 +576,13 @@
       tl.time(currentTime);
     };
 
-    // Standalone preview auto-advance (remove when rendering in HyperFrames)
-    let pt = 0;
-    const iv = setInterval(function() {
-      pt += 1/30;
-      if (pt <= 30) tl.time(pt);
-      else clearInterval(iv);
-    }, 1000/30);
+    // Standalone preview disabled for HyperFrames rendering
+    // let pt = 0;
+    // const iv = setInterval(function() {
+    //   pt += 1/30;
+    //   if (pt <= 30) tl.time(pt);
+    //   else clearInterval(iv);
+    // }, 1000/30);
 
   })();
 </script>

@@ -544,7 +544,7 @@
   </style>
 </head>
 <body>
-  <div class="hyperframes-canvas" data-composition-id="flowboard-feature-demo">
+  <div class="hyperframes-canvas" data-composition-id="flowboard-feature-demo" data-width="1920" data-height="1080">
 
     <!-- Background wash & shift -->
     <div class="bg-wash" data-track-index="0"></div>
@@ -743,13 +743,15 @@
      */
 
     function comp(id) {
-      return document.querySelector(`[data-composition-id="${id}"]`);
+      return document.querySelector('[data-composition-id="' + id + '"]');
     }
     function el(parent, name) {
-      return parent.querySelector(`[data-element="${name}"]`);
+      return parent.querySelector('[data-element="' + name + '"]');
     }
 
-    const master = gsap.timeline({ paused: false });
+    const master = gsap.timeline({ paused: true });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["flowboard-feature-demo"] = master;
 
     // -------------------------------------------------------
     // SCENE 1: Hero + Value Prop (0s -- 5s)
@@ -904,12 +906,12 @@
     const flowboardHeights = [46, 48, 45, 50]; // ~90-95% of max
 
     for (let q = 1; q <= 4; q++) {
-      master.fromTo(scene3.querySelector(`[data-bar="industry-q${q}"]`),
+      master.fromTo(scene3.querySelector('[data-bar="industry-q' + q + '"]'),
         { height: 0 },
         { height: industryHeights[q - 1] + "px", duration: 0.5, ease: "power2.out" },
         13.4 + (q - 1) * 0.12
       );
-      master.fromTo(scene3.querySelector(`[data-bar="flowboard-q${q}"]`),
+      master.fromTo(scene3.querySelector('[data-bar="flowboard-q' + q + '"]'),
         { height: 0 },
         { height: flowboardHeights[q - 1] + "px", duration: 0.5, ease: "power2.out" },
         13.6 + (q - 1) * 0.12

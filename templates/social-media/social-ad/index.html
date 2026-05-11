@@ -321,6 +321,7 @@
 <!-- ===== Scene 1: The Hook — Counter (0–6s) ===== -->
 <div id="scene1" class="composition"
      data-composition-id="scene1-hook"
+     data-width="1920" data-height="1080"
      data-start="0"
      data-duration="6"
      data-track-index="1">
@@ -623,7 +624,7 @@
       y: -6,
       duration: 3,
       stagger: 0.1,
-      repeat: -1,
+      repeat: 99,
       yoyo: true,
       ease: 'sine.inOut'
     }, 2);
@@ -667,7 +668,7 @@
     tl4.to('#cta-button', {
       scale: 1.04,
       duration: 1.5,
-      repeat: -1,
+      repeat: 99,
       yoyo: true,
       ease: 'sine.inOut'
     }, 1.3);
@@ -677,7 +678,7 @@
       scale: 1.06,
       opacity: 0.5,
       duration: 1.5,
-      repeat: -1,
+      repeat: 99,
       yoyo: true,
       ease: 'sine.inOut'
     }, 1.3);
@@ -703,11 +704,9 @@
   var master = gsap.timeline({ paused: true });
   setupTimeline(master);
 
-  if (typeof window.__hf_registerTimeline === 'function') {
-    window.__hf_registerTimeline(master);
-  } else {
-    master.play();
-  }
+  window.__timelines = window.__timelines || {};
+  window.__timelines["scene1-hook"] = master;
+  window.__hf_gsap = function(comp, time) { master.seek(time); };
 })();
 </script>
 

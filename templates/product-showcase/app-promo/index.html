@@ -175,7 +175,7 @@
 </style>
 </head>
 <body>
-<div class="canvas" data-composition-id="pulsefit-app-promo">
+<div class="canvas" data-composition-id="pulsefit-app-promo" data-width="1920" data-height="1080">
 
   <div class="blob blob-1" data-track-index="0"></div>
   <div class="blob blob-2" data-track-index="0"></div>
@@ -267,7 +267,9 @@
   window.__hf_gsap = gsap;
 
   (function() {
-    var tl = gsap.timeline({ paused: false });
+    var tl = gsap.timeline({ paused: true });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["pulsefit-app-promo"] = tl;
 
     // ── Blobs continuous ──
     tl.to('.blob-1', { x:60, y:40, scale:1.1, duration:8, yoyo:true, repeat:1, ease:'sine.inOut' }, 0);
