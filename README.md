@@ -72,25 +72,99 @@ npx hyperframes render    # 导出 MP4
 
 ## 渲染预览
 
-每个模板都包含完整渲染的 MP4 和 GIF 预览。点击查看效果：
+每个模板都包含完整渲染的 GIF 预览（可直接播放）和 MP4 下载。共 13 个模板已完成渲染。
 
-| 模板 | 分类 | 时长 | 预览 |
-|------|------|------|------|
-| **Kinetic Title "MOMENTUM"** | 动态排版 | 10s | [MP4](./output/mp4/motion-typography--kinetic-title.mp4) · [GIF](./output/gif/motion-typography--kinetic-title.gif) |
-| **Product Launch Event** | 活动宣传 | 30s | [MP4](./output/mp4/event-promo--product-launch-event.mp4) · [GIF](./output/gif/event-promo--product-launch-event.gif) |
-| **Tech Product Launch** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--tech-product-launch.mp4) · [GIF](./output/gif/product-showcase--tech-product-launch.gif) |
-| **SaaS Feature Demo** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--saas-feature-demo.mp4) · [GIF](./output/gif/product-showcase--saas-feature-demo.gif) |
-| **App Promo** | 产品宣传 | 30s | [MP4](./output/mp4/product-showcase--app-promo.mp4) · [GIF](./output/gif/product-showcase--app-promo.gif) |
-| **Company Origin** | 品牌故事 | 30s | [MP4](./output/mp4/brand-story--company-origin.mp4) · [GIF](./output/gif/brand-story--company-origin.gif) |
-| **Brand Values** | 品牌故事 | 30s | [MP4](./output/mp4/brand-story--brand-values.mp4) · [GIF](./output/gif/brand-story--brand-values.gif) |
-| **Creative Intro** | 电影感 | 12s | [MP4](./output/mp4/cinematic--creative-intro.mp4) · [GIF](./output/gif/cinematic--creative-intro.gif) |
-| **Emotional Story** | 电影感 | 30s | [MP4](./output/mp4/cinematic--emotional-story.mp4) · [GIF](./output/gif/cinematic--emotional-story.gif) |
-| **Social Ad** | 社交媒体 | 30s | [MP4](./output/mp4/social-media--social-ad.mp4) · [GIF](./output/gif/social-media--social-ad.gif) |
-| **Short Reel** | 社交媒体 | 15s | [MP4](./output/mp4/social-media--short-reel.mp4) · [GIF](./output/gif/social-media--short-reel.gif) |
-| **Video Essay** | YouTube | 20s | [MP4](./output/mp4/youtube-content--video-essay.mp4) · [GIF](./output/gif/youtube-content--video-essay.gif) |
-| **Channel Intro** | YouTube | 10s | [MP4](./output/mp4/youtube-content--channel-intro.mp4) · [GIF](./output/gif/youtube-content--channel-intro.gif) |
+### 产品宣传
 
-> 共 13 个模板已完成 MP4/GIF 渲染。更多模板持续渲染中。
+<p align="center">
+  <b>Tech Product Launch</b> · 30s<br>
+  <img src="./output/gif/product-showcase--tech-product-launch.gif" width="600"><br>
+  <sub><a href="./output/mp4/product-showcase--tech-product-launch.mp4">📥 下载 MP4</a> · <a href="./templates/product-showcase/tech-product-launch/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>SaaS Feature Demo</b> · 30s<br>
+  <img src="./output/gif/product-showcase--saas-feature-demo.gif" width="600"><br>
+  <sub><a href="./output/mp4/product-showcase--saas-feature-demo.mp4">📥 下载 MP4</a> · <a href="./templates/product-showcase/saas-feature-demo/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>App Promo</b> · 30s<br>
+  <img src="./output/gif/product-showcase-app-promo.gif" width="300"><br>
+  <sub><a href="./output/mp4/product-showcase-app-promo.mp4">📥 下载 MP4</a> · <a href="./templates/product-showcase/app-promo/">📂 模板</a></sub>
+</p>
+
+### 电影感
+
+<p align="center">
+  <b>Creative Intro</b> · 12s<br>
+  <img src="./output/gif/cinematic--creative-intro.gif" width="600"><br>
+  <sub><a href="./output/mp4/cinematic--creative-intro.mp4">📥 下载 MP4</a> · <a href="./templates/cinematic/creative-intro/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>Emotional Story</b> · 30s<br>
+  <img src="./output/gif/cinematic--emotional-story.gif" width="600"><br>
+  <sub><a href="./output/mp4/cinematic--emotional-story.mp4">📥 下载 MP4</a> · <a href="./templates/cinematic/emotional-story/">📂 模板</a></sub>
+</p>
+
+### 品牌故事
+
+<p align="center">
+  <b>Company Origin</b> · 30s<br>
+  <img src="./output/gif/brand-story--company-origin.gif" width="600"><br>
+  <sub><a href="./output/mp4/brand-story--company-origin.mp4">📥 下载 MP4</a> · <a href="./templates/brand-story/company-origin/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>Brand Values</b> · 30s<br>
+  <img src="./output/gif/brand-story--brand-values.gif" width="600"><br>
+  <sub><a href="./output/mp4/brand-story--brand-values.mp4">📥 下载 MP4</a> · <a href="./templates/brand-story/brand-values/">📂 模板</a></sub>
+</p>
+
+### 社交媒体
+
+<p align="center">
+  <b>Social Ad</b> · 30s<br>
+  <img src="./output/gif/social-media--social-ad.gif" width="600"><br>
+  <sub><a href="./output/mp4/social-media--social-ad.mp4">📥 下载 MP4</a> · <a href="./templates/social-media/social-ad/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>Short Reel</b> · 15s<br>
+  <img src="./output/gif/social-media--short-reel.gif" width="300"><br>
+  <sub><a href="./output/mp4/social-media--short-reel.mp4">📥 下载 MP4</a> · <a href="./templates/social-media/short-reel/">📂 模板</a></sub>
+</p>
+
+### 活动宣传
+
+<p align="center">
+  <b>Product Launch Event</b> · 30s<br>
+  <img src="./output/gif/event-promo--product-launch-event.gif" width="600"><br>
+  <sub><a href="./output/mp4/event-promo--product-launch-event.mp4">📥 下载 MP4</a> · <a href="./templates/event-promo/product-launch-event/">📂 模板</a></sub>
+</p>
+
+### YouTube
+
+<p align="center">
+  <b>Video Essay</b> · 20s<br>
+  <img src="./output/gif/youtube-content--video-essay.gif" width="600"><br>
+  <sub><a href="./output/mp4/youtube-content--video-essay.mp4">📥 下载 MP4</a> · <a href="./templates/youtube-content/video-essay/">📂 模板</a></sub>
+</p>
+
+<p align="center">
+  <b>Channel Intro</b> · 10s<br>
+  <img src="./output/gif/youtube-content--channel-intro.gif" width="600"><br>
+  <sub><a href="./output/mp4/youtube-content--channel-intro.mp4">📥 下载 MP4</a> · <a href="./templates/youtube-content/channel-intro/">📂 模板</a></sub>
+</p>
+
+### 动态排版
+
+<p align="center">
+  <b>Kinetic Title "MOMENTUM"</b> · 10s<br>
+  <img src="./output/gif/motion-typography--kinetic-title.gif" width="600"><br>
+  <sub><a href="./output/mp4/motion-typography--kinetic-title.mp4">📥 下载 MP4</a> · <a href="./templates/motion-typography/kinetic-title/">📂 模板</a></sub>
+</p>
 
 ## 模板速览
 
