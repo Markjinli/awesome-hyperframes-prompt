@@ -29,7 +29,14 @@ awesome-hyperframes-prompt/
 │   ├── event-promo/        # 活动宣传：大会预告、直播引流
 │   ├── cinematic/          # 电影感：创意短片、艺术表达
 │   ├── youtube-content/    # YouTube：频道片头、内容解说
-│   └── motion-typography/  # 动态排版：文字动画、标题设计
+│   ├── motion-typography/  # 动态排版：文字动画、标题设计
+│   ├── vfx-showcase/       # VFX 特效：液态流体、粒子效果
+│   ├── 3d-product/         # 3D 产品：设备360°展示
+│   ├── voiceover-explainer/# 语音旁白：TTS 产品介绍
+│   ├── audio-reactive/     # 音频同步：节拍驱动动画
+│   ├── app-social/         # 社交通知：平台UI叠加层
+│   ├── code-workflow/      # 代码工作流：开发者工具发布
+│   └── comparison/         # 对比展示：分屏对比
 ├── techniques/             # 📖 技巧指南
 ├── case-studies/           # 🔬 深度案例拆解
 │   ├── official/           # 官方案例逆向解析
@@ -176,11 +183,18 @@ npx hyperframes render    # 导出 MP4
 | 数据可视化 | 2 | ⏳ | 数据报告、KPI 展示、趋势分析 |
 | 品牌故事 | 2 | ✅ 2 | 企业文化、创始人访谈 |
 | 活动宣传 | 2 | ✅ 1 | 大会预告、直播预热 |
-| 电影感 | 2 | ✅ 2 | 创意短片、情绪表达 |
+| 电影感 | 3 | ✅ 2 | 创意短片、情绪表达、胶片质感 |
 | YouTube | 2 | ✅ 2 | 频道片头、视频解说 |
 | 动态排版 | 2 | ✅ 1 | 文字动画、标题序列 |
+| VFX 特效 | 1 | 🆕 | 液态流体背景 |
+| 3D 产品 | 1 | 🆕 | 设备 360° 展示 |
+| 语音旁白 | 1 | 🆕 | TTS 驱动产品介绍 |
+| 音频同步 | 1 | 🆕 | 节拍驱动的视觉动画 |
+| 社交通知 | 1 | 🆕 | 平台 UI 卡片叠加 |
+| 代码工作流 | 1 | 🆕 | 开发者工具发布视频 |
+| 对比展示 | 1 | 🆕 | 分屏对比 / 之前 vs 之后 |
 
-> 持续更新中，欢迎 PR 贡献你的模板！
+> 共 28 个模板，持续更新中。🆕 标记为本次新增的 8 个模板。
 
 ## 每个模板包含什么
 
@@ -200,6 +214,10 @@ templates/product-showcase/tech-product-launch/
 | [视觉风格指南](./techniques/styling-guide.md) | 配色、排版、构图的审美原则 |
 | [Block 组合技巧](./techniques/block-combos.md) | 50+ 官方 Block 的高效组合方式 |
 | [Agent 协作工作流](./techniques/agent-workflow.md) | 多轮迭代、版本管理、团队协作流程 |
+| [Shader 转场深度指南](./techniques/shader-transitions.md) | 14 种 WebGL Shader 转场的选择与调参 |
+| [音频同步动画](./techniques/audio-reactive.md) | Bass/Treble/Amplitude 频段映射到视觉属性 |
+| [Caption 风格模式](./techniques/caption-styles.md) | 5 种字幕风格（Hype/Corporate/Tutorial/Storytelling/Social）|
+| [TTS + Voiceover 工作流](./techniques/tts-voiceover.md) | 脚本写作 → TTS 生成 → 时间线同步全流程 |
 
 ## 贡献指南
 
